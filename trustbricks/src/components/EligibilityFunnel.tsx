@@ -1,0 +1,1214 @@
+"use client";
+
+import { useReducer, useCallback, useId, useTransition } from "react";
+import { motion, AnimatePresence, Variants } from "framer-motion";
+import { processMortgageLead } from "@/app/actions/leadRouting";
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TYPES & CONSTANTS
+═══════════════════════════════════════════════════════════════════════════ */
+
+export type BranchSlug = "abuja" | "lagos" | "adamawa" | "kaduna";
+export type PfaSlug =
+  | "stanbic-ibtc"
+  | "gt-pension"
+  | "citizens-tier-1"
+  | "citizens-tier-2"
+  | "trustfund"
+  | "nupemco"
+  | "tangerine-apt"
+  | "norrenberger"
+  | "nlpc"
+  | "premium"
+  | "accessarm"
+  | "leadway-pensure"
+  | "oak";
+
+export interface Branch {
+  slug: BranchSlug;
+  name: string;
+  emoji: string;
+}
+
+export interface PfaOption {
+  slug: PfaSlug;
+  label: string;
+  /** Sub-group label for grouped select rendering */
+  group?: string;
+}
+
+export interface PfaRule {
+  slug: PfaSlug;
+  name: string;
+  minBalance: number;
+}
+
+/* ── BRANCH REGISTRY ──────────────────────────────────────────────────── */
+export const BRANCHES: Branch[] = [
+  { slug: "abuja",    name: "Abuja (FCT)",    emoji: "🏛️" },
+  { slug: "lagos",    name: "Lagos",          emoji: "🌊" },
+  { slug: "adamawa",  name: "Adamawa",        emoji: "🏔️" },
+  { slug: "kaduna",   name: "Kaduna",         emoji: "🌾" },
+];
+
+/* ── PFA REGISTRY ─────────────────────────────────────────────────────── */
+export const PFA_OPTIONS: PfaOption[] = [
+  { slug: "stanbic-ibtc",    label: "Stanbic IBTC Nominees",   group: "Major" },
+  { slug: "gt-pension",      label: "GT Pension (Guaranty Trust Pensions)", group: "Major" },
+  { slug: "citizens-tier-1", label: "Citizens Pensions — Tier 1", group: "Citizens Pensions" },
+  { slug: "citizens-tier-2", label: "Citizens Pensions — Tier 2", group: "Citizens Pensions" },
+  { slug: "trustfund",       label: "Trustfund Pensions",      group: "Standard" },
+  { slug: "nupemco",         label: "NUPEMCO",                  group: "Standard" },
+  { slug: "tangerine-apt",   label: "Tangerine APT",            group: "Standard" },
+  { slug: "norrenberger",    label: "Norrenberger",             group: "Standard" },
+  { slug: "nlpc",            label: "NLPC Pensions",            group: "Standard" },
+  { slug: "premium",         label: "Premium Pensions",         group: "Standard" },
+  { slug: "accessarm",       label: "AccessARM Pensions",       group: "Standard" },
+  { slug: "leadway-pensure", label: "Leadway Pensure",          group: "Standard" },
+  { slug: "oak",             label: "Oak Pensions",             group: "Standard" },
+];
+
+/* ── PFA THRESHOLD RULES ─────────────────────────────────────────────── */
+export const PFA_RULES: Record<PfaSlug, PfaRule> = {
+  "stanbic-ibtc":    { slug: "stanbic-ibtc",    name: "Stanbic IBTC Nominees",             minBalance: 5_000_000 },
+  "gt-pension":      { slug: "gt-pension",       name: "GT Pension",                        minBalance: 1_000_000 },
+  "citizens-tier-1": { slug: "citizens-tier-1",  name: "Citizens Pensions (Tier 1)",        minBalance: 500_000 },
+  "citizens-tier-2": { slug: "citizens-tier-2",  name: "Citizens Pensions (Tier 2)",        minBalance: 200_000 },
+  "trustfund":       { slug: "trustfund",        name: "Trustfund Pensions",                minBalance: 500_000 },
+  "nupemco":         { slug: "nupemco",          name: "NUPEMCO",                           minBalance: 500_000 },
+  "tangerine-apt":   { slug: "tangerine-apt",    name: "Tangerine APT",                     minBalance: 500_000 },
+  "norrenberger":    { slug: "norrenberger",     name: "Norrenberger",                      minBalance: 500_000 },
+  "nlpc":            { slug: "nlpc",             name: "NLPC Pensions",                     minBalance: 500_000 },
+  "premium":         { slug: "premium",          name: "Premium Pensions",                  minBalance: 500_000 },
+  "accessarm":       { slug: "accessarm",        name: "AccessARM Pensions",                minBalance: 500_000 },
+  "leadway-pensure": { slug: "leadway-pensure",  name: "Leadway Pensure",                   minBalance: 500_000 },
+  "oak":             { slug: "oak",              name: "Oak Pensions",                      minBalance: 500_000 },
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CORE ELIGIBILITY ENGINE
+   Pure function — no side effects, fully testable.
+═══════════════════════════════════════════════════════════════════════════ */
+export interface EligibilityResult {
+  isEligible: boolean;
+  pfaName: string;
+  minBalance: number;
+  rsaBalance: number;
+  shortfall: number;
+}
+
+export function checkEligibility(
+  pfaSlug: PfaSlug,
+  rsaBalance: number
+): EligibilityResult {
+  const rule = PFA_RULES[pfaSlug];
+  const isEligible = rsaBalance >= rule.minBalance;
+  return {
+    isEligible,
+    pfaName:    rule.name,
+    minBalance: rule.minBalance,
+    rsaBalance,
+    shortfall:  isEligible ? 0 : rule.minBalance - rsaBalance,
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LEAD CAPTURE FORM STATE
+═══════════════════════════════════════════════════════════════════════════ */
+interface LeadFormData {
+  fullName:     string;
+  phone:        string;
+  email:        string;
+  employer:     string;
+  employerType: string;
+}
+
+const INITIAL_LEAD_FORM: LeadFormData = {
+  fullName:     "",
+  phone:        "",
+  email:        "",
+  employer:     "",
+  employerType: "",
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FUNNEL STATE MACHINE (useReducer)
+═══════════════════════════════════════════════════════════════════════════ */
+type FunnelStep = 1 | 2 | 3 | 4 | 5 | "success" | "ineligible";
+
+interface FunnelState {
+  step:        FunnelStep;
+  branch:      BranchSlug | null;
+  pfa:         PfaSlug | null;
+  rsaRaw:      string;         // raw string the user types
+  result:      EligibilityResult | null;
+  leadForm:    LeadFormData;
+  submitting:  boolean;
+  submitted:   boolean;
+  errors:      Partial<Record<keyof LeadFormData, string>>;
+}
+
+type FunnelAction =
+  | { type: "SET_BRANCH";    branch: BranchSlug }
+  | { type: "SET_PFA";       pfa: PfaSlug }
+  | { type: "SET_RSA_RAW";   value: string }
+  | { type: "VALIDATE";      result: EligibilityResult }
+  | { type: "SET_STEP";      step: FunnelStep }
+  | { type: "UPDATE_LEAD";   field: keyof LeadFormData; value: string }
+  | { type: "SET_ERRORS";    errors: Partial<Record<keyof LeadFormData, string>> }
+  | { type: "SUBMITTING" }
+  | { type: "SUBMITTED" }
+  | { type: "RESET" };
+
+const INITIAL_STATE: FunnelState = {
+  step: 1, branch: null, pfa: null, rsaRaw: "",
+  result: null, leadForm: INITIAL_LEAD_FORM, submitting: false,
+  submitted: false, errors: {},
+};
+
+function funnelReducer(state: FunnelState, action: FunnelAction): FunnelState {
+  switch (action.type) {
+    case "SET_BRANCH":
+      return { ...state, branch: action.branch };
+    case "SET_PFA":
+      return { ...state, pfa: action.pfa };
+    case "SET_RSA_RAW":
+      return { ...state, rsaRaw: action.value };
+    case "VALIDATE":
+      return {
+        ...state,
+        result: action.result,
+        step:   action.result.isEligible ? "success" : "ineligible",
+      };
+    case "SET_STEP":
+      return { ...state, step: action.step };
+    case "UPDATE_LEAD":
+      return {
+        ...state,
+        leadForm: { ...state.leadForm, [action.field]: action.value },
+        errors:   { ...state.errors, [action.field]: undefined },
+      };
+    case "SET_ERRORS":
+      return { ...state, errors: action.errors };
+    case "SUBMITTING":
+      return { ...state, submitting: true };
+    case "SUBMITTED":
+      return { ...state, submitting: false, submitted: true, step: 5 };
+    case "RESET":
+      return INITIAL_STATE;
+    default:
+      return state;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════════════════════════════ */
+/** Format number string as ₦ currency while user types */
+function formatNaira(raw: string): string {
+  const digits = raw.replace(/\D/g, "");
+  if (!digits) return "";
+  return "₦" + Number(digits).toLocaleString("en-NG");
+}
+
+/** Parse user-typed string back to a plain number */
+function parseNaira(raw: string): number {
+  return Number(raw.replace(/[^0-9]/g, ""));
+}
+
+/** Group PFA options by group label for <select> rendering */
+function groupedPfaOptions(): Record<string, PfaOption[]> {
+  return PFA_OPTIONS.reduce<Record<string, PfaOption[]>>((acc, opt) => {
+    const g = opt.group ?? "Other";
+    if (!acc[g]) acc[g] = [];
+    acc[g].push(opt);
+    return acc;
+  }, {});
+}
+
+/** Validate the lead form. Returns errors object (empty = valid) */
+function validateLeadForm(form: LeadFormData): Partial<Record<keyof LeadFormData, string>> {
+  const errors: Partial<Record<keyof LeadFormData, string>> = {};
+  if (!form.fullName.trim())
+    errors.fullName = "Please enter your full name.";
+  if (!/^\+?[0-9\s\-()]{7,15}$/.test(form.phone.trim()))
+    errors.phone = "Enter a valid Nigerian phone number.";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
+    errors.email = "Enter a valid email address.";
+  return errors;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOTION VARIANTS
+═══════════════════════════════════════════════════════════════════════════ */
+const backdropVariants: Variants = {
+  hidden:  { opacity: 0 },
+  visible: { opacity: 1 },
+  exit:    { opacity: 0 },
+};
+
+const dialogVariants: Variants = {
+  hidden:  { opacity: 0, scale: 0.93, y: 24 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 320, damping: 30, mass: 0.8 },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.93,
+    y: 24,
+    transition: { duration: 0.18, ease: [0.4, 0, 1, 1] },
+  },
+};
+
+const stepVariants: Variants = {
+  hidden:  { opacity: 0, x: 32 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { type: "spring", stiffness: 240, damping: 26 },
+  },
+  exit: {
+    opacity: 0,
+    x: -32,
+    transition: { duration: 0.14, ease: [0.4, 0, 1, 1] },
+  },
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STEP CONFIGURATION
+═══════════════════════════════════════════════════════════════════════════ */
+const NUMERIC_STEPS = [1, 2, 3] as const;
+
+function stepLabel(step: FunnelStep): string {
+  const map: Partial<Record<string, string>> = {
+    "1": "Select Branch",
+    "2": "Select PFA",
+    "3": "Enter RSA Balance",
+    "success":    "Eligible!",
+    "ineligible": "Not Yet Eligible",
+    "5":          "Your Details",
+  };
+  return map[String(step)] ?? "";
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+═══════════════════════════════════════════════════════════════════════════ */
+interface EligibilityFunnelProps {
+  isOpen:  boolean;
+  onClose: () => void;
+}
+
+export default function EligibilityFunnel({ isOpen, onClose }: EligibilityFunnelProps) {
+  const [state, dispatch] = useReducer(funnelReducer, INITIAL_STATE);
+  const [isPending, startTransition] = useTransition();
+  const dialogId = useId();
+  const headingId = `${dialogId}-heading`;
+
+  /* ── NAVIGATION ─────────────────────────────────────────────── */
+  const goToStep = useCallback((step: FunnelStep) => {
+    dispatch({ type: "SET_STEP", step });
+  }, []);
+
+  const handleStep1Next = () => {
+    if (!state.branch) return;
+    goToStep(2);
+  };
+
+  const handleStep2Next = () => {
+    if (!state.pfa) return;
+    goToStep(3);
+  };
+
+  const handleStep3Validate = () => {
+    if (!state.pfa) return;
+    const balance = parseNaira(state.rsaRaw);
+    if (!balance || balance < 1) return;
+    const result = checkEligibility(state.pfa, balance);
+    dispatch({ type: "VALIDATE", result });
+  };
+
+  const handleLeadSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const errors = validateLeadForm(state.leadForm);
+    if (Object.keys(errors).length > 0) {
+      dispatch({ type: "SET_ERRORS", errors });
+      return;
+    }
+    dispatch({ type: "SUBMITTING" });
+
+    startTransition(async () => {
+      try {
+        const formData = new FormData();
+        formData.append("branch_id", state.branch || "");
+        formData.append("pfa_id", state.pfa || "");
+        formData.append("rsa_balance", String(state.result?.rsaBalance || 0));
+        formData.append("full_name", state.leadForm.fullName);
+        formData.append("phone", state.leadForm.phone);
+        formData.append("email", state.leadForm.email);
+        formData.append("employer_type", state.leadForm.employer);
+
+        const response = await processMortgageLead(formData);
+
+        if (response.success) {
+          dispatch({ type: "SUBMITTED" });
+        } else {
+          dispatch({ 
+            type: "SET_ERRORS", 
+            errors: { fullName: response.message || "Failed to process lead." } 
+          });
+        }
+      } catch (error) {
+        dispatch({ 
+          type: "SET_ERRORS", 
+          errors: { fullName: "An unexpected error occurred." } 
+        });
+      }
+    });
+  };
+
+  const handleClose = () => {
+    onClose();
+    /* reset after exit animation */
+    setTimeout(() => dispatch({ type: "RESET" }), 350);
+  };
+
+  /* ── RENDER ─────────────────────────────────────────────────── */
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        /* BACKDROP */
+        <motion.div
+          key="backdrop"
+          variants={backdropVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={{ duration: 0.22 }}
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-[rgba(13,31,60,0.85)] backdrop-blur-sm"
+          onClick={handleClose}
+          aria-hidden="true"
+        >
+          {/* DIALOG */}
+          <motion.div
+            key="dialog"
+            variants={dialogVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            id={dialogId}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={headingId}
+            className="relative w-full max-w-lg bg-white rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-dialog)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* ── DIALOG HEADER ── */}
+            <DialogHeader
+              step={state.step}
+              headingId={headingId}
+              onClose={handleClose}
+            />
+
+            {/* ── PROGRESS BAR ── */}
+            {(state.step === 1 || state.step === 2 || state.step === 3) && (
+              <ProgressBar currentStep={state.step as 1 | 2 | 3} />
+            )}
+
+            {/* ── STEP CONTENT ── */}
+            <div className="p-6 sm:p-8" style={{ minHeight: "320px" }}>
+              <AnimatePresence mode="wait">
+                {/* STEP 1 — BRANCH */}
+                {state.step === 1 && (
+                  <motion.div key="step1" variants={stepVariants} initial="hidden" animate="visible" exit="exit">
+                    <Step1Branch
+                      selected={state.branch}
+                      onSelect={(b) => dispatch({ type: "SET_BRANCH", branch: b })}
+                      onNext={handleStep1Next}
+                    />
+                  </motion.div>
+                )}
+
+                {/* STEP 2 — PFA */}
+                {state.step === 2 && (
+                  <motion.div key="step2" variants={stepVariants} initial="hidden" animate="visible" exit="exit">
+                    <Step2Pfa
+                      selected={state.pfa}
+                      onSelect={(p) => dispatch({ type: "SET_PFA", pfa: p })}
+                      onNext={handleStep2Next}
+                      onBack={() => goToStep(1)}
+                    />
+                  </motion.div>
+                )}
+
+                {/* STEP 3 — RSA BALANCE */}
+                {state.step === 3 && (
+                  <motion.div key="step3" variants={stepVariants} initial="hidden" animate="visible" exit="exit">
+                    <Step3Balance
+                      pfa={state.pfa!}
+                      rawValue={state.rsaRaw}
+                      onChange={(v) => dispatch({ type: "SET_RSA_RAW", value: v })}
+                      onValidate={handleStep3Validate}
+                      onBack={() => goToStep(2)}
+                    />
+                  </motion.div>
+                )}
+
+                {/* STEP 4A — ELIGIBLE */}
+                {state.step === "success" && state.result && (
+                  <motion.div key="success" variants={stepVariants} initial="hidden" animate="visible" exit="exit">
+                    <StepSuccess
+                      result={state.result}
+                      onContinue={() => goToStep(5)}
+                    />
+                  </motion.div>
+                )}
+
+                {/* STEP 4B — INELIGIBLE */}
+                {state.step === "ineligible" && state.result && (
+                  <motion.div key="ineligible" variants={stepVariants} initial="hidden" animate="visible" exit="exit">
+                    <StepIneligible
+                      result={state.result}
+                      onRestart={() => dispatch({ type: "RESET" })}
+                      onClose={handleClose}
+                    />
+                  </motion.div>
+                )}
+
+                {/* STEP 5 — LEAD FORM */}
+                {state.step === 5 && (
+                  <motion.div key="step5" variants={stepVariants} initial="hidden" animate="visible" exit="exit">
+                    {state.submitted ? (
+                      <StepThankYou onClose={handleClose} />
+                    ) : (
+                      <Step5LeadForm
+                        form={state.leadForm}
+                        errors={state.errors}
+                        submitting={isPending}
+                        onChange={(field, value) =>
+                          dispatch({ type: "UPDATE_LEAD", field, value })
+                        }
+                        onSubmit={handleLeadSubmit}
+                        onBack={() =>
+                          goToStep(state.result?.isEligible ? "success" : "ineligible")
+                        }
+                      />
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SUB-COMPONENTS
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── DIALOG HEADER ───────────────────────────────────────────────────────── */
+function DialogHeader({
+  step, headingId, onClose,
+}: {
+  step: FunnelStep;
+  headingId: string;
+  onClose: () => void;
+}) {
+  return (
+    <div className="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-[var(--color-border)] bg-[var(--color-navy-700)]">
+      <div>
+        <p
+          className="text-[0.6875rem] font-semibold tracking-[0.12em] uppercase text-[var(--color-pencom-gold)] mb-0.5"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          PenCom Eligibility Checker
+        </p>
+        <h2
+          id={headingId}
+          className="text-base font-bold text-white"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          {stepLabel(step)}
+        </h2>
+      </div>
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close eligibility checker"
+        className="flex items-center justify-center w-8 h-8 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-amber-500)]"
+      >
+        <XIcon className="w-4 h-4" aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
+/* ── PROGRESS BAR ────────────────────────────────────────────────────────── */
+function ProgressBar({ currentStep }: { currentStep: 1 | 2 | 3 }) {
+  const pct = ((currentStep - 1) / 2) * 100;
+  return (
+    <div className="h-1 bg-[var(--color-navy-50)] relative" role="progressbar"
+      aria-valuenow={currentStep} aria-valuemin={1} aria-valuemax={3}
+      aria-label={`Step ${currentStep} of 3`}>
+      <motion.div
+        className="absolute inset-y-0 left-0 bg-[var(--color-amber-500)]"
+        initial={{ width: "0%" }}
+        animate={{ width: `${pct}%` }}
+        transition={{ type: "spring", stiffness: 200, damping: 24 }}
+      />
+    </div>
+  );
+}
+
+/* ── STEP 1: BRANCH ──────────────────────────────────────────────────────── */
+function Step1Branch({
+  selected, onSelect, onNext,
+}: {
+  selected: BranchSlug | null;
+  onSelect: (b: BranchSlug) => void;
+  onNext: () => void;
+}) {
+  return (
+    <div>
+      <StepInstruction
+        step={1}
+        title="Select your nearest branch"
+        hint="Your dedicated advisor will be based at this location."
+      />
+      <div className="grid grid-cols-2 gap-3 mb-8" role="radiogroup" aria-label="Branch selection">
+        {BRANCHES.map((b) => (
+          <BranchCard
+            key={b.slug}
+            branch={b}
+            isSelected={selected === b.slug}
+            onSelect={onSelect}
+          />
+        ))}
+      </div>
+      <div className="flex justify-end">
+        <PrimaryButton onClick={onNext} disabled={!selected}>
+          Continue <ArrowRightSm />
+        </PrimaryButton>
+      </div>
+    </div>
+  );
+}
+
+function BranchCard({
+  branch, isSelected, onSelect,
+}: {
+  branch: Branch;
+  isSelected: boolean;
+  onSelect: (s: BranchSlug) => void;
+}) {
+  return (
+    <motion.button
+      type="button"
+      onClick={() => onSelect(branch.slug)}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 380, damping: 22 }}
+      role="radio"
+      aria-checked={isSelected}
+      className={[
+        "relative flex flex-col items-center gap-2 px-4 py-5 rounded-[var(--radius-lg)]",
+        "border-2 text-sm font-semibold transition-all duration-[200ms]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-amber-500)]",
+        isSelected
+          ? "border-[var(--color-amber-500)] bg-[var(--color-amber-50)] text-[var(--color-navy-700)]"
+          : "border-[var(--color-border)] bg-white text-[var(--color-text-body)] hover:border-[var(--color-amber-500)]/40",
+      ].join(" ")}
+      style={{ fontFamily: "var(--font-display)" }}
+    >
+      <span className="text-2xl" aria-hidden="true">{branch.emoji}</span>
+      <span>{branch.name}</span>
+      {isSelected && (
+        <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[var(--color-amber-500)] flex items-center justify-center">
+          <CheckIcon className="w-2.5 h-2.5 text-white" />
+        </span>
+      )}
+    </motion.button>
+  );
+}
+
+/* ── STEP 2: PFA ─────────────────────────────────────────────────────────── */
+function Step2Pfa({
+  selected, onSelect, onNext, onBack,
+}: {
+  selected: PfaSlug | null;
+  onSelect: (p: PfaSlug) => void;
+  onNext: () => void;
+  onBack: () => void;
+}) {
+  const grouped = groupedPfaOptions();
+  const selectedOption = PFA_OPTIONS.find((o) => o.slug === selected);
+
+  return (
+    <div>
+      <StepInstruction
+        step={2}
+        title="Select your Pension Fund Administrator"
+        hint="Find your PFA on your pension statement or the PenCom portal."
+      />
+
+      <div className="mb-2">
+        <label
+          htmlFor="pfa-select"
+          className="block text-xs font-semibold text-[var(--color-text-body)] mb-1.5"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          Your PFA
+        </label>
+        <select
+          id="pfa-select"
+          value={selected ?? ""}
+          onChange={(e) => onSelect(e.target.value as PfaSlug)}
+          aria-label="Select your Pension Fund Administrator"
+          className={[
+            "w-full px-4 py-3 rounded-[var(--radius-md)] border-2 bg-white appearance-none",
+            "text-sm text-[var(--color-text-heading)] font-medium",
+            "transition-colors duration-[180ms]",
+            "focus:outline-none focus:border-[var(--color-amber-500)] focus:ring-2 focus:ring-[var(--color-amber-500)]/20",
+            selected ? "border-[var(--color-amber-500)]" : "border-[var(--color-border)]",
+          ].join(" ")}
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          <option value="" disabled>Choose your PFA…</option>
+          {Object.entries(grouped).map(([groupName, opts]) => (
+            <optgroup key={groupName} label={groupName}>
+              {opts.map((opt) => (
+                <option key={opt.slug} value={opt.slug}>{opt.label}</option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      </div>
+
+      {/* Citizens tier info */}
+      {selected?.startsWith("citizens") && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-3 p-3 rounded-[var(--radius-md)] bg-[var(--color-info)]/8 border border-[var(--color-info)]/20"
+        >
+          <p className="text-xs text-[var(--color-info)] font-medium" style={{ fontFamily: "var(--font-body)" }}>
+            {selected === "citizens-tier-1"
+              ? "Tier 1 minimum: ₦500,000 RSA balance."
+              : "Tier 2 minimum: ₦200,000 RSA balance."}
+          </p>
+        </motion.div>
+      )}
+
+      {/* Threshold preview */}
+      {selected && (
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-3 p-3 rounded-[var(--radius-md)] bg-[var(--color-navy-50)] border border-[var(--color-navy-100)]"
+        >
+          <p className="text-xs text-[var(--color-text-body)]" style={{ fontFamily: "var(--font-body)" }}>
+            <span className="font-semibold text-[var(--color-text-heading)]">{selectedOption?.label}</span>
+            {" "}requires a minimum RSA balance of{" "}
+            <span className="font-bold font-tabular text-[var(--color-navy-700)]">
+              ₦{PFA_RULES[selected].minBalance.toLocaleString("en-NG")}
+            </span>
+            .
+          </p>
+        </motion.div>
+      )}
+
+      <div className="flex items-center justify-between mt-8">
+        <BackButton onClick={onBack} />
+        <PrimaryButton onClick={onNext} disabled={!selected}>
+          Continue <ArrowRightSm />
+        </PrimaryButton>
+      </div>
+    </div>
+  );
+}
+
+/* ── STEP 3: RSA BALANCE ─────────────────────────────────────────────────── */
+function Step3Balance({
+  pfa, rawValue, onChange, onValidate, onBack,
+}: {
+  pfa: PfaSlug;
+  rawValue: string;
+  onChange: (v: string) => void;
+  onValidate: () => void;
+  onBack: () => void;
+}) {
+  const rule = PFA_RULES[pfa];
+  const parsedBalance = parseNaira(rawValue);
+  const isValid = parsedBalance >= 1;
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digits = e.target.value.replace(/\D/g, "");
+    onChange(digits);
+  };
+
+  const displayValue = rawValue ? formatNaira(rawValue) : "";
+
+  return (
+    <div>
+      <StepInstruction
+        step={3}
+        title="Enter your RSA balance"
+        hint={`Your ${rule.name} account requires a minimum of ₦${rule.minBalance.toLocaleString("en-NG")}.`}
+      />
+
+      <div className="mb-2">
+        <label
+          htmlFor="rsa-balance"
+          className="block text-xs font-semibold text-[var(--color-text-body)] mb-1.5"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          RSA Balance
+        </label>
+        <input
+          id="rsa-balance"
+          type="text"
+          inputMode="numeric"
+          value={displayValue}
+          onChange={handleInput}
+          placeholder="₦0"
+          aria-label="Enter your RSA balance in naira"
+          aria-describedby="rsa-hint"
+          className={[
+            "w-full px-4 py-4 rounded-[var(--radius-md)] border-2 bg-white",
+            "font-tabular text-lg text-[var(--color-text-heading)] font-bold",
+            "transition-colors duration-[180ms]",
+            "placeholder:text-[var(--color-text-muted)] placeholder:font-normal",
+            "focus:outline-none focus:ring-2 focus:ring-[var(--color-amber-500)]/20",
+            isValid
+              ? "border-[var(--color-amber-500)]"
+              : "border-[var(--color-border)] focus:border-[var(--color-amber-500)]",
+          ].join(" ")}
+          style={{ fontFamily: "var(--font-display)" }}
+        />
+        <p
+          id="rsa-hint"
+          className="mt-2 text-xs text-[var(--color-text-muted)]"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          Find this on your PFA mobile app, web portal, or your last pension statement.
+        </p>
+      </div>
+
+      <div className="flex items-center justify-between mt-8">
+        <BackButton onClick={onBack} />
+        <PrimaryButton onClick={onValidate} disabled={!isValid}>
+          Check Eligibility <ArrowRightSm />
+        </PrimaryButton>
+      </div>
+    </div>
+  );
+}
+
+/* ── STEP SUCCESS ────────────────────────────────────────────────────────── */
+function StepSuccess({
+  result, onContinue,
+}: {
+  result: EligibilityResult;
+  onContinue: () => void;
+}) {
+  return (
+    <div className="text-center">
+      {/* Checkmark */}
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ type: "spring", stiffness: 320, damping: 20, delay: 0.1 }}
+        className="mx-auto mb-5 w-20 h-20 rounded-full bg-[var(--color-success)]/10 flex items-center justify-center"
+        aria-hidden="true"
+      >
+        <svg className="w-10 h-10 text-[var(--color-success)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+        </svg>
+      </motion.div>
+
+      <h3 className="text-2xl font-black text-[var(--color-success)] mb-2" style={{ fontFamily: "var(--font-display)" }}>
+        You Qualify!
+      </h3>
+      <p className="text-sm text-[var(--color-text-body)] mb-6" style={{ fontFamily: "var(--font-body)" }}>
+        Your RSA balance of{" "}
+        <strong className="font-tabular text-[var(--color-text-heading)]">
+          ₦{result.rsaBalance.toLocaleString("en-NG")}
+        </strong>{" "}
+        meets the{" "}
+        <strong>{result.pfaName}</strong> threshold of{" "}
+        <strong className="font-tabular">₦{result.minBalance.toLocaleString("en-NG")}</strong>.
+      </p>
+
+      {/* Stats row */}
+      <div className="grid grid-cols-2 gap-3 mb-7 text-left">
+        <div className="rounded-[var(--radius-md)] bg-[var(--color-success)]/8 border border-[var(--color-success)]/20 p-4">
+          <p className="font-tabular text-xl font-black text-[var(--color-success)]" style={{ fontFamily: "var(--font-display)" }}>
+            ₦{(result.rsaBalance * 0.25).toLocaleString("en-NG")}
+          </p>
+          <p className="text-xs text-[var(--color-text-body)] mt-0.5" style={{ fontFamily: "var(--font-body)" }}>
+            Potential 25% equity contribution
+          </p>
+        </div>
+        <div className="rounded-[var(--radius-md)] bg-[var(--color-navy-50)] border border-[var(--color-navy-100)] p-4">
+          <p className="font-tabular text-xl font-black text-[var(--color-navy-700)]" style={{ fontFamily: "var(--font-display)" }}>
+            ₦{result.rsaBalance.toLocaleString("en-NG")}
+          </p>
+          <p className="text-xs text-[var(--color-text-body)] mt-0.5" style={{ fontFamily: "var(--font-body)" }}>
+            Your RSA balance
+          </p>
+        </div>
+      </div>
+
+      <PrimaryButton onClick={onContinue} fullWidth>
+        Claim Your Spot — Enter Your Details <ArrowRightSm />
+      </PrimaryButton>
+    </div>
+  );
+}
+
+/* ── STEP INELIGIBLE ─────────────────────────────────────────────────────── */
+function StepIneligible({
+  result, onRestart, onClose,
+}: {
+  result: EligibilityResult;
+  onRestart: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <div className="text-center">
+      {/* X icon */}
+      <div
+        className="mx-auto mb-5 w-20 h-20 rounded-full bg-[var(--color-error)]/8 flex items-center justify-center"
+        aria-hidden="true"
+      >
+        <XIcon className="w-10 h-10 text-[var(--color-error)]" />
+      </div>
+
+      <h3 className="text-xl font-black text-[var(--color-text-heading)] mb-2" style={{ fontFamily: "var(--font-display)" }}>
+        Not Yet Eligible
+      </h3>
+      <p className="text-sm text-[var(--color-text-body)] mb-1" style={{ fontFamily: "var(--font-body)" }}>
+        Your RSA balance of{" "}
+        <strong className="font-tabular">₦{result.rsaBalance.toLocaleString("en-NG")}</strong>{" "}
+        is below the{" "}
+        <strong>{result.pfaName}</strong> minimum of{" "}
+        <strong className="font-tabular">₦{result.minBalance.toLocaleString("en-NG")}</strong>.
+      </p>
+      <p className="text-sm text-[var(--color-error)] font-semibold mb-7" style={{ fontFamily: "var(--font-body)" }}>
+        Shortfall: ₦{result.shortfall.toLocaleString("en-NG")}
+      </p>
+
+      <div className="flex flex-col gap-3">
+        <a
+          href={`https://wa.me/2348030000000?text=${encodeURIComponent("Hello, I'd like to be notified when I'm eligible for the PenCom mortgage scheme.")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={[
+            "flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-[var(--radius-pill)]",
+            "bg-[#25D366] text-white font-bold text-sm",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]",
+          ].join(" ")}
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          📲 Notify Me When I Qualify
+        </a>
+        <button
+          type="button"
+          onClick={onRestart}
+          className={[
+            "w-full px-5 py-3.5 rounded-[var(--radius-pill)] border-2 border-[var(--color-navy-700)]",
+            "text-[var(--color-navy-700)] text-sm font-semibold",
+            "hover:bg-[var(--color-navy-700)] hover:text-white transition-all duration-[280ms]",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-navy-700)]",
+          ].join(" ")}
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          Try a Different PFA
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ── STEP 5: LEAD FORM ───────────────────────────────────────────────────── */
+function Step5LeadForm({
+  form, errors, submitting, onChange, onSubmit, onBack,
+}: {
+  form: LeadFormData;
+  errors: Partial<Record<keyof LeadFormData, string>>;
+  submitting: boolean;
+  onChange: (field: keyof LeadFormData, value: string) => void;
+  onSubmit: (e: React.FormEvent) => void;
+  onBack: () => void;
+}) {
+  return (
+    <form onSubmit={onSubmit} noValidate>
+      <StepInstruction
+        step={5}
+        title="Your details"
+        hint="A dedicated advisor will contact you within 24 hours."
+      />
+
+      <div className="flex flex-col gap-4 mb-6">
+        <FormField
+          id="lead-name"
+          label="Full Name *"
+          type="text"
+          value={form.fullName}
+          error={errors.fullName}
+          onChange={(v) => onChange("fullName", v)}
+          autoComplete="name"
+          placeholder="e.g. Chukwuemeka Obi"
+        />
+        <FormField
+          id="lead-phone"
+          label="Phone Number *"
+          type="tel"
+          value={form.phone}
+          error={errors.phone}
+          onChange={(v) => onChange("phone", v)}
+          autoComplete="tel"
+          placeholder="e.g. +234 803 000 0000"
+        />
+        <FormField
+          id="lead-email"
+          label="Email Address *"
+          type="email"
+          value={form.email}
+          error={errors.email}
+          onChange={(v) => onChange("email", v)}
+          autoComplete="email"
+          placeholder="you@example.com"
+        />
+        <FormField
+          id="lead-employer"
+          label="Employer / Organisation"
+          type="text"
+          value={form.employer}
+          onChange={(v) => onChange("employer", v)}
+          autoComplete="organization"
+          placeholder="e.g. Federal Ministry of Finance"
+        />
+      </div>
+
+      <div className="flex items-center justify-between">
+        <BackButton onClick={onBack} />
+        <button
+          type="submit"
+          disabled={submitting}
+          className={[
+            "inline-flex items-center gap-2 px-6 py-3 rounded-[var(--radius-pill)]",
+            "bg-[var(--color-amber-500)] text-white text-sm font-bold",
+            "shadow-[var(--shadow-action-glow)]",
+            "disabled:opacity-60 disabled:cursor-not-allowed",
+            "transition-all duration-[280ms] hover:bg-[var(--color-amber-600)]",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-amber-500)]",
+          ].join(" ")}
+          style={{ fontFamily: "var(--font-display)" }}
+          aria-live="polite"
+        >
+          {submitting ? (
+            <>
+              <SpinnerIcon className="w-4 h-4 animate-spin" aria-hidden="true" />
+              Submitting…
+            </>
+          ) : (
+            <>Submit My Details <ArrowRightSm /></>
+          )}
+        </button>
+      </div>
+    </form>
+  );
+}
+
+/* ── STEP THANK YOU ──────────────────────────────────────────────────────── */
+function StepThankYou({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="text-center py-4">
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ type: "spring", stiffness: 320, damping: 20 }}
+        className="text-5xl mb-5" aria-hidden="true"
+      >
+        🎉
+      </motion.div>
+      <h3 className="text-2xl font-black text-[var(--color-text-heading)] mb-3" style={{ fontFamily: "var(--font-display)" }}>
+        We've Got You!
+      </h3>
+      <p className="text-sm text-[var(--color-text-body)] mb-6" style={{ fontFamily: "var(--font-body)" }}>
+        Your dedicated advisor will reach out within <strong>24 hours</strong>.
+        Keep an eye on your phone and email.
+      </p>
+      <button
+        type="button"
+        onClick={onClose}
+        className="px-8 py-3 rounded-[var(--radius-pill)] bg-[var(--color-navy-700)] text-white text-sm font-bold hover:bg-[var(--color-navy-600)] transition-colors duration-[280ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-navy-700)]"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        Close
+      </button>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHARED UI PRIMITIVES
+═══════════════════════════════════════════════════════════════════════════ */
+
+function StepInstruction({
+  step, title, hint,
+}: {
+  step: number | string;
+  title: string;
+  hint: string;
+}) {
+  return (
+    <div className="mb-5">
+      <p className="text-[0.6875rem] font-semibold tracking-[0.1em] uppercase text-[var(--color-amber-500)] mb-1" style={{ fontFamily: "var(--font-display)" }}>
+        {typeof step === "number" ? `Step ${step}` : ""}
+      </p>
+      <h3 className="text-base font-bold text-[var(--color-text-heading)] mb-1" style={{ fontFamily: "var(--font-display)" }}>
+        {title}
+      </h3>
+      <p className="text-xs text-[var(--color-text-body)]" style={{ fontFamily: "var(--font-body)" }}>
+        {hint}
+      </p>
+    </div>
+  );
+}
+
+function FormField({
+  id, label, type, value, error, onChange, autoComplete, placeholder,
+}: {
+  id: string;
+  label: string;
+  type: string;
+  value: string;
+  error?: string;
+  onChange: (v: string) => void;
+  autoComplete?: string;
+  placeholder?: string;
+}) {
+  return (
+    <div>
+      <label htmlFor={id} className="block text-xs font-semibold text-[var(--color-text-body)] mb-1.5" style={{ fontFamily: "var(--font-body)" }}>
+        {label}
+      </label>
+      <input
+        id={id}
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        autoComplete={autoComplete}
+        placeholder={placeholder}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className={[
+          "w-full px-4 py-3 rounded-[var(--radius-md)] border-2 bg-white text-sm",
+          "text-[var(--color-text-heading)] transition-colors duration-[180ms]",
+          "placeholder:text-[var(--color-text-muted)]",
+          "focus:outline-none focus:ring-2 focus:ring-[var(--color-amber-500)]/20",
+          error
+            ? "border-[var(--color-error)] focus:border-[var(--color-error)]"
+            : "border-[var(--color-border)] focus:border-[var(--color-amber-500)]",
+        ].join(" ")}
+        style={{ fontFamily: "var(--font-body)" }}
+      />
+      {error && (
+        <p id={`${id}-error`} role="alert" className="mt-1 text-xs text-[var(--color-error)]" style={{ fontFamily: "var(--font-body)" }}>
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function PrimaryButton({
+  onClick, disabled, children, fullWidth,
+}: {
+  onClick?: () => void;
+  disabled?: boolean;
+  children: React.ReactNode;
+  fullWidth?: boolean;
+}) {
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      whileHover={disabled ? {} : { scale: 1.03 }}
+      whileTap={disabled ? {} : { scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 380, damping: 22 }}
+      className={[
+        "inline-flex items-center justify-center gap-2",
+        "px-6 py-3 rounded-[var(--radius-pill)]",
+        "bg-[var(--color-amber-500)] text-white text-sm font-bold",
+        "shadow-[var(--shadow-action-glow)]",
+        "disabled:opacity-50 disabled:cursor-not-allowed",
+        "transition-all duration-[280ms] hover:bg-[var(--color-amber-600)]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-amber-500)]",
+        fullWidth ? "w-full" : "",
+      ].join(" ")}
+      style={{ fontFamily: "var(--font-display)" }}
+    >
+      {children}
+    </motion.button>
+  );
+}
+
+function BackButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-text-body)] hover:text-[var(--color-text-heading)] transition-colors duration-[180ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-navy-700)] rounded"
+      style={{ fontFamily: "var(--font-body)" }}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4" aria-hidden="true">
+        <path fillRule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clipRule="evenodd" />
+      </svg>
+      Back
+    </button>
+  );
+}
+
+/* ── ICONS ──────────────────────────────────────────────────────────────── */
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+    </svg>
+  );
+}
+
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className} aria-hidden="true">
+      <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+    </svg>
+  );
+}
+
+function ArrowRightSm() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4" aria-hidden="true">
+      <path fillRule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clipRule="evenodd" />
+    </svg>
+  );
+}
+
+function SpinnerIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4Z" />
+    </svg>
+  );
+}

@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Branch {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  email     String
+  whatsapp  String
+  leads     Lead[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PfaRule {
+  id                String   @id @default(cuid())
+  name              String   @unique
+  minimum_threshold Float
+  leads             Lead[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Lead {
+  id            String   @id @default(cuid())
+  full_name     String
+  phone         String
+  employer_type String
+  rsa_balance   Float
+  is_eligible   Boolean
+  status        String   @default("new")
+  
+  branch_id     String
+  branch        Branch   @relation(fields: [branch_id], references: [id])
+  
+  pfa_id        String
+  pfa           PfaRule  @relation(fields: [pfa_id], references: [id])
+  
+  createdAt     DateTime @default(now())
+}

@@ -1,0 +1,14 @@
+{
+  "site": {
+    "slogan": "We Value your trust",
+    "heroTitle": "Your RSA Balance Can Open Your Front Door",
+    "heroSubtitle": "Unlock 25% of your Retirement Savings Account (RSA) to finance your residential mortgage down payment. We simplify the verification, banking matches, and PFA approvals.",
+    "companyPhone": "+234 901 234 5678",
+    "companyEmail": "hq@trustbrickspropertieslimited.com.ng",
+    "rcNumber": "9552712"
+  },
+  "officers": [
+    { "id": "1", "name": "Adewale Fashola", "email": "adewale@trustbrickproperties.ng", "role": "Senior Conversion Officer", "branch": "Lagos Hub" },
+    { "id": "2", "name": "Amina Usman", "email": "amina@trustbrickproperties.ng", "role": "Lead Conversion Officer", "branch": "Abuja (HQ)" }
+  ]
+}
