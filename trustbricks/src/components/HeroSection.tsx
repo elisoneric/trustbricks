@@ -302,65 +302,160 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
 
 /* ── BACKGROUND 3D SHAPES ───────────────────────────────────────────────── */
 
+const GlassHouse3D = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-[0_20px_50px_rgba(232,96,10,0.15)]">
+    <defs>
+      <linearGradient id="wallGradLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="rgba(255, 255, 255, 0.28)" />
+        <stop offset="100%" stopColor="rgba(255, 255, 255, 0.04)" />
+      </linearGradient>
+      <linearGradient id="wallGradRight" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="rgba(232, 96, 10, 0.22)" />
+        <stop offset="100%" stopColor="rgba(232, 96, 10, 0.04)" />
+      </linearGradient>
+      <linearGradient id="roofGradLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#FF8C42" stopOpacity="0.8" />
+        <stop offset="100%" stopColor="#E8600A" stopOpacity="0.8" />
+      </linearGradient>
+      <linearGradient id="roofGradRight" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#E8600A" stopOpacity="0.8" />
+        <stop offset="100%" stopColor="#9E3C00" stopOpacity="0.8" />
+      </linearGradient>
+    </defs>
+    <polygon points="100,165 35,130 100,95 165,130" fill="rgba(5, 11, 20, 0.03)" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+    <polygon points="35,130 100,165 100,105 35,70" fill="url(#wallGradLeft)" stroke="rgba(255,255,255,0.25)" strokeWidth="1.2" />
+    <polygon points="100,165 165,130 165,70 100,105" fill="url(#wallGradRight)" stroke="rgba(232, 96, 10, 0.25)" strokeWidth="1.2" />
+    <polygon points="30,70 100,105 100,45 30,10" fill="url(#roofGradLeft)" />
+    <polygon points="100,105 170,70 170,10 100,45" fill="url(#roofGradRight)" />
+    <polygon points="115,147 135,137 135,107 115,117" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+  </svg>
+);
+
+const PFALogo3D = () => (
+  <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-[0_25px_60px_rgba(13,31,60,0.12)]">
+    <defs>
+      <linearGradient id="shieldLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#0B1C33" />
+        <stop offset="100%" stopColor="#050B14" />
+      </linearGradient>
+      <linearGradient id="shieldRight" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#1E3E6B" />
+        <stop offset="100%" stopColor="#0F2440" />
+      </linearGradient>
+      <linearGradient id="goldHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#FFC107" />
+        <stop offset="100%" stopColor="#E8600A" />
+      </linearGradient>
+    </defs>
+    <polygon points="100,175 40,140 40,55 100,25 160,55 160,140" fill="rgba(5, 11, 20, 0.08)" />
+    <path d="M100,170 L45,138 L45,60 L100,30 Z" fill="url(#shieldLeft)" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+    <path d="M100,170 L155,138 L155,60 L100,30 Z" fill="url(#shieldRight)" stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
+    <path d="M100,65 L125,85 L100,135 L75,85 Z" fill="url(#goldHighlight)" opacity="0.85" />
+    <text x="100" y="112" fontSize="22" fontWeight="900" fill="#FFFFFF" textAnchor="middle" letterSpacing="2.5" fontFamily="sans-serif" transform="skewY(-8)">
+      PFA
+    </text>
+  </svg>
+);
+
+const NairaCoin3D = () => (
+  <svg viewBox="0 0 160 160" className="w-full h-full drop-shadow-[0_15px_40px_rgba(232,96,10,0.08)]">
+    <defs>
+      <linearGradient id="coinFace" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#FFE082" />
+        <stop offset="50%" stopColor="#FFB300" />
+        <stop offset="100%" stopColor="#FFA000" />
+      </linearGradient>
+      <linearGradient id="coinRim" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#FFA000" />
+        <stop offset="100%" stopColor="#FF6F00" />
+      </linearGradient>
+    </defs>
+    <ellipse cx="80" cy="85" rx="70" ry="70" fill="url(#coinRim)" />
+    <ellipse cx="80" cy="78" rx="68" ry="68" fill="url(#coinFace)" stroke="#FFF" strokeWidth="0.4" />
+    <ellipse cx="80" cy="78" rx="55" ry="55" fill="none" stroke="#FF6F00" strokeWidth="1.2" strokeDasharray="5 3" />
+    <text x="80" y="98" fontSize="56" fontWeight="900" fill="#B7791F" textAnchor="middle" fontFamily="sans-serif">
+      ₦
+    </text>
+  </svg>
+);
+
 function Background3DShapes() {
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true" style={{ perspective: '1000px' }}>
-      {/* 3D Cube 1 */}
-      <motion.div
-        className="absolute top-[15%] left-[10%] w-24 h-24 border border-[var(--color-amber-500)]/20 bg-gradient-to-br from-[var(--color-amber-500)]/5 to-transparent rounded-xl backdrop-blur-sm"
-        initial={{ rotateX: 0, rotateY: 0, rotateZ: 0 }}
-        animate={{
-          rotateX: [0, 180, 360],
-          rotateY: [0, 180, 360],
-          rotateZ: [0, 90, 180],
-          y: [0, -20, 0]
-        }}
-        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-        style={{ transformStyle: 'preserve-3d' }}
-      />
+    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true" style={{ perspective: '1200px' }}>
       
-      {/* 3D Orb */}
+      {/* 1. Floating Glassmorphic 3D House - Top Left */}
       <motion.div
-        className="absolute bottom-[20%] right-[15%] w-32 h-32 rounded-full border border-slate-200/50 bg-gradient-to-tr from-blue-500/5 to-transparent shadow-[inset_0_0_20px_rgba(255,255,255,0.5)] backdrop-blur-md"
-        initial={{ scale: 1, rotateZ: 0 }}
+        className="absolute top-[12%] left-[4%] w-28 h-28 lg:w-40 lg:h-40"
+        initial={{ rotateX: 10, rotateY: -15, rotateZ: 0, y: 0 }}
         animate={{
-          scale: [1, 1.05, 1],
-          y: [0, 30, 0],
-          rotateZ: [0, 180, 360]
+          rotateY: [-15, 10, -15],
+          rotateX: [10, -10, 10],
+          y: [0, -25, 0]
+        }}
+        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        <GlassHouse3D />
+      </motion.div>
+
+      {/* 2. Floating PFA Shield - Center Right */}
+      <motion.div
+        className="absolute top-[35%] right-[3%] w-24 h-24 lg:w-36 lg:h-36"
+        initial={{ rotateX: 5, rotateY: 20, y: 0 }}
+        animate={{
+          rotateY: [20, -5, 20],
+          rotateX: [5, 15, 5],
+          y: [0, 20, 0]
         }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-        style={{ transformStyle: 'preserve-3d', rotateX: '45deg' }}
-      />
-      
-      {/* 3D Glass Prism */}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        <PFALogo3D />
+      </motion.div>
+
+      {/* 3. Floating Naira Coin - Top Right */}
       <motion.div
-        className="absolute top-[40%] right-[5%] w-16 h-40 border border-emerald-500/10 bg-gradient-to-b from-emerald-500/5 to-transparent rounded-lg backdrop-blur-md"
-        initial={{ rotateX: 45, rotateY: 45 }}
+        className="absolute top-[14%] right-[8%] w-16 h-16 lg:w-26 lg:h-26"
+        initial={{ rotateY: 10, rotateX: 25, y: 0 }}
         animate={{
-          rotateX: [45, 135, 45],
-          rotateY: [45, 225, 45],
-          y: [0, -40, 0]
+          rotateY: [10, 45, 10],
+          y: [0, -15, 0]
+        }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        <NairaCoin3D />
+      </motion.div>
+
+      {/* 4. Second Glassmorphic House - Bottom Left */}
+      <motion.div
+        className="absolute bottom-[18%] left-[8%] w-32 h-32 lg:w-44 lg:h-44 opacity-80"
+        initial={{ rotateX: -10, rotateY: 10, y: 0 }}
+        animate={{
+          rotateY: [10, -15, 10],
+          rotateX: [-10, 10, -10],
+          y: [0, 30, 0]
         }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
         style={{ transformStyle: 'preserve-3d' }}
-      />
+      >
+        <GlassHouse3D />
+      </motion.div>
 
-      {/* Small Floating Pyramid */}
+      {/* 5. Second Naira Coin - Bottom Right */}
       <motion.div
-        className="absolute top-[60%] left-[5%] w-0 h-0"
-        style={{
-          borderLeft: '20px solid transparent',
-          borderRight: '20px solid transparent',
-          borderBottom: '40px solid rgba(232, 96, 10, 0.05)',
-          filter: 'drop-shadow(0 10px 10px rgba(0,0,0,0.05))',
-          transformStyle: 'preserve-3d'
-        }}
+        className="absolute bottom-[28%] right-[6%] w-14 h-14 lg:w-22 lg:h-22 opacity-70"
+        initial={{ rotateY: -30, rotateX: 15, y: 0 }}
         animate={{
-          rotateY: [0, 360],
-          y: [0, 20, 0]
+          rotateY: [-30, -5, -30],
+          y: [0, -20, 0]
         }}
-        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-      />
+        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        <NairaCoin3D />
+      </motion.div>
+
     </div>
   );
 }
