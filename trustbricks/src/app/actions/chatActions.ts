@@ -10,6 +10,13 @@ export async function sendMessageToGemini(history: { role: 'user' | 'model'; par
     };
   }
   
+  // Gemini API strictly requires the conversation history to start with a 'user' message.
+  // If the frontend passes the bot's initial greeting, we need to remove it.
+  const filteredHistory = [...history];
+  while (filteredHistory.length > 0 && filteredHistory[0].role === "model") {
+    filteredHistory.shift();
+  }
+
   try {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`,
@@ -19,7 +26,7 @@ export async function sendMessageToGemini(history: { role: 'user' | 'model'; par
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          contents: history,
+          contents: filteredHistory,
           systemInstruction: {
             parts: [{
               text: "You are Ada, a premium, professional mortgage and customer support advisor for TrustBricks Properties. " +
