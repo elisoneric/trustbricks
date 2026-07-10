@@ -84,19 +84,19 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const checkParams = () => {
-        const params = new URLSearchParams(window.location.search);
-        if (params.get("eligibility") === "true") {
-          setFunnelOpen(true);
-          const newUrl = window.location.pathname;
-          window.history.replaceState({}, "", newUrl);
-        }
-      };
-      checkParams();
-      window.addEventListener("popstate", checkParams);
-      return () => window.removeEventListener("popstate", checkParams);
+    if (typeof window === "undefined") return;
+
+    // Case 1: arrived via router.push from another page — URL has ?eligibility=true
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("eligibility") === "true") {
+      setFunnelOpen(true);
+      window.history.replaceState({}, "", window.location.pathname);
     }
+
+    // Case 2: already on '/' — navbar fires this custom event directly
+    const handleOpen = () => setFunnelOpen(true);
+    window.addEventListener("openEligibilityFunnel", handleOpen);
+    return () => window.removeEventListener("openEligibilityFunnel", handleOpen);
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -118,7 +118,7 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
 
   const handleEligibilityClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    router.push("/?eligibility=true", { scroll: false });
+    setFunnelOpen(true);
   };
 
   const displayTitle = siteSettings?.heroTitle || "Your RSA Balance Can Open Your Front Door";
