@@ -161,7 +161,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
       if (trimBvn)   body.bvn = trimBvn;
 
       const res = await fetch(
-        "https://api.trustbrickspropertieslimited.com.ng/api/portal/status-check",
+        "https://dev.trustbrickspropertieslimited.com.ng/api/portal/status-check",
         {
           method:  "POST",
           headers: { "Content-Type": "application/json" },
