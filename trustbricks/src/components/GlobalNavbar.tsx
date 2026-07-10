@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import ApplicationStatusModal from "@/components/ApplicationStatusModal";
 
 /* ── TYPES ──────────────────────────────────────────────────────────────── */
 interface NavLink {
@@ -66,8 +67,9 @@ const hamburgerBotVariants: Variants = {
 
 /* ── COMPONENT ──────────────────────────────────────────────────────────── */
 export default function GlobalNavbar() {
-  const [scrolled,    setScrolled]    = useState(false);
-  const [mobileOpen,  setMobileOpen]  = useState(false);
+  const [scrolled,         setScrolled]         = useState(false);
+  const [mobileOpen,       setMobileOpen]       = useState(false);
+  const [statusModalOpen,  setStatusModalOpen]  = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -174,8 +176,34 @@ export default function GlobalNavbar() {
           ))}
         </ul>
 
-        {/* ── DESKTOP CTA ── */}
+        {/* ── DESKTOP CTAs ── */}
         <div className="hidden md:flex items-center gap-3">
+          {/* Secondary: Check Application status */}
+          <motion.button
+            type="button"
+            onClick={() => setStatusModalOpen(true)}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 380, damping: 22 }}
+            className={[
+              "inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--radius-pill)]",
+              "border border-slate-200 bg-white text-[#050B14] text-sm font-bold",
+              "hover:bg-slate-50 hover:border-slate-300",
+              "shadow-sm hover:shadow-md",
+              "transition-all duration-[280ms]",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-amber-500)]",
+            ].join(" ")}
+            style={{ fontFamily: "var(--font-display)" }}
+            aria-label="Check my application status"
+            id="navbar-check-application-btn"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Track Application
+          </motion.button>
+
+          {/* Primary: Check Eligibility */}
           <motion.a
             href="/?eligibility=true"
             onClick={handleEligibilityClick}
@@ -259,8 +287,29 @@ export default function GlobalNavbar() {
                 </motion.li>
               ))}
 
-              {/* CTA in drawer */}
+              {/* Track Application CTA in drawer */}
               <motion.li variants={drawerItemVariants} className="mt-3">
+                <button
+                  type="button"
+                  onClick={() => { setStatusModalOpen(true); setMobileOpen(false); }}
+                  className={[
+                    "flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-[var(--radius-pill)]",
+                    "bg-white/10 text-white font-bold text-base border border-white/15",
+                    "hover:bg-white/15 transition-colors",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-amber-500)]",
+                  ].join(" ")}
+                  style={{ fontFamily: "var(--font-display)" }}
+                  aria-label="Track my application status"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Track My Application
+                </button>
+              </motion.li>
+
+              {/* Eligibility CTA in drawer */}
+              <motion.li variants={drawerItemVariants}>
                 <a
                   href="/?eligibility=true"
                   onClick={handleEligibilityClick}
@@ -281,6 +330,12 @@ export default function GlobalNavbar() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ── APPLICATION STATUS MODAL ── */}
+      <ApplicationStatusModal
+        isOpen={statusModalOpen}
+        onClose={() => setStatusModalOpen(false)}
+      />
     </header>
   );
 }
