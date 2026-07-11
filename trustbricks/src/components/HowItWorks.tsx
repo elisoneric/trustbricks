@@ -115,7 +115,7 @@ export default function HowItWorks({ onCheckStatus }: HowItWorksProps) {
                 <div>
                   <p className="text-[var(--color-clay-200)] text-xs font-black uppercase tracking-widest mb-1">Already Applied?</p>
                   <h3 className="text-white text-xl font-black leading-snug" style={{ fontFamily: "var(--font-display)" }}>Track your application status</h3>
-                  <p className="text-white/45 text-sm font-medium mt-0.5">Enter your phone or BVN — get your stage instantly.</p>
+                  <p className="text-white/45 text-sm font-medium mt-0.5">Enter your phone or account number — get your stage instantly.</p>
                 </div>
               </div>
 

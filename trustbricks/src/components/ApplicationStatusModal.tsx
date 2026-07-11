@@ -5,19 +5,12 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Phone, CreditCard, Lock, Search, CheckCircle2 } from "lucide-react";
 
 /* ─── TYPES ──────────────────────────────────────────────────────────────── */
-interface Application {
-  reference: string;
-  application_type: string;
-  label: string;
-  description: string;
-  step: number;
-  total_steps: number;
-  last_updated: string;
-}
-
 interface StatusResponse {
   found: boolean;
-  applications: Application[];
+  status: string | null;
+  description: string | null;
+  step: number | null;
+  total_steps: number;
 }
 
 type ModalState = "form" | "loading" | "result" | "not-found" | "error";
@@ -98,10 +91,10 @@ interface ApplicationStatusModalProps {
 export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationStatusModalProps) {
   const [state, setState] = useState<ModalState>("form");
   const [phone, setPhone] = useState("");
-  const [bvn, setBvn] = useState("");
-  const [applications, setApplications] = useState<Application[]>([]);
+  const [accountNumber, setAccountNumber] = useState("");
+  const [result, setResult] = useState<StatusResponse | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
-  const [activeTab, setActiveTab] = useState<"phone" | "bvn">("phone");
+  const [activeTab, setActiveTab] = useState<"phone" | "account">("phone");
 
   const overlayRef = useRef<HTMLDivElement>(null);
   const phoneInputRef = useRef<HTMLInputElement>(null);
@@ -111,7 +104,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
     if (isOpen) {
       setState("form");
       setPhone("");
-      setBvn("");
+      setAccountNumber("");
       setErrorMsg("");
       setActiveTab("phone");
       setTimeout(() => phoneInputRef.current?.focus(), 100);
@@ -136,20 +129,23 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
+    // Validation — matches the tracking API's contract: digits only (leading + ok),
+    // phone needs 10+ digits, account number needs 6+ digits, at least one required.
     const trimPhone = phone.trim();
-    const trimBvn = bvn.trim();
+    const trimAccount = accountNumber.trim();
+    const phoneDigits = trimPhone.replace(/^\+/, "");
+    const accountDigits = trimAccount;
 
-    if (!trimPhone && !trimBvn) {
-      setErrorMsg("Please enter at least one field — phone number or BVN.");
+    if (!trimPhone && !trimAccount) {
+      setErrorMsg("Please enter at least one field — phone number or account number.");
       return;
     }
-    if (trimPhone && !/^0[789][01]\d{8}$/.test(trimPhone)) {
-      setErrorMsg("Enter a valid Nigerian phone number (e.g. 08012345678).");
+    if (trimPhone && (!/^\d+$/.test(phoneDigits) || phoneDigits.length < 10)) {
+      setErrorMsg("Enter a valid phone number (at least 10 digits).");
       return;
     }
-    if (trimBvn && !/^\d{11}$/.test(trimBvn)) {
-      setErrorMsg("BVN must be exactly 11 digits.");
+    if (trimAccount && (!/^\d+$/.test(accountDigits) || accountDigits.length < 6)) {
+      setErrorMsg("Account number must be digits only, at least 6 digits.");
       return;
     }
 
@@ -158,11 +154,11 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
 
     try {
       const body: Record<string, string> = {};
-      if (trimPhone) body.phone_number = trimPhone;
-      if (trimBvn)   body.bvn = trimBvn;
+      if (trimPhone)   body.phone_number = trimPhone;
+      if (trimAccount) body.account_number = trimAccount;
 
       const res = await fetch(
-        "https://dev.trustbrickspropertieslimited.com.ng/api/portal/status-check",
+        "https://space.trustbrickspropertieslimited.com.ng/api/portal/track",
         {
           method:  "POST",
           headers: { "Content-Type": "application/json" },
@@ -171,8 +167,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
       );
 
       if (res.status === 429) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.detail || "Too many requests. Please wait a moment and try again.");
+        throw new Error("Too many attempts. Please wait a minute and try again.");
       }
       if (res.status === 422) {
         const data = await res.json().catch(() => ({}));
@@ -184,14 +179,21 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
 
       const data: StatusResponse = await res.json();
 
-      if (data.found && data.applications.length > 0) {
-        setApplications(data.applications);
+      if (data.found) {
+        setResult(data);
         setState("result");
       } else {
         setState("not-found");
       }
     } catch (err: any) {
-      setErrorMsg(err.message || "An unexpected error occurred.");
+      // Network/CORS-level failures surface as a raw TypeError ("Failed to fetch") —
+      // show a friendly message instead of the browser's internal error text.
+      const isNetworkError = err instanceof TypeError;
+      setErrorMsg(
+        isNetworkError
+          ? "Couldn't reach the server. Check your connection and try again."
+          : err.message || "An unexpected error occurred."
+      );
       setState("form");
     }
   };
@@ -199,18 +201,10 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
   const handleReset = () => {
     setState("form");
     setPhone("");
-    setBvn("");
+    setAccountNumber("");
     setErrorMsg("");
+    setResult(null);
     setTimeout(() => phoneInputRef.current?.focus(), 100);
-  };
-
-  const formatDate = (iso: string) => {
-    try {
-      return new Date(iso).toLocaleDateString("en-NG", {
-        day: "numeric", month: "short", year: "numeric",
-        hour: "2-digit", minute: "2-digit",
-      });
-    } catch { return iso; }
   };
 
   return (
@@ -267,7 +261,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                 Check My Application
               </h2>
               <p className="text-white/55 text-sm font-medium">
-                Enter your phone number or BVN to track your application stage.
+                Enter your phone number or account number to track your application stage.
               </p>
             </div>
 
@@ -279,9 +273,9 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                 {state === "form" && (
                   <motion.div key="form" variants={contentVariants} initial="hidden" animate="visible" exit="exit">
 
-                    {/* Tab switcher */}
+                    {/* Tab switcher — either field alone is enough, both optional */}
                     <div className="flex gap-1 p-1 bg-[var(--color-mortar-100)] rounded-xl mb-6">
-                      {(["phone", "bvn"] as const).map((tab) => (
+                      {(["phone", "account"] as const).map((tab) => (
                         <button
                           key={tab}
                           type="button"
@@ -294,7 +288,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                           ].join(" ")}
                         >
                           {tab === "phone" ? <Phone className="w-3.5 h-3.5" /> : <CreditCard className="w-3.5 h-3.5" />}
-                          {tab === "phone" ? "Phone Number" : "BVN"}
+                          {tab === "phone" ? "Phone Number" : "Account Number"}
                         </button>
                       ))}
                     </div>
@@ -303,7 +297,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                       {activeTab === "phone" ? (
                         <div>
                           <label htmlFor="app-status-phone" className="block text-xs font-black text-[var(--color-text-body)] uppercase tracking-widest mb-2">
-                            Phone Number
+                            Phone Number <span className="normal-case font-medium text-[var(--color-text-muted)]">(optional)</span>
                           </label>
                           <div className="relative">
                             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] text-sm font-bold pointer-events-none select-none font-tabular">
@@ -320,23 +314,23 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                               className="w-full pl-14 pr-4 py-3.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-mortar-50)] text-[var(--color-text-heading)] text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/40 focus:border-[var(--color-clay-500)] transition-all placeholder:text-[var(--color-mortar-300)]"
                             />
                           </div>
-                          <p className="text-[11px] text-[var(--color-text-muted)] mt-2 font-medium">Nigerian number starting with 0 (11 digits)</p>
+                          <p className="text-[11px] text-[var(--color-text-muted)] mt-2 font-medium">The number used on your application (10+ digits)</p>
                         </div>
                       ) : (
                         <div>
-                          <label htmlFor="app-status-bvn" className="block text-xs font-black text-[var(--color-text-body)] uppercase tracking-widest mb-2">
-                            BVN
+                          <label htmlFor="app-status-account" className="block text-xs font-black text-[var(--color-text-body)] uppercase tracking-widest mb-2">
+                            Account Number <span className="normal-case font-medium text-[var(--color-text-muted)]">(optional)</span>
                           </label>
                           <input
-                            id="app-status-bvn"
+                            id="app-status-account"
                             type="text"
                             inputMode="numeric"
-                            placeholder="12345678901"
-                            value={bvn}
-                            onChange={(e) => { setBvn(e.target.value.replace(/\D/g, "").slice(0, 11)); setErrorMsg(""); }}
+                            placeholder="1234567890"
+                            value={accountNumber}
+                            onChange={(e) => { setAccountNumber(e.target.value.replace(/\D/g, "").slice(0, 20)); setErrorMsg(""); }}
                             className="w-full px-4 py-3.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-mortar-50)] text-[var(--color-text-heading)] text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/40 focus:border-[var(--color-clay-500)] transition-all placeholder:text-[var(--color-mortar-300)]"
                           />
-                          <p className="text-[11px] text-[var(--color-text-muted)] mt-2 font-medium">Your 11-digit Bank Verification Number</p>
+                          <p className="text-[11px] text-[var(--color-text-muted)] mt-2 font-medium">Your AMB pension account number (6+ digits)</p>
                         </div>
                       )}
 
@@ -344,9 +338,9 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                       <button
                         type="button"
                         className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-clay-500)] font-semibold underline underline-offset-2 transition-colors"
-                        onClick={() => setActiveTab(activeTab === "phone" ? "bvn" : "phone")}
+                        onClick={() => setActiveTab(activeTab === "phone" ? "account" : "phone")}
                       >
-                        + Also add {activeTab === "phone" ? "BVN" : "phone"} for better accuracy
+                        + Also add {activeTab === "phone" ? "account number" : "phone"} for better accuracy
                       </button>
 
                       {/* Error message */}
@@ -383,7 +377,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                     {/* Privacy note */}
                     <p className="flex items-center justify-center gap-1.5 text-center text-[11px] text-[var(--color-text-muted)] mt-5 font-medium">
                       <Lock className="w-3 h-3" />
-                      Fully encrypted. Your data is never stored.
+                      No login needed. We only return a status and step — never personal details.
                     </p>
                   </motion.div>
                 )}
@@ -396,7 +390,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                 )}
 
                 {/* ── RESULT STATE ── */}
-                {state === "result" && (
+                {state === "result" && result && (
                   <motion.div key="result" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="space-y-4">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-8 h-8 rounded-full bg-[var(--color-moss)]/10 flex items-center justify-center shrink-0">
@@ -404,45 +398,25 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                       </div>
                       <div>
                         <p className="text-sm font-black text-[var(--color-text-heading)]">Application Found</p>
-                        <p className="text-xs text-[var(--color-text-muted)]">{applications.length} active record{applications.length !== 1 ? "s" : ""}</p>
+                        <p className="text-xs text-[var(--color-text-muted)]">Current status below</p>
                       </div>
                     </div>
 
-                    <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-1 scroll-smooth">
-                      {applications.map((app, idx) => (
-                        <motion.div
-                          key={idx}
-                          initial={{ opacity: 0, y: 16 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: idx * 0.1 }}
-                          className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-mortar-50)] p-5 relative overflow-hidden"
-                        >
-                          {/* Top accent */}
-                          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[var(--color-clay-500)] to-[var(--color-clay-200)]" />
+                    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-mortar-50)] p-5 relative overflow-hidden">
+                      {/* Top accent */}
+                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[var(--color-clay-500)] to-[var(--color-clay-200)]" />
 
-                          <div className="flex items-start justify-between gap-3 mb-4">
-                            <div>
-                              <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[var(--color-clay-500)]/10 text-[var(--color-clay-500)] text-[10px] font-black uppercase tracking-widest mb-2">
-                                {app.application_type}
-                              </span>
-                              <p className="text-base font-black text-[var(--color-text-heading)] leading-tight">{app.label}</p>
-                            </div>
-                            <span className="text-[10px] font-bold text-[var(--color-text-muted)] bg-[var(--color-card)] border border-[var(--color-border)] px-2.5 py-1.5 rounded-lg shrink-0 font-tabular">
-                              {app.reference}
-                            </span>
-                          </div>
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[var(--color-clay-500)]/10 text-[var(--color-clay-500)] text-[10px] font-black uppercase tracking-widest mb-3">
+                        {result.status}
+                      </span>
 
-                          <StepProgressBar step={app.step} totalSteps={app.total_steps} />
+                      {result.step != null && (
+                        <StepProgressBar step={result.step} totalSteps={result.total_steps} />
+                      )}
 
-                          <p className="text-sm text-[var(--color-text-body)] font-medium leading-relaxed mt-4 pt-4 border-t border-[var(--color-border)]">
-                            {app.description}
-                          </p>
-
-                          <p className="text-[11px] text-[var(--color-text-muted)] font-semibold mt-3">
-                            Last updated: {formatDate(app.last_updated)}
-                          </p>
-                        </motion.div>
-                      ))}
+                      <p className="text-sm text-[var(--color-text-body)] font-medium leading-relaxed mt-4 pt-4 border-t border-[var(--color-border)]">
+                        {result.description}
+                      </p>
                     </div>
 
                     <div className="flex gap-3 pt-2">
