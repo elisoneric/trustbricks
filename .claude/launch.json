@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "trustbricks-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "trustbricks", "run", "dev"],
+      "port": 3000
+    }
+  ]
+}

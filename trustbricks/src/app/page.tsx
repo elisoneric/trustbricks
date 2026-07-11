@@ -8,7 +8,7 @@ export default async function HomePage() {
   const siteSettings = config?.site || {};
 
   return (
-    <div className="min-h-screen bg-[#F0F4F9] font-sans antialiased selection:bg-[#E8600A] selection:text-white">
+    <div className="min-h-screen bg-[var(--color-body-bg)] font-sans antialiased selection:bg-[var(--color-clay-500)] selection:text-white">
       <GlobalNavbar />
       <HomeClient siteSettings={siteSettings} />
       <Footer siteSettings={siteSettings} />

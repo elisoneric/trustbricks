@@ -24,7 +24,7 @@ const itemVariants: Variants = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#F0F4F9] flex flex-col font-sans antialiased">
+    <div className="min-h-screen bg-[var(--color-body-bg)] flex flex-col font-sans antialiased">
       <GlobalNavbar />
 
       <main className="flex-grow pt-32 pb-24">
@@ -35,15 +35,15 @@ export default function AboutPage() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: "spring", stiffness: 120, damping: 18 }}
           >
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#E8600A]/10 border border-[#E8600A]/20 text-[#E8600A] text-xs font-bold uppercase tracking-wider mb-6">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[var(--color-clay-500)]/10 border border-[var(--color-clay-500)]/20 text-[var(--color-clay-500)] text-xs font-bold uppercase tracking-wider mb-6">
               About Trust Bricks
             </span>
-            <h1 className="text-4xl md:text-5xl font-black text-[#0D1F3C] leading-tight mb-6" style={{ fontFamily: "var(--font-display)" }}>
+            <h1 className="text-4xl md:text-5xl font-black text-[var(--color-text-heading)] leading-tight mb-6" style={{ fontFamily: "var(--font-display)" }}>
               Teamwork Makes The <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-amber-500)] to-[#D4530A]">Dream Work.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-clay-500)] to-[var(--color-clay-600)]">Dream Work.</span>
             </h1>
-            <p className="text-lg text-[#475569] leading-relaxed">
-              Trust Bricks Properties Ltd is a premier real estate and mortgage facilitation firm in Nigeria. 
+            <p className="text-lg text-[var(--color-text-body)] leading-relaxed">
+              Trust Bricks Properties Ltd is a premier real estate and mortgage facilitation firm in Nigeria.
               We are dedicated to helping working professionals utilize the PenCom guidelines to purchase their own homes.
             </p>
           </motion.div>
@@ -58,25 +58,25 @@ export default function AboutPage() {
             className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16"
           >
             {/* Vision */}
-            <motion.div variants={itemVariants} className="bg-white rounded-3xl p-8 border border-slate-200/60 shadow-card hover:shadow-card-hover transition-all duration-300">
-              <div className="w-12 h-12 rounded-2xl bg-[#0D1F3C]/5 flex items-center justify-center text-[#E8600A] mb-6">
+            <motion.div variants={itemVariants} className="bg-[var(--color-card)] rounded-3xl p-8 border border-[var(--color-border)] shadow-card hover:shadow-card-hover transition-all duration-300">
+              <div className="w-12 h-12 rounded-2xl bg-[var(--color-ink-700)]/5 flex items-center justify-center text-[var(--color-clay-500)] mb-6">
                 <Building className="w-6 h-6" />
               </div>
-              <h2 className="text-2xl font-bold text-[#0D1F3C] mb-4" style={{ fontFamily: "var(--font-display)" }}>Our Vision</h2>
-              <p className="text-[#475569] leading-relaxed">
-                To become the most reliable and transparent gateway to homeownership in Nigeria, enabling every citizen 
+              <h2 className="text-2xl font-bold text-[var(--color-text-heading)] mb-4" style={{ fontFamily: "var(--font-display)" }}>Our Vision</h2>
+              <p className="text-[var(--color-text-body)] leading-relaxed">
+                To become the most reliable and transparent gateway to homeownership in Nigeria, enabling every citizen
                 to effortlessly transition from tenant to homeowner using their pension assets as leverage.
               </p>
             </motion.div>
 
             {/* Mission */}
-            <motion.div variants={itemVariants} className="bg-white rounded-3xl p-8 border border-slate-200/60 shadow-card hover:shadow-card-hover transition-all duration-300">
-              <div className="w-12 h-12 rounded-2xl bg-[#0D1F3C]/5 flex items-center justify-center text-[#E8600A] mb-6">
+            <motion.div variants={itemVariants} className="bg-[var(--color-card)] rounded-3xl p-8 border border-[var(--color-border)] shadow-card hover:shadow-card-hover transition-all duration-300">
+              <div className="w-12 h-12 rounded-2xl bg-[var(--color-ink-700)]/5 flex items-center justify-center text-[var(--color-clay-500)] mb-6">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h2 className="text-2xl font-bold text-[#0D1F3C] mb-4" style={{ fontFamily: "var(--font-display)" }}>Our Mission</h2>
-              <p className="text-[#475569] leading-relaxed">
-                To simplify the complexity of PFA approvals and primary mortgage bank requirements. We guide our clients through 
+              <h2 className="text-2xl font-bold text-[var(--color-text-heading)] mb-4" style={{ fontFamily: "var(--font-display)" }}>Our Mission</h2>
+              <p className="text-[var(--color-text-body)] leading-relaxed">
+                To simplify the complexity of PFA approvals and primary mortgage bank requirements. We guide our clients through
                 structured real estate options that conform completely with National Pension Commission guidelines.
               </p>
             </motion.div>
@@ -88,33 +88,33 @@ export default function AboutPage() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="bg-white rounded-3xl p-8 md:p-12 border border-slate-200/60 shadow-card mb-16"
+            className="bg-[var(--color-card)] rounded-3xl p-8 md:p-12 border border-[var(--color-border)] shadow-card mb-16"
           >
-            <h2 className="text-3xl font-extrabold text-[#0D1F3C] text-center mb-12" style={{ fontFamily: "var(--font-display)" }}>
+            <h2 className="text-3xl font-extrabold text-[var(--color-text-heading)] text-center mb-12" style={{ fontFamily: "var(--font-display)" }}>
               Our Core Pillars
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               <div className="space-y-3">
-                <div className="text-[#E8600A] font-bold text-lg flex items-center gap-2">
+                <div className="text-[var(--color-clay-500)] font-bold text-lg flex items-center gap-2">
                   <Award className="w-5 h-5" /> Integrity First
                 </div>
-                <p className="text-sm text-[#475569] leading-relaxed">
+                <p className="text-sm text-[var(--color-text-body)] leading-relaxed">
                   We maintain absolute compliance with federal guidelines and coordinate honestly with all licensed PFAs and mortgage banks.
                 </p>
               </div>
               <div className="space-y-3">
-                <div className="text-[#E8600A] font-bold text-lg flex items-center gap-2">
+                <div className="text-[var(--color-clay-500)] font-bold text-lg flex items-center gap-2">
                   <Building className="w-5 h-5" /> Customer Obsession
                 </div>
-                <p className="text-sm text-[#475569] leading-relaxed">
+                <p className="text-sm text-[var(--color-text-body)] leading-relaxed">
                   Navigating real estate paperwork can be daunting. We do the heavy lifting to ensure you can focus on moving into your home.
                 </p>
               </div>
               <div className="space-y-3">
-                <div className="text-[#E8600A] font-bold text-lg flex items-center gap-2">
+                <div className="text-[var(--color-clay-500)] font-bold text-lg flex items-center gap-2">
                   <Heart className="w-5 h-5" /> Teamwork & Speed
                 </div>
-                <p className="text-sm text-[#475569] leading-relaxed">
+                <p className="text-sm text-[var(--color-text-body)] leading-relaxed">
                   Our regional hubs cooperate directly to synchronize files between state land ministries, commercial banks, and PFAs.
                 </p>
               </div>

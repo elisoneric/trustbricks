@@ -2,7 +2,15 @@
 
 import { useReducer, useCallback, useId, useTransition } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
+import { Landmark, Waves, Mountain, Wheat, Bell, PartyPopper } from "lucide-react";
 import { processMortgageLead } from "@/app/actions/leadRouting";
+
+const BRANCH_ICONS: Record<BranchSlug, React.ReactNode> = {
+  abuja:   <Landmark className="w-6 h-6" />,
+  lagos:   <Waves className="w-6 h-6" />,
+  adamawa: <Mountain className="w-6 h-6" />,
+  kaduna:  <Wheat className="w-6 h-6" />,
+};
 
 /* ═══════════════════════════════════════════════════════════════════════════
    TYPES & CONSTANTS
@@ -403,7 +411,7 @@ export default function EligibilityFunnel({ isOpen, onClose }: EligibilityFunnel
             role="dialog"
             aria-modal="true"
             aria-labelledby={headingId}
-            className="relative w-full max-w-lg bg-white rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-dialog)]"
+            className="relative w-full max-w-lg bg-[var(--color-card)] rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-dialog)]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* ── DIALOG HEADER ── */}
@@ -521,7 +529,7 @@ function DialogHeader({
   onClose: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-[var(--color-border)] bg-[var(--color-navy-700)]">
+    <div className="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-[var(--color-border)] bg-[var(--color-ink-700)]">
       <div>
         <p
           className="text-[0.6875rem] font-semibold tracking-[0.12em] uppercase text-[var(--color-pencom-gold)] mb-0.5"
@@ -541,7 +549,7 @@ function DialogHeader({
         type="button"
         onClick={onClose}
         aria-label="Close eligibility checker"
-        className="flex items-center justify-center w-8 h-8 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-amber-500)]"
+        className="flex items-center justify-center w-8 h-8 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-clay-500)]"
       >
         <XIcon className="w-4 h-4" aria-hidden="true" />
       </button>
@@ -553,11 +561,11 @@ function DialogHeader({
 function ProgressBar({ currentStep }: { currentStep: 1 | 2 | 3 }) {
   const pct = ((currentStep - 1) / 2) * 100;
   return (
-    <div className="h-1 bg-[var(--color-navy-50)] relative" role="progressbar"
+    <div className="h-1 bg-[var(--color-mortar-50)] relative" role="progressbar"
       aria-valuenow={currentStep} aria-valuemin={1} aria-valuemax={3}
       aria-label={`Step ${currentStep} of 3`}>
       <motion.div
-        className="absolute inset-y-0 left-0 bg-[var(--color-amber-500)]"
+        className="absolute inset-y-0 left-0 bg-[var(--color-clay-500)]"
         initial={{ width: "0%" }}
         animate={{ width: `${pct}%` }}
         transition={{ type: "spring", stiffness: 200, damping: 24 }}
@@ -619,17 +627,17 @@ function BranchCard({
       className={[
         "relative flex flex-col items-center gap-2 px-4 py-5 rounded-[var(--radius-lg)]",
         "border-2 text-sm font-semibold transition-all duration-[200ms]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-amber-500)]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-clay-500)]",
         isSelected
-          ? "border-[var(--color-amber-500)] bg-[var(--color-amber-50)] text-[var(--color-navy-700)]"
-          : "border-[var(--color-border)] bg-white text-[var(--color-text-body)] hover:border-[var(--color-amber-500)]/40",
+          ? "border-[var(--color-clay-500)] bg-[var(--color-clay-50)] text-[var(--color-ink-700)]"
+          : "border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-body)] hover:border-[var(--color-clay-500)]/40",
       ].join(" ")}
       style={{ fontFamily: "var(--font-display)" }}
     >
-      <span className="text-2xl" aria-hidden="true">{branch.emoji}</span>
+      <span className="text-[var(--color-clay-500)]" aria-hidden="true">{BRANCH_ICONS[branch.slug]}</span>
       <span>{branch.name}</span>
       {isSelected && (
-        <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[var(--color-amber-500)] flex items-center justify-center">
+        <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[var(--color-clay-500)] flex items-center justify-center">
           <CheckIcon className="w-2.5 h-2.5 text-white" />
         </span>
       )}
@@ -671,11 +679,11 @@ function Step2Pfa({
           onChange={(e) => onSelect(e.target.value as PfaSlug)}
           aria-label="Select your Pension Fund Administrator"
           className={[
-            "w-full px-4 py-3 rounded-[var(--radius-md)] border-2 bg-white appearance-none",
+            "w-full px-4 py-3 rounded-[var(--radius-md)] border-2 bg-[var(--color-card)] appearance-none",
             "text-sm text-[var(--color-text-heading)] font-medium",
             "transition-colors duration-[180ms]",
-            "focus:outline-none focus:border-[var(--color-amber-500)] focus:ring-2 focus:ring-[var(--color-amber-500)]/20",
-            selected ? "border-[var(--color-amber-500)]" : "border-[var(--color-border)]",
+            "focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-2 focus:ring-[var(--color-clay-500)]/20",
+            selected ? "border-[var(--color-clay-500)]" : "border-[var(--color-border)]",
           ].join(" ")}
           style={{ fontFamily: "var(--font-body)" }}
         >
@@ -710,12 +718,12 @@ function Step2Pfa({
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-3 p-3 rounded-[var(--radius-md)] bg-[var(--color-navy-50)] border border-[var(--color-navy-100)]"
+          className="mt-3 p-3 rounded-[var(--radius-md)] bg-[var(--color-mortar-50)] border border-[var(--color-mortar-100)]"
         >
           <p className="text-xs text-[var(--color-text-body)]" style={{ fontFamily: "var(--font-body)" }}>
             <span className="font-semibold text-[var(--color-text-heading)]">{selectedOption?.label}</span>
             {" "}requires a minimum RSA balance of{" "}
-            <span className="font-bold font-tabular text-[var(--color-navy-700)]">
+            <span className="font-bold font-tabular text-[var(--color-ink-700)]">
               ₦{PFA_RULES[selected].minBalance.toLocaleString("en-NG")}
             </span>
             .
@@ -780,14 +788,14 @@ function Step3Balance({
           aria-label="Enter your RSA balance in naira"
           aria-describedby="rsa-hint"
           className={[
-            "w-full px-4 py-4 rounded-[var(--radius-md)] border-2 bg-white",
+            "w-full px-4 py-4 rounded-[var(--radius-md)] border-2 bg-[var(--color-card)]",
             "font-tabular text-lg text-[var(--color-text-heading)] font-bold",
             "transition-colors duration-[180ms]",
             "placeholder:text-[var(--color-text-muted)] placeholder:font-normal",
-            "focus:outline-none focus:ring-2 focus:ring-[var(--color-amber-500)]/20",
+            "focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/20",
             isValid
-              ? "border-[var(--color-amber-500)]"
-              : "border-[var(--color-border)] focus:border-[var(--color-amber-500)]",
+              ? "border-[var(--color-clay-500)]"
+              : "border-[var(--color-border)] focus:border-[var(--color-clay-500)]",
           ].join(" ")}
           style={{ fontFamily: "var(--font-display)" }}
         />
@@ -855,8 +863,8 @@ function StepSuccess({
             Potential 25% equity contribution
           </p>
         </div>
-        <div className="rounded-[var(--radius-md)] bg-[var(--color-navy-50)] border border-[var(--color-navy-100)] p-4">
-          <p className="font-tabular text-xl font-black text-[var(--color-navy-700)]" style={{ fontFamily: "var(--font-display)" }}>
+        <div className="rounded-[var(--radius-md)] bg-[var(--color-mortar-50)] border border-[var(--color-mortar-100)] p-4">
+          <p className="font-tabular text-xl font-black text-[var(--color-ink-700)]" style={{ fontFamily: "var(--font-display)" }}>
             ₦{result.rsaBalance.toLocaleString("en-NG")}
           </p>
           <p className="text-xs text-[var(--color-text-body)] mt-0.5" style={{ fontFamily: "var(--font-body)" }}>
@@ -916,16 +924,17 @@ function StepIneligible({
           ].join(" ")}
           style={{ fontFamily: "var(--font-display)" }}
         >
-          📲 Notify Me When I Qualify
+          <Bell className="w-4 h-4" />
+          Notify Me When I Qualify
         </a>
         <button
           type="button"
           onClick={onRestart}
           className={[
-            "w-full px-5 py-3.5 rounded-[var(--radius-pill)] border-2 border-[var(--color-navy-700)]",
-            "text-[var(--color-navy-700)] text-sm font-semibold",
-            "hover:bg-[var(--color-navy-700)] hover:text-white transition-all duration-[280ms]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-navy-700)]",
+            "w-full px-5 py-3.5 rounded-[var(--radius-pill)] border-2 border-[var(--color-ink-700)]",
+            "text-[var(--color-ink-700)] text-sm font-semibold",
+            "hover:bg-[var(--color-ink-700)] hover:text-white transition-all duration-[280ms]",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ink-700)]",
           ].join(" ")}
           style={{ fontFamily: "var(--font-display)" }}
         >
@@ -1004,11 +1013,11 @@ function Step5LeadForm({
           disabled={submitting}
           className={[
             "inline-flex items-center gap-2 px-6 py-3 rounded-[var(--radius-pill)]",
-            "bg-[var(--color-amber-500)] text-white text-sm font-bold",
+            "bg-[var(--color-clay-500)] text-white text-sm font-bold",
             "shadow-[var(--shadow-action-glow)]",
             "disabled:opacity-60 disabled:cursor-not-allowed",
-            "transition-all duration-[280ms] hover:bg-[var(--color-amber-600)]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-amber-500)]",
+            "transition-all duration-[280ms] hover:bg-[var(--color-clay-600)]",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-clay-500)]",
           ].join(" ")}
           style={{ fontFamily: "var(--font-display)" }}
           aria-live="polite"
@@ -1035,9 +1044,9 @@ function StepThankYou({ onClose }: { onClose: () => void }) {
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 320, damping: 20 }}
-        className="text-5xl mb-5" aria-hidden="true"
+        className="mb-5 flex justify-center text-[var(--color-clay-500)]" aria-hidden="true"
       >
-        🎉
+        <PartyPopper className="w-12 h-12" />
       </motion.div>
       <h3 className="text-2xl font-black text-[var(--color-text-heading)] mb-3" style={{ fontFamily: "var(--font-display)" }}>
         We've Got You!
@@ -1049,7 +1058,7 @@ function StepThankYou({ onClose }: { onClose: () => void }) {
       <button
         type="button"
         onClick={onClose}
-        className="px-8 py-3 rounded-[var(--radius-pill)] bg-[var(--color-navy-700)] text-white text-sm font-bold hover:bg-[var(--color-navy-600)] transition-colors duration-[280ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-navy-700)]"
+        className="px-8 py-3 rounded-[var(--radius-pill)] bg-[var(--color-ink-700)] text-white text-sm font-bold hover:bg-[var(--color-ink-600)] transition-colors duration-[280ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-ink-700)]"
         style={{ fontFamily: "var(--font-display)" }}
       >
         Close
@@ -1071,7 +1080,7 @@ function StepInstruction({
 }) {
   return (
     <div className="mb-5">
-      <p className="text-[0.6875rem] font-semibold tracking-[0.1em] uppercase text-[var(--color-amber-500)] mb-1" style={{ fontFamily: "var(--font-display)" }}>
+      <p className="text-[0.6875rem] font-semibold tracking-[0.1em] uppercase text-[var(--color-clay-500)] mb-1" style={{ fontFamily: "var(--font-display)" }}>
         {typeof step === "number" ? `Step ${step}` : ""}
       </p>
       <h3 className="text-base font-bold text-[var(--color-text-heading)] mb-1" style={{ fontFamily: "var(--font-display)" }}>
@@ -1111,13 +1120,13 @@ function FormField({
         aria-invalid={!!error}
         aria-describedby={error ? `${id}-error` : undefined}
         className={[
-          "w-full px-4 py-3 rounded-[var(--radius-md)] border-2 bg-white text-sm",
+          "w-full px-4 py-3 rounded-[var(--radius-md)] border-2 bg-[var(--color-card)] text-sm",
           "text-[var(--color-text-heading)] transition-colors duration-[180ms]",
           "placeholder:text-[var(--color-text-muted)]",
-          "focus:outline-none focus:ring-2 focus:ring-[var(--color-amber-500)]/20",
+          "focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/20",
           error
             ? "border-[var(--color-error)] focus:border-[var(--color-error)]"
-            : "border-[var(--color-border)] focus:border-[var(--color-amber-500)]",
+            : "border-[var(--color-border)] focus:border-[var(--color-clay-500)]",
         ].join(" ")}
         style={{ fontFamily: "var(--font-body)" }}
       />
@@ -1149,11 +1158,11 @@ function PrimaryButton({
       className={[
         "inline-flex items-center justify-center gap-2",
         "px-6 py-3 rounded-[var(--radius-pill)]",
-        "bg-[var(--color-amber-500)] text-white text-sm font-bold",
+        "bg-[var(--color-clay-500)] text-white text-sm font-bold",
         "shadow-[var(--shadow-action-glow)]",
         "disabled:opacity-50 disabled:cursor-not-allowed",
-        "transition-all duration-[280ms] hover:bg-[var(--color-amber-600)]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-amber-500)]",
+        "transition-all duration-[280ms] hover:bg-[var(--color-clay-600)]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-clay-500)]",
         fullWidth ? "w-full" : "",
       ].join(" ")}
       style={{ fontFamily: "var(--font-display)" }}
@@ -1168,7 +1177,7 @@ function BackButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-text-body)] hover:text-[var(--color-text-heading)] transition-colors duration-[180ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-navy-700)] rounded"
+      className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-text-body)] hover:text-[var(--color-text-heading)] transition-colors duration-[180ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ink-700)] rounded"
       style={{ fontFamily: "var(--font-body)" }}
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4" aria-hidden="true">

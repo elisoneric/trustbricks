@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, Variants, useScroll, useTransform, animate, useAnimation, useInView } from "framer-motion";
-import { ShieldCheck, Landmark, MapPin, ArrowRight, ChevronDown, Sparkles, Building2, MousePointer2 } from "lucide-react";
+import { motion, Variants, useScroll, useTransform, animate, useReducedMotion } from "framer-motion";
+import { ShieldCheck, Landmark, MapPin, ArrowRight, Building2, MousePointer2, Sparkles } from "lucide-react";
 import EligibilityFunnel from "./EligibilityFunnel";
 import { useRouter } from "next/navigation";
 
@@ -10,8 +10,10 @@ import { useRouter } from "next/navigation";
 function MagneticCTA({ onClick, children, className, style, ariaLabel }: any) {
   const ref = useRef<HTMLButtonElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const reduceMotion = useReducedMotion();
 
   const handleMouse = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (reduceMotion) return;
     const { clientX, clientY } = e;
     const { width, height, left, top } = ref.current!.getBoundingClientRect();
     const x = clientX - (left + width / 2);
@@ -41,40 +43,38 @@ function MagneticCTA({ onClick, children, className, style, ariaLabel }: any) {
   );
 }
 
-/* ── FRAMER MOTION VARIANTS ─────────────────────────────────────────────── */
+/* ── FRAMER MOTION VARIANTS (opacity/transform only — no filter:blur) ───── */
 const containerVariants: Variants = {
   hidden:  {},
   visible: {
-    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
   },
 };
 
 const fadeSlideUp: Variants = {
-  hidden:  { opacity: 0, y: 30, filter: "blur(8px)" },
+  hidden:  { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
-    transition: { type: "spring", stiffness: 100, damping: 20 },
+    transition: { type: "spring", stiffness: 120, damping: 20 },
   },
 };
 
 const scaleIn: Variants = {
-  hidden:  { opacity: 0, scale: 0.95, filter: "blur(10px)" },
+  hidden:  { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
-    scale: 1,
-    filter: "blur(0px)",
-    transition: { type: "spring", stiffness: 120, damping: 25, delay: 0.4 },
+    y: 0,
+    transition: { type: "spring", stiffness: 130, damping: 24, delay: 0.35 },
   },
 };
 
 /* ── TRUST CHIP DATA ─────────────────────────────────────────────────────── */
 const TRUST_CHIPS = [
-  { icon: <ShieldCheck className="w-4 h-4 text-emerald-500" />, label: "PenCom Regulated" },
-  { icon: <Landmark className="w-4 h-4 text-blue-500" />, label: "12 PFAs Supported" },
-  { icon: <MapPin className="w-4 h-4 text-rose-500" />, label: "4 State Offices" },
-  { icon: <Building2 className="w-4 h-4 text-slate-500" />, label: "RC: 9552712" },
+  { icon: <ShieldCheck className="w-4 h-4 text-[var(--color-moss)]" />, label: "PenCom Regulated" },
+  { icon: <Landmark className="w-4 h-4 text-[var(--color-ink-400)]" />, label: "12 PFAs Supported" },
+  { icon: <MapPin className="w-4 h-4 text-[var(--color-clay-500)]" />, label: "4 State Offices" },
+  { icon: <Building2 className="w-4 h-4 text-[var(--color-mortar-500)]" />, label: "RC: 9552712" },
 ];
 
 /* ── COMPONENT ──────────────────────────────────────────────────────────── */
@@ -82,6 +82,7 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
   const [funnelOpen, setFunnelOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const router = useRouter();
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -106,7 +107,7 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
 
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const opacityFade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  const scaleDown = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+  const scaleDown = useTransform(scrollYProgress, [0, 1], [1, 0.96]);
 
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
@@ -125,7 +126,7 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
   const displaySubtitle = siteSettings?.heroSubtitle || "Unlock 25% of your Retirement Savings Account to finance your residential mortgage down payment. We simplify the verification, banking matches, and PFA approvals.";
   const displaySlogan = siteSettings?.slogan || "We Value your trust";
 
-  // Dynamic Word Highlighting
+  // Word-level reveal (opacity/y only — highlighted words carry the clay gradient)
   const titleWords = displayTitle.split(" ");
   const highlightWords = ["RSA", "Balance", "Front", "Door", "RSA Balance", "Front Door"];
 
@@ -137,35 +138,31 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
         aria-label="Hero — RSA mortgage eligibility"
         className="relative w-full flex flex-col items-center justify-start overflow-hidden pt-24 pb-24 lg:pt-28 lg:pb-32"
         style={{
-          background: "#FFFFFF",
-          minHeight: "100vh", // Flexible height but at least viewport height
+          background: "var(--color-card)",
+          minHeight: "100vh",
         }}
       >
-        {/* ── PREMIUM MESH GRADIENT BACKDROP ── */}
-        <motion.div style={{ y: bgY, opacity: opacityFade }} className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[var(--color-amber-500)]/5 blur-[120px]" />
-          <div className="absolute top-[20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-[#0D1F3C]/5 blur-[150px]" />
-          <div className="absolute bottom-[-20%] left-[20%] w-[50%] h-[50%] rounded-full bg-emerald-500/5 blur-[120px]" />
-          
-          {/* Subtle Grid overlay */}
-          <div 
-            className="absolute inset-0"
+        {/* ── AMBIENT BACKDROP: brick-course texture + soft color wash ── */}
+        <motion.div style={{ y: reduceMotion ? 0 : bgY, opacity: reduceMotion ? 1 : opacityFade }} className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[var(--color-clay-500)]/5 blur-[120px]" />
+          <div className="absolute top-[20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-[var(--color-ink-700)]/5 blur-[150px]" />
+          <div className="absolute bottom-[-20%] left-[20%] w-[50%] h-[50%] rounded-full bg-[var(--color-moss)]/5 blur-[120px]" />
+
+          {/* Brick coursing texture overlay — the site's signature motif, kept ambient/quiet */}
+          <div
+            className="absolute inset-0 pattern-brick opacity-[0.35]"
             style={{
-              backgroundImage: `linear-gradient(rgba(13,31,60,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(13,31,60,0.02) 1px, transparent 1px)`,
-              backgroundSize: "40px 40px",
-              maskImage: "radial-gradient(ellipse at center, black 40%, transparent 80%)",
-              WebkitMaskImage: "radial-gradient(ellipse at center, black 40%, transparent 80%)"
+              maskImage: "radial-gradient(ellipse at center, black 35%, transparent 75%)",
+              WebkitMaskImage: "radial-gradient(ellipse at center, black 35%, transparent 75%)",
             }}
           />
         </motion.div>
 
-        {/* ── FAINT ABSTRACT 3D SHAPES ── */}
-        <Background3DShapes />
+        {/* ── SIGNATURE MOMENT: brick wall assembling on load ── */}
+        <BrickBuildAccents />
 
-
-
-        <motion.div 
-          style={{ scale: scaleDown, opacity: opacityFade }}
+        <motion.div
+          style={{ scale: reduceMotion ? 1 : scaleDown, opacity: reduceMotion ? 1 : opacityFade }}
           className="relative z-10 mx-auto w-full max-w-[1400px] px-6 lg:px-12"
         >
           {/* ════════════════════════════
@@ -180,21 +177,20 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
             {/* Eyebrow */}
             <motion.div variants={fadeSlideUp} className="mb-6 z-10">
               <span
-                className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-slate-200/60 bg-white/50 backdrop-blur-md shadow-sm text-slate-700 text-xs font-bold tracking-[0.15em] uppercase hover:bg-white hover:shadow-md transition-all duration-300"
+                className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-[var(--color-border)] bg-[var(--color-card)]/50 backdrop-blur-md shadow-sm text-[var(--color-text-body)] text-xs font-bold tracking-[0.15em] uppercase hover:bg-[var(--color-card)] hover:shadow-md transition-all duration-300"
                 style={{ fontFamily: "var(--font-display)" }}
               >
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-amber-500)] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-amber-500)]"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-clay-500)] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-clay-500)]"></span>
                 </span>
                 {displaySlogan}
               </span>
             </motion.div>
 
-
-            {/* Kinetic Typography H1 */}
+            {/* Headline — single measured reveal per word (opacity/y only) */}
             <h1
-              className="text-[clamp(3rem,6vw,5.5rem)] font-black leading-[1.05] tracking-[-0.04em] text-[#050B14] mb-8"
+              className="text-[clamp(3rem,6vw,5.5rem)] font-black leading-[1.05] tracking-[-0.04em] text-[var(--color-text-heading)] mb-8"
               style={{ fontFamily: "var(--font-display)" }}
             >
               {titleWords.map((word: string, i: number) => {
@@ -203,10 +199,10 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
                 return (
                   <span key={i} className="inline-block overflow-hidden pb-2 mr-[0.25em]">
                     <motion.span
-                      initial={{ y: "100%", rotateZ: 5 }}
-                      animate={{ y: 0, rotateZ: 0 }}
-                      transition={{ type: "spring", stiffness: 100, damping: 15, delay: i * 0.05 }}
-                      className={`inline-block ${isHighlight ? "text-transparent bg-clip-text bg-gradient-to-r from-[#E8600A] via-[#FF8C42] to-[#E8600A] bg-[length:200%_auto] animate-[gradient_3s_ease_infinite]" : ""}`}
+                      initial={reduceMotion ? false : { y: "100%" }}
+                      animate={{ y: 0 }}
+                      transition={{ type: "spring", stiffness: 110, damping: 16, delay: reduceMotion ? 0 : i * 0.04 }}
+                      className={`inline-block ${isHighlight ? "text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-clay-500)] via-[var(--color-clay-200)] to-[var(--color-clay-500)] bg-[length:200%_auto] animate-[gradient_3s_ease_infinite]" : ""}`}
                     >
                       {word}
                     </motion.span>
@@ -218,7 +214,7 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
             {/* Subtitle */}
             <motion.p
               variants={fadeSlideUp}
-              className="text-lg lg:text-xl leading-[1.6] text-slate-600 mb-10 max-w-2xl font-medium"
+              className="text-lg lg:text-xl leading-[1.6] text-[var(--color-text-body)] mb-10 max-w-2xl font-medium"
               style={{ fontFamily: "var(--font-body)" }}
             >
               {displaySubtitle}
@@ -231,10 +227,10 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
             >
               <MagneticCTA
                 onClick={handleEligibilityClick}
-                className="group relative flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-[#050B14] text-white overflow-hidden shadow-[0_8px_30px_rgba(5,11,20,0.15)] hover:shadow-[0_20px_40px_rgba(5,11,20,0.25)] w-full sm:w-auto"
+                className="group relative flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-[var(--color-ink-700)] text-white overflow-hidden shadow-[0_8px_30px_rgba(16,25,43,0.15)] hover:shadow-[0_20px_40px_rgba(16,25,43,0.25)] w-full sm:w-auto"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-[#050B14] via-[#162E57] to-[#050B14] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-ink-700)] via-[var(--color-ink-500)] to-[var(--color-ink-700)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <span className="relative z-10 text-base font-bold tracking-wide">Check Eligibility</span>
                 <motion.div className="relative z-10 bg-white/10 p-1.5 rounded-full" whileHover={{ x: 3 }}>
                   <ArrowRight className="w-4 h-4" />
@@ -244,10 +240,10 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
               <a
                 href="#how-it-works"
                 onClick={(e) => handleSmoothScroll(e, "how-it-works")}
-                className="group flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white text-slate-800 text-base font-bold border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all duration-300 w-full sm:w-auto shadow-sm hover:shadow-md"
+                className="group flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[var(--color-card)] text-[var(--color-text-heading)] text-base font-bold border border-[var(--color-border)] hover:border-[var(--color-border-emphasis)] hover:bg-[var(--color-mortar-50)] transition-all duration-300 w-full sm:w-auto shadow-sm hover:shadow-md"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                <MousePointer2 className="w-4 h-4 text-slate-400 group-hover:text-[var(--color-amber-500)] transition-colors" />
+                <MousePointer2 className="w-4 h-4 text-[var(--color-text-muted)] group-hover:text-[var(--color-clay-500)] transition-colors" />
                 See How It Works
               </a>
             </motion.div>
@@ -269,18 +265,18 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 1 }}
+            transition={{ delay: reduceMotion ? 0 : 0.9, duration: 0.6 }}
             className="flex flex-wrap items-center justify-center gap-4 lg:gap-8 mt-16"
           >
             {TRUST_CHIPS.map((chip, idx) => (
-              <div key={idx} className="flex items-center gap-2 text-sm font-bold text-slate-600 bg-white px-4 py-2 rounded-full border border-slate-100 shadow-sm">
+              <div key={idx} className="flex items-center gap-2 text-sm font-bold text-[var(--color-text-body)] bg-[var(--color-card)] px-4 py-2 rounded-full border border-[var(--color-border)] shadow-sm">
                 {chip.icon}
                 <span style={{ fontFamily: "var(--font-body)" }}>{chip.label}</span>
               </div>
             ))}
           </motion.div>
         </motion.div>
-        
+
         {/* Shimmer & Gradient animation styles */}
         <style dangerouslySetInnerHTML={{__html: `
           @keyframes gradient {
@@ -300,162 +296,55 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
   );
 }
 
-/* ── BACKGROUND 3D SHAPES ───────────────────────────────────────────────── */
+/* ── SIGNATURE MOMENT: BRICK WALL BUILD ─────────────────────────────────────
+   The one "spend the boldness here" moment. Two small running-bond wall
+   fragments assemble course-by-course on load — literal to "Trust Bricks" —
+   replacing the previous floating 3D glass-house/shield/coin decoration.
+   Transform/opacity only (no blur), pauses respecting reduced motion. ── */
+function BrickWall({ rows = 4, cols = 5, brickSize = 22 }: { rows?: number; cols?: number; brickSize?: number }) {
+  const reduceMotion = useReducedMotion();
+  const gap = 3;
 
-const GlassHouse3D = () => (
-  <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-[0_20px_50px_rgba(232,96,10,0.15)]">
-    <defs>
-      <linearGradient id="wallGradLeft" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="rgba(255, 255, 255, 0.28)" />
-        <stop offset="100%" stopColor="rgba(255, 255, 255, 0.04)" />
-      </linearGradient>
-      <linearGradient id="wallGradRight" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="rgba(232, 96, 10, 0.22)" />
-        <stop offset="100%" stopColor="rgba(232, 96, 10, 0.04)" />
-      </linearGradient>
-      <linearGradient id="roofGradLeft" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#FF8C42" stopOpacity="0.8" />
-        <stop offset="100%" stopColor="#E8600A" stopOpacity="0.8" />
-      </linearGradient>
-      <linearGradient id="roofGradRight" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#E8600A" stopOpacity="0.8" />
-        <stop offset="100%" stopColor="#9E3C00" stopOpacity="0.8" />
-      </linearGradient>
-    </defs>
-    <polygon points="100,165 35,130 100,95 165,130" fill="rgba(5, 11, 20, 0.03)" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-    <polygon points="35,130 100,165 100,105 35,70" fill="url(#wallGradLeft)" stroke="rgba(255,255,255,0.25)" strokeWidth="1.2" />
-    <polygon points="100,165 165,130 165,70 100,105" fill="url(#wallGradRight)" stroke="rgba(232, 96, 10, 0.25)" strokeWidth="1.2" />
-    <polygon points="30,70 100,105 100,45 30,10" fill="url(#roofGradLeft)" />
-    <polygon points="100,105 170,70 170,10 100,45" fill="url(#roofGradRight)" />
-    <polygon points="115,147 135,137 135,107 115,117" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
-  </svg>
-);
-
-const PFALogo3D = () => (
-  <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-[0_25px_60px_rgba(13,31,60,0.12)]">
-    <defs>
-      <linearGradient id="shieldLeft" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#0B1C33" />
-        <stop offset="100%" stopColor="#050B14" />
-      </linearGradient>
-      <linearGradient id="shieldRight" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#1E3E6B" />
-        <stop offset="100%" stopColor="#0F2440" />
-      </linearGradient>
-      <linearGradient id="goldHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#FFC107" />
-        <stop offset="100%" stopColor="#E8600A" />
-      </linearGradient>
-    </defs>
-    <polygon points="100,175 40,140 40,55 100,25 160,55 160,140" fill="rgba(5, 11, 20, 0.08)" />
-    <path d="M100,170 L45,138 L45,60 L100,30 Z" fill="url(#shieldLeft)" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
-    <path d="M100,170 L155,138 L155,60 L100,30 Z" fill="url(#shieldRight)" stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
-    <path d="M100,65 L125,85 L100,135 L75,85 Z" fill="url(#goldHighlight)" opacity="0.85" />
-    <text x="100" y="112" fontSize="22" fontWeight="900" fill="#FFFFFF" textAnchor="middle" letterSpacing="2.5" fontFamily="sans-serif" transform="skewY(-8)">
-      PFA
-    </text>
-  </svg>
-);
-
-const NairaCoin3D = () => (
-  <svg viewBox="0 0 160 160" className="w-full h-full drop-shadow-[0_15px_40px_rgba(232,96,10,0.08)]">
-    <defs>
-      <linearGradient id="coinFace" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#FFE082" />
-        <stop offset="50%" stopColor="#FFB300" />
-        <stop offset="100%" stopColor="#FFA000" />
-      </linearGradient>
-      <linearGradient id="coinRim" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#FFA000" />
-        <stop offset="100%" stopColor="#FF6F00" />
-      </linearGradient>
-    </defs>
-    <ellipse cx="80" cy="85" rx="70" ry="70" fill="url(#coinRim)" />
-    <ellipse cx="80" cy="78" rx="68" ry="68" fill="url(#coinFace)" stroke="#FFF" strokeWidth="0.4" />
-    <ellipse cx="80" cy="78" rx="55" ry="55" fill="none" stroke="#FF6F00" strokeWidth="1.2" strokeDasharray="5 3" />
-    <text x="80" y="98" fontSize="56" fontWeight="900" fill="#B7791F" textAnchor="middle" fontFamily="sans-serif">
-      ₦
-    </text>
-  </svg>
-);
-
-function Background3DShapes() {
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true" style={{ perspective: '1200px' }}>
-      
-      {/* 1. Floating Glassmorphic 3D House - Top Left */}
-      <motion.div
-        className="absolute top-[12%] left-[4%] w-28 h-28 lg:w-40 lg:h-40"
-        initial={{ rotateX: 10, rotateY: -15, rotateZ: 0, y: 0 }}
-        animate={{
-          rotateY: [-15, 10, -15],
-          rotateX: [10, -10, 10],
-          y: [0, -25, 0]
-        }}
-        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        <GlassHouse3D />
-      </motion.div>
+    <div
+      aria-hidden="true"
+      className="flex flex-col-reverse gap-[3px]"
+      style={{ width: cols * brickSize + (cols - 1) * gap }}
+    >
+      {Array.from({ length: rows }).map((_, rowIdx) => {
+        const offset = rowIdx % 2 === 1;
+        return (
+          <div key={rowIdx} className="flex gap-[3px]" style={{ marginLeft: offset ? brickSize / 2 : 0 }}>
+            {Array.from({ length: offset ? cols - 1 : cols }).map((_, colIdx) => (
+              <motion.span
+                key={colIdx}
+                initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.4,
+                  delay: reduceMotion ? 0 : (rows - rowIdx) * 0.09 + colIdx * 0.05,
+                  ease: "easeOut",
+                }}
+                className="block rounded-[2px] bg-gradient-to-br from-[var(--color-clay-500)] to-[var(--color-clay-600)] shadow-sm"
+                style={{ width: brickSize, height: brickSize * 0.46 }}
+              />
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
-      {/* 2. Floating PFA Shield - Center Right */}
-      <motion.div
-        className="absolute top-[35%] right-[3%] w-24 h-24 lg:w-36 lg:h-36"
-        initial={{ rotateX: 5, rotateY: 20, y: 0 }}
-        animate={{
-          rotateY: [20, -5, 20],
-          rotateX: [5, 15, 5],
-          y: [0, 20, 0]
-        }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        <PFALogo3D />
-      </motion.div>
-
-      {/* 3. Floating Naira Coin - Top Right */}
-      <motion.div
-        className="absolute top-[14%] right-[8%] w-16 h-16 lg:w-26 lg:h-26"
-        initial={{ rotateY: 10, rotateX: 25, y: 0 }}
-        animate={{
-          rotateY: [10, 45, 10],
-          y: [0, -15, 0]
-        }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        <NairaCoin3D />
-      </motion.div>
-
-      {/* 4. Second Glassmorphic House - Bottom Left */}
-      <motion.div
-        className="absolute bottom-[18%] left-[8%] w-32 h-32 lg:w-44 lg:h-44 opacity-80"
-        initial={{ rotateX: -10, rotateY: 10, y: 0 }}
-        animate={{
-          rotateY: [10, -15, 10],
-          rotateX: [-10, 10, -10],
-          y: [0, 30, 0]
-        }}
-        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        <GlassHouse3D />
-      </motion.div>
-
-      {/* 5. Second Naira Coin - Bottom Right */}
-      <motion.div
-        className="absolute bottom-[28%] right-[6%] w-14 h-14 lg:w-22 lg:h-22 opacity-70"
-        initial={{ rotateY: -30, rotateX: 15, y: 0 }}
-        animate={{
-          rotateY: [-30, -5, -30],
-          y: [0, -20, 0]
-        }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        <NairaCoin3D />
-      </motion.div>
-
+function BrickBuildAccents() {
+  return (
+    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
+      <div className="absolute top-[14%] left-[4%] opacity-70 hidden md:block">
+        <BrickWall rows={5} cols={4} brickSize={18} />
+      </div>
+      <div className="absolute bottom-[10%] right-[5%] opacity-60 hidden md:block">
+        <BrickWall rows={3} cols={6} brickSize={16} />
+      </div>
     </div>
   );
 }
@@ -467,21 +356,25 @@ function Background3DShapes() {
  */
 function AnimatedCounter({ value, prefix = "₦", duration = 1.2 }: { value: number; prefix?: string; duration?: number }) {
   const [displayVal, setDisplayVal] = useState(value);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
+    if (reduceMotion) return;
     const controls = animate(displayVal, value, {
       duration: duration,
       ease: "easeOut",
       onUpdate: (latest) => setDisplayVal(Math.round(latest)),
     });
     return () => controls.stop();
-  }, [value, duration]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, duration, reduceMotion]);
 
-  return <span className="font-tabular tracking-tight">{prefix}{displayVal.toLocaleString("en-NG")}</span>;
+  const shown = reduceMotion ? value : displayVal;
+  return <span className="font-tabular tracking-tight">{prefix}{shown.toLocaleString("en-NG")}</span>;
 }
 
 /**
- * Super Premium Ultra-Wide Estimator Card
+ * Interactive Estimator Card
  */
 function HeroInteractiveEstimatorCard({ onCheckEligibility }: { onCheckEligibility: () => void }) {
   const [rsaBalance, setRsaBalance] = useState(15000000); // Default ₦15M
@@ -495,38 +388,38 @@ function HeroInteractiveEstimatorCard({ onCheckEligibility }: { onCheckEligibili
   const purchasingPower = equityContribution * 5; // Assuming 20% downpayment standard
 
   return (
-    <div className="relative w-full rounded-[2.5rem] bg-white border border-slate-200/60 shadow-[0_40px_80px_-20px_rgba(13,31,60,0.12)] p-2">
+    <div className="relative w-full rounded-[2.5rem] bg-[var(--color-card)] border border-[var(--color-border)] shadow-[0_40px_80px_-20px_rgba(16,25,43,0.12)] p-2">
       {/* Outer border gradient effect */}
       <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-b from-white/80 to-transparent pointer-events-none" />
-      
-      <div className="relative bg-slate-50/50 rounded-[2rem] p-6 sm:p-10 lg:p-12 overflow-hidden border border-slate-100">
-        
+
+      <div className="relative bg-[var(--color-mortar-50)]/60 rounded-[2rem] p-6 sm:p-10 lg:p-12 overflow-hidden border border-[var(--color-border)]">
+
         {/* Subtle glowing orb inside the card */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-[var(--color-amber-500)]/10 to-transparent rounded-full blur-[80px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-[var(--color-clay-500)]/10 to-transparent rounded-full blur-[80px] pointer-events-none" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10">
-          
+
           {/* Left Side: Controls */}
           <div className="lg:col-span-5 space-y-8">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-bold text-slate-600 mb-6 shadow-sm">
-                <Building2 className="w-3.5 h-3.5 text-[var(--color-amber-500)]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--color-card)] border border-[var(--color-border)] rounded-full text-xs font-bold text-[var(--color-text-body)] mb-6 shadow-sm">
+                <Building2 className="w-3.5 h-3.5 text-[var(--color-clay-500)]" />
                 Mortgage Estimator
               </div>
-              <h2 className="text-3xl font-black text-[#050B14] leading-tight mb-2" style={{ fontFamily: "var(--font-display)" }}>
+              <h2 className="text-3xl font-black text-[var(--color-text-heading)] leading-tight mb-2" style={{ fontFamily: "var(--font-display)" }}>
                 Dial in your balance.
               </h2>
-              <p className="text-slate-500 text-sm font-medium">Drag the slider to see your immediate purchasing power under PenCom rules.</p>
+              <p className="text-[var(--color-text-muted)] text-sm font-medium">Drag the slider to see your immediate purchasing power under PenCom rules.</p>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+            <div className="bg-[var(--color-card)] rounded-2xl p-6 border border-[var(--color-border)] shadow-sm">
               <div className="flex justify-between items-end mb-6">
-                <span className="text-sm font-bold text-slate-400 uppercase tracking-wider">Current RSA Balance</span>
-                <span className="text-2xl font-black text-[var(--color-amber-500)]">
+                <span className="text-sm font-bold text-[var(--color-text-muted)] uppercase tracking-wider">Current RSA Balance</span>
+                <span className="text-2xl font-black text-[var(--color-clay-500)]">
                   <AnimatedCounter value={rsaBalance} />
                 </span>
               </div>
-              
+
               <div className="relative w-full h-12 flex items-center">
                 <input
                   type="range"
@@ -535,17 +428,17 @@ function HeroInteractiveEstimatorCard({ onCheckEligibility }: { onCheckEligibili
                   step={step}
                   value={rsaBalance}
                   onChange={(e) => setRsaBalance(Number(e.target.value))}
-                  className="w-full h-3 bg-slate-100 rounded-full appearance-none cursor-pointer relative z-10 accent-[#050B14] hover:accent-[var(--color-amber-500)] transition-all"
+                  className="w-full h-3 bg-[var(--color-mortar-100)] rounded-full appearance-none cursor-pointer relative z-10 accent-[var(--color-ink-700)] hover:accent-[var(--color-clay-500)] transition-all"
                   aria-label="RSA Balance slider"
                 />
                 {/* Custom Fill track */}
-                <div 
-                  className="absolute left-0 h-3 bg-[#050B14] rounded-full pointer-events-none"
+                <div
+                  className="absolute left-0 h-3 bg-[var(--color-ink-700)] rounded-full pointer-events-none"
                   style={{ width: `${((rsaBalance - min) / (max - min)) * 100}%` }}
                 />
               </div>
-              
-              <div className="flex justify-between text-xs text-slate-400 font-bold mt-2">
+
+              <div className="flex justify-between text-xs text-[var(--color-text-muted)] font-bold mt-2">
                 <span>₦2M</span>
                 <span>₦80M+</span>
               </div>
@@ -554,31 +447,31 @@ function HeroInteractiveEstimatorCard({ onCheckEligibility }: { onCheckEligibili
 
           {/* Right Side: Results Display */}
           <div className="lg:col-span-7 grid grid-cols-1 gap-4 h-full">
-            
+
             {/* Equity Card */}
-            <div className="bg-[#050B14] rounded-3xl p-8 flex flex-col justify-center relative overflow-hidden group shadow-lg">
+            <div className="bg-[var(--color-ink-700)] rounded-3xl p-8 flex flex-col justify-center relative overflow-hidden group shadow-lg">
               {/* Animated glass shine */}
               <div className="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-[150%] group-hover:translate-x-[50%] transition-transform duration-1000 ease-in-out" />
-              
+
               <div className="relative z-10">
                 <p className="text-white/60 text-xs font-bold uppercase tracking-widest mb-3">25% Equity Release</p>
                 <div className="text-4xl lg:text-5xl font-black text-white mb-4">
                   <AnimatedCounter value={equityContribution} />
                 </div>
-                <div className="w-12 h-1 bg-[var(--color-amber-500)] rounded-full opacity-80" />
+                <div className="w-12 h-1 bg-[var(--color-clay-500)] rounded-full opacity-80" />
               </div>
             </div>
 
             {/* Target Home Card */}
-            <div className="bg-white rounded-3xl p-8 flex flex-col justify-between border border-slate-200 shadow-sm relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-amber-500)]/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500" />
-              
+            <div className="bg-[var(--color-card)] rounded-3xl p-8 flex flex-col justify-between border border-[var(--color-border)] shadow-sm relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-clay-500)]/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500" />
+
               <div>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">Target Home Budget</p>
-                <div className="text-3xl lg:text-4xl font-black text-[#050B14]">
+                <p className="text-[var(--color-text-muted)] text-xs font-bold uppercase tracking-widest mb-3">Target Home Budget</p>
+                <div className="text-3xl lg:text-4xl font-black text-[var(--color-text-heading)]">
                   <AnimatedCounter value={purchasingPower} />
                 </div>
-                <p className="text-slate-400 text-xs mt-3 font-medium leading-relaxed">
+                <p className="text-[var(--color-text-muted)] text-xs mt-3 font-medium leading-relaxed">
                   Assuming your 25% RSA equity is used as a 20% downpayment on the total property.
                 </p>
               </div>
@@ -587,7 +480,7 @@ function HeroInteractiveEstimatorCard({ onCheckEligibility }: { onCheckEligibili
                 onClick={onCheckEligibility}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="mt-6 w-full flex items-center justify-center gap-2 bg-[var(--color-amber-500)]/10 hover:bg-[var(--color-amber-500)]/20 text-[var(--color-amber-500)] py-3.5 rounded-xl font-bold transition-colors"
+                className="mt-6 w-full flex items-center justify-center gap-2 bg-[var(--color-clay-500)]/10 hover:bg-[var(--color-clay-500)]/20 text-[var(--color-clay-500)] py-3.5 rounded-xl font-bold transition-colors"
                 style={{ fontFamily: "var(--font-display)" }}
               >
                 <Sparkles className="w-4 h-4" />

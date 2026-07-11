@@ -1,19 +1,26 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import { Bricolage_Grotesque, Public_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
 /* ── FONT LOADING ────────────────────────────────────────────── */
-const plusJakartaSans = Plus_Jakarta_Sans({
+const bricolageGrotesque = Bricolage_Grotesque({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["600", "700", "800"],
   display: "swap",
 });
 
-const inter = Inter({
+const publicSans = Public_Sans({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["500", "600"],
   display: "swap",
 });
 
@@ -68,9 +75,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${plusJakartaSans.variable} ${inter.variable} h-full antialiased`}
+      className={`${bricolageGrotesque.variable} ${publicSans.variable} ${ibmPlexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#F0F4F9]">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#EDE7DB]">{children}</body>
     </html>
   );
 }

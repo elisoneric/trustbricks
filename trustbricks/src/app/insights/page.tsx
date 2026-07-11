@@ -68,14 +68,19 @@ export default async function InsightsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F0F4F9] flex flex-col font-['Inter']">
+    <div className="min-h-screen bg-[var(--color-body-bg)] flex flex-col font-sans antialiased">
       <GlobalNavbar />
-      
+
       {/* Header Section */}
-      <section className="pt-32 pb-16 px-6 lg:px-8 bg-[#0D1F3C] text-white">
-        <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold font-['Plus_Jakarta_Sans'] mb-6 tracking-tight">
-            Market Insights & <span className="text-[#E8600A]">News</span>
+      <section className="relative overflow-hidden pt-32 pb-16 px-6 lg:px-8 bg-[var(--color-ink-700)] text-white">
+        {/* Brick coursing texture, quiet */}
+        <div
+          className="absolute inset-0 pattern-brick opacity-[0.05]"
+          style={{ ["--brick-line" as any]: "white", ["--brick-bg" as any]: "transparent" }}
+        />
+        <div className="relative z-10 max-w-7xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
+            Market Insights & <span className="text-[var(--color-clay-200)]">News</span>
           </h1>
           <p className="text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
             Stay ahead of the curve. Read the latest updates on the Nigerian real estate market and expert guides on maximizing your RSA mortgage.
@@ -88,9 +93,9 @@ export default async function InsightsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => (
             <Link key={post._id} href={`/insights/${post.slug}`} className="group block h-full">
-              <article className="bg-white rounded-2xl overflow-hidden border border-gray-200/60 shadow-sm h-full flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-[#0D1F3C]/5">
+              <article className="bg-[var(--color-card)] rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-sm h-full flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-[var(--color-ink-700)]/5">
                 {/* Image Container */}
-                <div className="relative h-56 w-full overflow-hidden bg-gray-100">
+                <div className="relative h-56 w-full overflow-hidden bg-[var(--color-mortar-50)]">
                   {post.mainImage ? (
                     <Image
                       src={post.mainImage}
@@ -99,33 +104,33 @@ export default async function InsightsPage() {
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <div className="w-full h-full flex items-center justify-center text-[var(--color-text-muted)]">
                       No Image
                     </div>
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
-                
+
                 {/* Content */}
                 <div className="p-6 flex flex-col flex-grow">
-                  <div className="flex items-center gap-2 text-xs font-medium text-[#E8600A] mb-3 uppercase tracking-wider">
-                    <span>{new Date(post.publishedAt).toLocaleDateString('en-NG', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                  <div className="flex items-center gap-2 text-xs font-medium text-[var(--color-clay-500)] mb-3 uppercase tracking-wider">
+                    <span className="font-tabular">{new Date(post.publishedAt).toLocaleDateString('en-NG', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                   </div>
-                  
-                  <h2 className="text-xl font-bold font-['Plus_Jakarta_Sans'] text-[#0D1F3C] mb-4 line-clamp-2 group-hover:text-[#E8600A] transition-colors">
+
+                  <h2 className="text-xl font-bold text-[var(--color-text-heading)] mb-4 line-clamp-2 group-hover:text-[var(--color-clay-500)] transition-colors" style={{ fontFamily: "var(--font-display)" }}>
                     {post.title}
                   </h2>
-                  
-                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
+
+                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-[var(--color-border)]">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-[#0D1F3C] flex items-center justify-center text-[10px] font-bold text-white uppercase">
+                      <div className="w-6 h-6 rounded-full bg-[var(--color-ink-700)] flex items-center justify-center text-[10px] font-bold text-white uppercase">
                         {post.authorName ? post.authorName.charAt(0) : 'T'}
                       </div>
-                      <span className="text-sm font-medium text-gray-600">
+                      <span className="text-sm font-medium text-[var(--color-text-body)]">
                         {post.authorName || 'Trust Bricks Team'}
                       </span>
                     </div>
-                    <ArrowRight className="w-5 h-5 text-[#E8600A] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                    <ArrowRight className="w-5 h-5 text-[var(--color-clay-500)] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                   </div>
                 </div>
               </article>

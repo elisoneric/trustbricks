@@ -1,62 +1,79 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   TRUST BRICK PROPERTIES — DESIGN SYSTEM
-   Phase 1 tokens mapped to Tailwind v4 @theme (CSS-first config)
-   All hex values are canonical from the Phase 1 Blueprint.
+   TRUST BRICKS PROPERTIES — DESIGN SYSTEM
+   Grounded in the literal brand material (bricklaying: courses, mortar, clay)
+   paired with the institutional-document register of PenCom/pension paperwork.
+   Replaces the generic navy/amber fintech-default palette.
 ───────────────────────────────────────────────────────────────────────────── */
 
 @theme {
   /* FONTS */
-  --font-display: "Plus Jakarta Sans", sans-serif;
-  --font-body:    "Inter", sans-serif;
-  --font-sans:    "Inter", sans-serif;
+  --font-display: "Bricolage Grotesque", sans-serif;
+  --font-body:    "Public Sans", sans-serif;
+  --font-sans:    "Public Sans", sans-serif;
+  --font-mono:    "IBM Plex Mono", monospace;
 
-  /* ── NAVY PALETTE ── */
-  --color-navy-50:  #EEF2F7;
-  --color-navy-100: #D6E0ED;
-  --color-navy-200: #ADBFDA;
-  --color-navy-300: #7D9AC2;
-  --color-navy-400: #4F77AA;
-  --color-navy-500: #1E3A5F;
-  --color-navy-600: #162E57;
-  --color-navy-700: #0D1F3C;
-  --color-navy-800: #081526;
-  --color-navy-900: #040C15;
+  /* ── INK PALETTE (primary dark — institutional trust) ── */
+  --color-ink-50:  #EEF0F4;
+  --color-ink-100: #D8DDE6;
+  --color-ink-200: #B0BBC9;
+  --color-ink-300: #7C8CA3;
+  --color-ink-400: #4C5F7D;
+  --color-ink-500: #2A3F5F;
+  --color-ink-600: #1B2A44;
+  --color-ink-700: #10192B;
+  --color-ink-800: #0A121F;
+  --color-ink-900: #05090F;
 
-  /* ── AMBER / ORANGE PALETTE ── */
-  --color-amber-50:  #FDE8D8;
-  --color-amber-100: #FBCAA6;
-  --color-amber-500: #E8600A;
-  --color-amber-600: #D4530A;
-  --color-amber-700: #BC430A;
+  /* ── CLAY PALETTE (primary accent — burnt terracotta brick) ── */
+  --color-clay-50:  #FBE9E1;
+  --color-clay-100: #F3C9B5;
+  --color-clay-200: #E4A583;
+  --color-clay-500: #B8502E;
+  --color-clay-600: #A0431F;
+  --color-clay-700: #833518;
+
+  /* ── MORTAR PALETTE (secondary neutral — grey between the bricks) ── */
+  --color-mortar-50:  #F5F3EF;
+  --color-mortar-100: #E7E3DA;
+  --color-mortar-200: #D3CDC0;
+  --color-mortar-300: #B7AFA0;
+  --color-mortar-400: #9C9484;
+  --color-mortar-500: #8A8272;
+  --color-mortar-600: #6E6759;
+  --color-mortar-700: #544E44;
+
+  /* ── SEAL / MOSS (sparing accents) ── */
+  --color-seal: #A9812E;   /* certification / "PenCom verified" moments only */
+  --color-moss: #2F6E52;   /* success / verified state */
 
   /* ── SEMANTIC ── */
-  --color-success:     #059669;
-  --color-warning:     #D97706;
-  --color-error:       #DC2626;
-  --color-info:        #0369A1;
-  --color-pencom-gold: #B8952A;
+  --color-success:     #2F6E52;
+  --color-warning:     #A9721F;
+  --color-error:       #B3261E;
+  --color-info:        #2B5C7A;
+  --color-pencom-gold: #A9812E;
 
   /* ── SURFACE ── */
-  --color-body-bg: #F0F4F9;
-  --color-card:    #FFFFFF;
-  --color-border:  #E2E8F0;
-  --color-border-emphasis: #CBD5E1;
+  --color-body-bg: #EDE7DB;
+  --color-card:    #FDFBF7;
+  --color-border:  #DBD5C7;
+  --color-border-emphasis: #C4BCA9;
 
   /* ── TEXT ── */
-  --color-text-heading: #0F172A;
-  --color-text-body:    #475569;
-  --color-text-muted:   #94A3B8;
-  --color-text-inverse: #F8FAFC;
+  --color-text-heading: #10192B;
+  --color-text-body:    #4B4739;
+  --color-text-muted:   #8A8272;
+  --color-text-inverse: #FDFBF7;
 
   /* ── SHADOWS ── */
-  --shadow-card:        0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
-  --shadow-card-hover:  0 8px 32px rgba(13,31,60,0.14);
-  --shadow-nav:         0 1px 0 #E2E8F0;
-  --shadow-action-glow: 0 0 24px rgba(232,96,10,0.45), 0 4px 16px rgba(232,96,10,0.25);
-  --shadow-dialog:      0 24px 64px rgba(13,31,60,0.22);
-  --shadow-glass:       0 4px 32px rgba(13,31,60,0.12), inset 0 1px 0 rgba(255,255,255,0.15);
+  --shadow-card:        0 1px 3px rgba(16,25,43,0.06), 0 4px 16px rgba(16,25,43,0.06);
+  --shadow-card-hover:  0 8px 32px rgba(16,25,43,0.14);
+  --shadow-nav:         0 1px 0 #DBD5C7;
+  --shadow-action-glow: 0 0 24px rgba(184,80,46,0.4), 0 4px 16px rgba(184,80,46,0.22);
+  --shadow-dialog:      0 24px 64px rgba(16,25,43,0.22);
+  --shadow-glass:       0 4px 32px rgba(16,25,43,0.12), inset 0 1px 0 rgba(255,255,255,0.15);
 
   /* ── RADIUS ── */
   --radius-sm:   6px;
@@ -97,11 +114,11 @@ body {
 
 /* ── SELECTION COLOR ── */
 ::selection {
-  background-color: var(--color-amber-500);
+  background-color: var(--color-clay-500);
   color: white;
 }
 ::-moz-selection {
-  background-color: var(--color-amber-500);
+  background-color: var(--color-clay-500);
   color: white;
 }
 
@@ -114,18 +131,59 @@ body {
   background: var(--color-body-bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-navy-200);
+  background: var(--color-mortar-300);
   border-radius: 9999px;
   border: 2px solid var(--color-body-bg);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-navy-300);
+  background: var(--color-mortar-400);
 }
 
-/* ── TABULAR NUMERALS — used for all ₦ amounts ── */
+/* ── TABULAR / LEDGER NUMERALS — used for all ₦ amounts, RC & PFA figures ── */
 .font-tabular {
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
+}
+
+/* ── BRICK COURSING — the site's one signature structural motif ──
+   True running-bond (offset) pattern: vertical mortar joints alternate
+   position every other row via double-height background tiling. ── */
+.pattern-brick {
+  --brick-w: 56px;
+  --brick-h: 26px;
+  --brick-line: var(--color-mortar-200);
+  --brick-bg: var(--color-parchment);
+  background-color: var(--brick-bg);
+  background-image:
+    linear-gradient(90deg, var(--brick-line) 1.5px, transparent 1.5px),
+    linear-gradient(90deg, var(--brick-line) 1.5px, transparent 1.5px),
+    linear-gradient(var(--brick-line) 1.5px, transparent 1.5px);
+  background-size:
+    var(--brick-w) calc(var(--brick-h) * 2),
+    var(--brick-w) calc(var(--brick-h) * 2),
+    100% var(--brick-h);
+  background-position:
+    0 0,
+    calc(var(--brick-w) / 2) var(--brick-h),
+    0 0;
+}
+
+/* Thin divider strip using the same coursing logic, sized for a rule.
+   Override --brick-line inline to recolor per-section (e.g. clay on dark ink). */
+.divider-brick {
+  --brick-w: 32px;
+  --brick-line: var(--color-mortar-300);
+  height: 10px;
+  background-color: transparent;
+  background-image:
+    linear-gradient(90deg, var(--brick-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--brick-line) 1px, transparent 1px);
+  background-size: var(--brick-w) 200%, var(--brick-w) 200%;
+  background-position: 0 0, calc(var(--brick-w) / 2) 100%;
+  border-top: 1.5px solid var(--brick-line);
+  border-bottom: 1.5px solid var(--brick-line);
+  opacity: 0.6;
 }
 
 /* ── MARQUEE SCROLL ANIMATION ── */
@@ -140,7 +198,8 @@ body {
   width: max-content;
 }
 
-.marquee-track:hover {
+.marquee-track:hover,
+.marquee-track.is-paused {
   animation-play-state: paused;
 }
 
@@ -170,8 +229,8 @@ input[type="range"] {
   cursor: pointer;
   background: linear-gradient(
     to right,
-    var(--color-amber-500) var(--slider-fill, 0%),
-    var(--color-navy-50)   var(--slider-fill, 0%)
+    var(--color-clay-500) var(--slider-fill, 0%),
+    var(--color-mortar-100) var(--slider-fill, 0%)
   );
 }
 
@@ -181,15 +240,15 @@ input[type="range"]::-webkit-slider-thumb {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-navy-700), var(--color-amber-500));
-  box-shadow: 0 2px 8px rgba(13,31,60,0.25);
+  background: linear-gradient(135deg, var(--color-ink-700), var(--color-clay-500));
+  box-shadow: 0 2px 8px rgba(16,25,43,0.25);
   cursor: grab;
   transition: box-shadow 180ms ease;
 }
 
 input[type="range"]::-webkit-slider-thumb:active {
   cursor: grabbing;
-  box-shadow: 0 0 0 4px rgba(232,96,10,0.25);
+  box-shadow: 0 0 0 4px rgba(184,80,46,0.25);
 }
 
 /* ── SCROLL-BASED FADE-IN UTILITY ── */
@@ -200,4 +259,19 @@ input[type="range"]::-webkit-slider-thumb:active {
 @keyframes fade-slide-up {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

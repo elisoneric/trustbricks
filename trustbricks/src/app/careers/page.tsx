@@ -38,7 +38,7 @@ const JOBS = [
 
 export default function CareersPage() {
   return (
-    <div className="min-h-screen bg-[#F0F4F9] flex flex-col font-sans antialiased">
+    <div className="min-h-screen bg-[var(--color-body-bg)] flex flex-col font-sans antialiased">
       <GlobalNavbar />
 
       <main className="flex-grow pt-32 pb-24">
@@ -48,14 +48,14 @@ export default function CareersPage() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: "spring", stiffness: 100, damping: 15 }}
           >
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#E8600A]/10 border border-[#E8600A]/20 text-[#E8600A] text-xs font-bold uppercase tracking-wider mb-6">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--color-clay-500)]/10 border border-[var(--color-clay-500)]/20 text-[var(--color-clay-500)] text-xs font-bold uppercase tracking-wider mb-6">
               Join Our Team
             </span>
-            <h1 className="text-4xl md:text-5xl font-black text-[#0D1F3C] mb-6" style={{ fontFamily: "var(--font-display)" }}>
+            <h1 className="text-4xl md:text-5xl font-black text-[var(--color-text-heading)] mb-6" style={{ fontFamily: "var(--font-display)" }}>
               Build the Future of <br />
-              <span className="text-[#E8600A]">Homeownership.</span>
+              <span className="text-[var(--color-clay-500)]">Homeownership.</span>
             </h1>
-            <p className="text-lg text-[#475569] leading-relaxed max-w-2xl mx-auto">
+            <p className="text-lg text-[var(--color-text-body)] leading-relaxed max-w-2xl mx-auto">
               At Trust Bricks, we work collaboratively to dismantle the barriers preventing millions of Nigerians from owning homes. Join us in making a real-world impact.
             </p>
           </motion.div>
@@ -71,21 +71,21 @@ export default function CareersPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ type: "spring", stiffness: 120, damping: 16, delay: index * 0.08 }}
                 whileHover={{ y: -3, scale: 1.01 }}
-                className="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col sm:flex-row justify-between sm:items-center gap-6"
+                className="bg-[var(--color-card)] rounded-2xl p-6 border border-[var(--color-border)] shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col sm:flex-row justify-between sm:items-center gap-6"
               >
                 <div className="space-y-2">
-                  <span className="text-xs font-bold text-[#E8600A] uppercase tracking-wider bg-[#E8600A]/5 px-2.5 py-1 rounded-md">
+                  <span className="text-xs font-bold text-[var(--color-clay-500)] uppercase tracking-wider bg-[var(--color-clay-500)]/5 px-2.5 py-1 rounded-md">
                     {job.department}
                   </span>
-                  <h3 className="text-xl font-bold text-[#0D1F3C]" style={{ fontFamily: "var(--font-display)" }}>
+                  <h3 className="text-xl font-bold text-[var(--color-text-heading)]" style={{ fontFamily: "var(--font-display)" }}>
                     {job.title}
                   </h3>
-                  
+
                   {/* Job Metadata */}
-                  <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-[#475569] font-medium">
-                    <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-slate-400" /> {job.location}</span>
-                    <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-slate-400" /> {job.type}</span>
-                    <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5 text-slate-400" /> {job.posted}</span>
+                  <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-[var(--color-text-body)] font-medium">
+                    <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-[var(--color-text-muted)]" /> {job.location}</span>
+                    <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-[var(--color-text-muted)]" /> {job.type}</span>
+                    <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5 text-[var(--color-text-muted)]" /> {job.posted}</span>
                   </div>
                 </div>
 
@@ -93,7 +93,7 @@ export default function CareersPage() {
                   <button
                     type="button"
                     onClick={() => alert(`Applying for ${job.title} position...`)}
-                    className="inline-flex items-center gap-1.5 px-5 py-3 rounded-xl bg-[#0D1F3C] hover:bg-[#1E3A5F] text-white text-xs font-bold transition-all duration-200 cursor-pointer shadow-md"
+                    className="inline-flex items-center gap-1.5 px-5 py-3 rounded-xl bg-[var(--color-ink-700)] hover:bg-[var(--color-ink-600)] text-white text-xs font-bold transition-all duration-200 cursor-pointer shadow-md"
                   >
                     <span>Apply Now</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />

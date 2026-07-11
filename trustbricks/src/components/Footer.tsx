@@ -20,27 +20,37 @@ export default function Footer({ siteSettings }: { siteSettings?: any } = {}) {
   ];
 
   return (
-    <footer className="bg-[#050B14] text-white pt-24 pb-12 border-t-[4px] border-[#E8600A]">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-        
+    <footer className="bg-[var(--color-ink-700)] text-white pt-24 pb-12">
+      {/* Brick-course top rule — the site's one signature structural motif */}
+      <div className="divider-brick" aria-hidden="true" style={{ ['--brick-line' as any]: 'var(--color-clay-500)' }} />
+
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 mt-16">
+
         {/* Brand Column */}
         <div className="space-y-6">
           <div className="flex items-center gap-3">
-             <div className="w-8 h-8 bg-[#E8600A] rounded-md flex items-center justify-center">
-                <div className="w-4 h-4 border-2 border-white rounded-sm"></div>
-             </div>
-             <span className="font-extrabold text-[16px] leading-none tracking-tight">
-               TRUST BRICKS<span className="text-[#E8600A]">.</span>
+             <span aria-hidden="true" className="flex flex-col gap-[3px] w-8 h-8 rounded-md bg-[var(--color-clay-500)] p-[5px]">
+               <span className="flex gap-[3px] flex-1">
+                 <span className="flex-1 rounded-[1px] bg-white/90" />
+                 <span className="flex-1 rounded-[1px] bg-white/90" />
+               </span>
+               <span className="flex gap-[3px] flex-1 pl-[7px]">
+                 <span className="flex-1 rounded-[1px] bg-white/90" />
+                 <span className="flex-1 rounded-[1px] bg-white/90" />
+               </span>
+             </span>
+             <span className="font-extrabold text-[16px] leading-none tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
+               TRUST BRICKS<span className="text-[var(--color-clay-500)]">.</span>
              </span>
           </div>
-          <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
+          <p className="text-white/50 text-sm leading-relaxed max-w-xs">
             Empowering Nigerian professionals to unlock their RSA equity and secure their dream homes with absolute transparency and ease.
           </p>
-          <div className="text-xs text-slate-400 space-y-1">
+          <div className="text-xs text-white/50 space-y-1 font-tabular">
             <p>Email: {siteSettings?.companyEmail || "hq@trustbrickproperties.ng"}</p>
             <p>Phone: {siteSettings?.companyPhone || "+234 800-TRUSTBRICKS"}</p>
           </div>
-          <div className="flex items-center gap-4 text-slate-400">
+          <div className="flex items-center gap-4 text-white/50">
             <a href="#" className="hover:text-white transition-colors"><Facebook /></a>
             <a href="#" className="hover:text-white transition-colors"><Twitter /></a>
             <a href="#" className="hover:text-white transition-colors"><Linkedin /></a>
@@ -49,12 +59,12 @@ export default function Footer({ siteSettings }: { siteSettings?: any } = {}) {
 
         {/* Quick Links */}
         <div>
-          <h4 className="text-white font-bold text-sm tracking-widest uppercase mb-6">Company</h4>
-          <ul className="space-y-4 text-slate-400 text-sm font-medium">
+          <h4 className="text-white font-bold text-sm tracking-widest uppercase mb-6" style={{ fontFamily: "var(--font-display)" }}>Company</h4>
+          <ul className="space-y-4 text-white/50 text-sm font-medium">
             {companyLinks.map((link) => (
               <li key={link.label}>
-                <Link href={link.href} className="hover:text-[#E8600A] transition-colors flex items-center gap-2 group">
-                  <span className="w-0 h-[1px] bg-[#E8600A] transition-all duration-300 group-hover:w-3"></span>
+                <Link href={link.href} className="hover:text-[var(--color-clay-200)] transition-colors flex items-center gap-2 group">
+                  <span className="w-0 h-[1px] bg-[var(--color-clay-500)] transition-all duration-300 group-hover:w-3"></span>
                   {link.label}
                 </Link>
               </li>
@@ -64,12 +74,12 @@ export default function Footer({ siteSettings }: { siteSettings?: any } = {}) {
 
         {/* Legal & Support */}
         <div>
-          <h4 className="text-white font-bold text-sm tracking-widest uppercase mb-6">Legal & Support</h4>
-          <ul className="space-y-4 text-slate-400 text-sm font-medium">
+          <h4 className="text-white font-bold text-sm tracking-widest uppercase mb-6" style={{ fontFamily: "var(--font-display)" }}>Legal & Support</h4>
+          <ul className="space-y-4 text-white/50 text-sm font-medium">
             {legalLinks.map((link) => (
               <li key={link.label}>
-                <Link href={link.href} className="hover:text-[#E8600A] transition-colors flex items-center gap-2 group">
-                  <span className="w-0 h-[1px] bg-[#E8600A] transition-all duration-300 group-hover:w-3"></span>
+                <Link href={link.href} className="hover:text-[var(--color-clay-200)] transition-colors flex items-center gap-2 group">
+                  <span className="w-0 h-[1px] bg-[var(--color-clay-500)] transition-all duration-300 group-hover:w-3"></span>
                   {link.label}
                 </Link>
               </li>
@@ -79,33 +89,33 @@ export default function Footer({ siteSettings }: { siteSettings?: any } = {}) {
 
         {/* Regional Hubs */}
         <div>
-          <h4 className="text-white font-bold text-sm tracking-widest uppercase mb-6">Regional Hubs</h4>
-          <ul className="space-y-4 text-slate-400 text-sm font-medium">
+          <h4 className="text-white font-bold text-sm tracking-widest uppercase mb-6" style={{ fontFamily: "var(--font-display)" }}>Regional Hubs</h4>
+          <ul className="space-y-4 text-white/50 text-sm font-medium">
             <li className="flex items-start gap-3">
-              <span className="text-[#E8600A] mt-1"><Building /></span>
+              <span className="text-[var(--color-clay-500)] mt-1"><Building /></span>
               <div>
                 <p className="text-white font-semibold">Abuja Office (HQ)</p>
                 <p className="text-xs mt-1">Plot 234, Wuse Zone 5, FCT</p>
               </div>
             </li>
             <li className="flex items-start gap-3">
-              <span className="text-slate-600 mt-1"><Building /></span>
+              <span className="text-white/40 mt-1"><Building /></span>
               <div>
                 <p className="text-white font-semibold">Lagos Hub</p>
                 <p className="text-xs mt-1">14 Broad Street, Lagos Island</p>
               </div>
             </li>
             <li className="flex gap-4 mt-6">
-               <span className="text-xs bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">Adamawa</span>
-               <span className="text-xs bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">Kaduna</span>
+               <span className="text-xs bg-white/5 px-3 py-1.5 rounded-full border border-white/10">Adamawa</span>
+               <span className="text-xs bg-white/5 px-3 py-1.5 rounded-full border border-white/10">Kaduna</span>
             </li>
           </ul>
         </div>
 
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500 font-medium">
-        <p>TRUST BRICKS PROPERTIES LTD. © 2026 (RC: 9552712). All rights reserved.</p>
+      <div className="max-w-7xl mx-auto px-6 border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40 font-medium">
+        <p className="font-tabular">TRUST BRICKS PROPERTIES LTD. © 2026 (RC: 9552712). All rights reserved.</p>
         <p className="flex items-center gap-2">
           <ShieldCheck /> Regulated and Compliant with PenCom RSA Guidelines.
         </p>
