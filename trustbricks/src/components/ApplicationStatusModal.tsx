@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Phone, CreditCard, Lock, Search, CheckCircle2 } from "lucide-react";
 
@@ -90,6 +91,11 @@ interface ApplicationStatusModalProps {
 
 export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationStatusModalProps) {
   const [state, setState] = useState<ModalState>("form");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const [phone, setPhone] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [result, setResult] = useState<StatusResponse | null>(null);
@@ -158,7 +164,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
       if (trimAccount) body.account_number = trimAccount;
 
       const res = await fetch(
-        "https://space.trustbrickspropertieslimited.com.ng/api/portal/track",
+        "https://dev.trustbrickspropertieslimited.com.ng/api/portal/track",
         {
           method:  "POST",
           headers: { "Content-Type": "application/json" },
@@ -186,15 +192,8 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
         setState("not-found");
       }
     } catch (err: any) {
-      // Network/CORS-level failures surface as a raw TypeError ("Failed to fetch") —
-      // show a friendly message instead of the browser's internal error text.
-      const isNetworkError = err instanceof TypeError;
-      setErrorMsg(
-        isNetworkError
-          ? "Couldn't reach the server. Check your connection and try again."
-          : err.message || "An unexpected error occurred."
-      );
-      setState("form");
+      setErrorMsg(err.message || "An unexpected error occurred.");
+      setState("error");
     }
   };
 
@@ -207,7 +206,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
     setTimeout(() => phoneInputRef.current?.focus(), 100);
   };
 
-  return (
+  const modalContent = (
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -220,9 +219,6 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
           className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4"
           style={{ background: "rgba(16, 25, 43, 0.65)", backdropFilter: "blur(6px)" }}
           onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Check application status"
         >
           <motion.div
             key="panel"
@@ -232,260 +228,189 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
             exit="exit"
             className="relative w-full sm:max-w-lg bg-[var(--color-card)] rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-[0_40px_100px_rgba(16,25,43,0.3)]"
           >
-            {/* ── TOP GRADIENT HEADER ── */}
             <div className="relative px-7 pt-8 pb-6 bg-gradient-to-br from-[var(--color-ink-700)] via-[var(--color-ink-600)] to-[var(--color-ink-500)] overflow-hidden">
-              {/* Decorative orbs */}
-              <div className="absolute top-[-20px] right-[-20px] w-40 h-40 rounded-full bg-[var(--color-clay-500)]/15 blur-[50px] pointer-events-none" />
-              <div className="absolute bottom-[-10px] left-[-10px] w-28 h-28 rounded-full bg-[var(--color-ink-400)]/15 blur-[40px] pointer-events-none" />
-
-              {/* Close button */}
               <button
                 type="button"
                 onClick={onClose}
-                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors duration-200 text-white/70 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-                aria-label="Close modal"
+                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors duration-200 text-white/70"
               >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
               </button>
-
-              {/* Icon badge */}
-              <div className="w-12 h-12 rounded-2xl bg-[var(--color-clay-500)] flex items-center justify-center mb-4 shadow-[0_8px_24px_rgba(184,80,46,0.4)]">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-
-              <h2 className="text-xl font-black text-white mb-1" style={{ fontFamily: "var(--font-display)" }}>
-                Check My Application
-              </h2>
-              <p className="text-white/55 text-sm font-medium">
-                Enter your phone number or account number to track your application stage.
-              </p>
+              <h2 className="text-xl font-black text-white mb-1">Check My Application</h2>
+              <p className="text-white/55 text-sm font-medium">Track your application stage.</p>
             </div>
 
-            {/* ── BODY ── */}
             <div className="px-7 py-6">
               <AnimatePresence mode="wait">
-
-                {/* ── FORM STATE ── */}
                 {state === "form" && (
                   <motion.div key="form" variants={contentVariants} initial="hidden" animate="visible" exit="exit">
-
-                    {/* Tab switcher — either field alone is enough, both optional */}
                     <div className="flex gap-1 p-1 bg-[var(--color-mortar-100)] rounded-xl mb-6">
                       {(["phone", "account"] as const).map((tab) => (
                         <button
                           key={tab}
                           type="button"
-                          onClick={() => setActiveTab(tab)}
-                          className={[
-                            "flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-bold rounded-lg transition-all duration-200",
+                          onClick={() => {
+                            setActiveTab(tab);
+                            setErrorMsg("");
+                            if (tab === "phone") {
+                              setTimeout(() => phoneInputRef.current?.focus(), 100);
+                            }
+                          }}
+                          className={`flex-1 py-2 text-xs font-black uppercase tracking-widest rounded-lg transition-all duration-200 ${
                             activeTab === tab
-                              ? "bg-[var(--color-card)] text-[var(--color-ink-700)] shadow-sm"
-                              : "text-[var(--color-text-muted)] hover:text-[var(--color-text-body)]",
-                          ].join(" ")}
+                              ? "bg-white text-[var(--color-text-heading)] shadow-sm"
+                              : "text-[var(--color-text-muted)] hover:text-[var(--color-text-body)]"
+                          }`}
                         >
-                          {tab === "phone" ? <Phone className="w-3.5 h-3.5" /> : <CreditCard className="w-3.5 h-3.5" />}
                           {tab === "phone" ? "Phone Number" : "Account Number"}
                         </button>
                       ))}
                     </div>
 
-                    <form onSubmit={handleSubmit} noValidate className="space-y-4">
-                      {activeTab === "phone" ? (
-                        <div>
-                          <label htmlFor="app-status-phone" className="block text-xs font-black text-[var(--color-text-body)] uppercase tracking-widest mb-2">
-                            Phone Number <span className="normal-case font-medium text-[var(--color-text-muted)]">(optional)</span>
-                          </label>
-                          <div className="relative">
-                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] text-sm font-bold pointer-events-none select-none font-tabular">
-                              +234
-                            </div>
-                            <input
-                              ref={phoneInputRef}
-                              id="app-status-phone"
-                              type="tel"
-                              inputMode="numeric"
-                              placeholder="08012345678"
-                              value={phone}
-                              onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, 11)); setErrorMsg(""); }}
-                              className="w-full pl-14 pr-4 py-3.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-mortar-50)] text-[var(--color-text-heading)] text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/40 focus:border-[var(--color-clay-500)] transition-all placeholder:text-[var(--color-mortar-300)]"
-                            />
-                          </div>
-                          <p className="text-[11px] text-[var(--color-text-muted)] mt-2 font-medium">The number used on your application (10+ digits)</p>
-                        </div>
-                      ) : (
-                        <div>
-                          <label htmlFor="app-status-account" className="block text-xs font-black text-[var(--color-text-body)] uppercase tracking-widest mb-2">
-                            Account Number <span className="normal-case font-medium text-[var(--color-text-muted)]">(optional)</span>
-                          </label>
-                          <input
-                            id="app-status-account"
-                            type="text"
-                            inputMode="numeric"
-                            placeholder="1234567890"
-                            value={accountNumber}
-                            onChange={(e) => { setAccountNumber(e.target.value.replace(/\D/g, "").slice(0, 20)); setErrorMsg(""); }}
-                            className="w-full px-4 py-3.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-mortar-50)] text-[var(--color-text-heading)] text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/40 focus:border-[var(--color-clay-500)] transition-all placeholder:text-[var(--color-mortar-300)]"
-                          />
-                          <p className="text-[11px] text-[var(--color-text-muted)] mt-2 font-medium">Your AMB pension account number (6+ digits)</p>
-                        </div>
-                      )}
-
-                      {/* Optional second field (subtle) */}
-                      <button
-                        type="button"
-                        className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-clay-500)] font-semibold underline underline-offset-2 transition-colors"
-                        onClick={() => setActiveTab(activeTab === "phone" ? "account" : "phone")}
-                      >
-                        + Also add {activeTab === "phone" ? "account number" : "phone"} for better accuracy
-                      </button>
-
-                      {/* Error message */}
-                      <AnimatePresence>
-                        {errorMsg && (
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                      <AnimatePresence mode="wait">
+                        {activeTab === "phone" ? (
                           <motion.div
-                            initial={{ opacity: 0, y: -8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0 }}
-                            className="flex items-start gap-3 px-4 py-3 bg-[var(--color-error)]/10 border border-[var(--color-error)]/20 rounded-xl"
+                            key="phone-field"
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 8 }}
+                            transition={{ duration: 0.15 }}
                           >
-                            <span className="text-[var(--color-error)] mt-0.5 shrink-0">
-                              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5"/>
-                                <path d="M7 4v4M7 9.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                              </svg>
-                            </span>
-                            <p className="text-[var(--color-error)] text-xs font-semibold">{errorMsg}</p>
+                            <label htmlFor="app-status-phone" className="block text-xs font-black text-[var(--color-text-body)] uppercase tracking-widest mb-2">
+                              Phone Number
+                            </label>
+                            <div className="relative">
+                              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]">
+                                <Phone className="w-4 h-4" />
+                              </span>
+                              <input
+                                ref={phoneInputRef}
+                                id="app-status-phone"
+                                type="tel"
+                                placeholder="e.g. 08031234567"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                                className="w-full pl-11 pr-4 py-3.5 bg-[var(--color-mortar-50)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text-body)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-1 focus:ring-[var(--color-clay-500)] transition-colors"
+                              />
+                            </div>
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="account-field"
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 8 }}
+                            transition={{ duration: 0.15 }}
+                          >
+                            <label htmlFor="app-status-account" className="block text-xs font-black text-[var(--color-text-body)] uppercase tracking-widest mb-2">
+                              AMB Account Number
+                            </label>
+                            <div className="relative">
+                              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]">
+                                <CreditCard className="w-4 h-4" />
+                              </span>
+                              <input
+                                id="app-status-account"
+                                type="text"
+                                placeholder="Enter your account number"
+                                value={accountNumber}
+                                onChange={(e) => setAccountNumber(e.target.value)}
+                                className="w-full pl-11 pr-4 py-3.5 bg-[var(--color-mortar-50)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text-body)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-1 focus:ring-[var(--color-clay-500)] transition-colors"
+                              />
+                            </div>
                           </motion.div>
                         )}
                       </AnimatePresence>
 
-                      <motion.button
-                        type="submit"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="w-full py-3.5 rounded-xl bg-[var(--color-ink-700)] text-white text-sm font-black tracking-wide hover:bg-[var(--color-ink-600)] transition-colors shadow-[0_8px_24px_rgba(16,25,43,0.2)] hover:shadow-[0_12px_32px_rgba(16,25,43,0.3)]"
-                        style={{ fontFamily: "var(--font-display)" }}
-                      >
-                        Track My Application →
-                      </motion.button>
-                    </form>
-
-                    {/* Privacy note */}
-                    <p className="flex items-center justify-center gap-1.5 text-center text-[11px] text-[var(--color-text-muted)] mt-5 font-medium">
-                      <Lock className="w-3 h-3" />
-                      No login needed. We only return a status and step — never personal details.
-                    </p>
-                  </motion.div>
-                )}
-
-                {/* ── LOADING STATE ── */}
-                {state === "loading" && (
-                  <motion.div key="loading" variants={contentVariants} initial="hidden" animate="visible" exit="exit">
-                    <Spinner />
-                  </motion.div>
-                )}
-
-                {/* ── RESULT STATE ── */}
-                {state === "result" && result && (
-                  <motion.div key="result" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="space-y-4">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-8 h-8 rounded-full bg-[var(--color-moss)]/10 flex items-center justify-center shrink-0">
-                        <CheckCircle2 className="w-4 h-4 text-[var(--color-moss)]" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-black text-[var(--color-text-heading)]">Application Found</p>
-                        <p className="text-xs text-[var(--color-text-muted)]">Current status below</p>
-                      </div>
-                    </div>
-
-                    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-mortar-50)] p-5 relative overflow-hidden">
-                      {/* Top accent */}
-                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[var(--color-clay-500)] to-[var(--color-clay-200)]" />
-
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[var(--color-clay-500)]/10 text-[var(--color-clay-500)] text-[10px] font-black uppercase tracking-widest mb-3">
-                        {result.status}
-                      </span>
-
-                      {result.step != null && (
-                        <StepProgressBar step={result.step} totalSteps={result.total_steps} />
+                      {errorMsg && (
+                        <motion.p
+                          initial={{ opacity: 0, y: -4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-xs font-bold text-[var(--color-red)] pl-1"
+                        >
+                          ⚠️ {errorMsg}
+                        </motion.p>
                       )}
 
-                      <p className="text-sm text-[var(--color-text-body)] font-medium leading-relaxed mt-4 pt-4 border-t border-[var(--color-border)]">
-                        {result.description}
-                      </p>
+                      <div className="pt-2">
+                        <button
+                          type="submit"
+                          className="w-full py-3.5 rounded-xl bg-[var(--color-ink-700)] text-white text-sm font-black tracking-wide hover:bg-[var(--color-ink-600)] transition-colors shadow-[0_8px_24px_rgba(16,25,43,0.2)] hover:shadow-[0_12px_32px_rgba(16,25,43,0.3)]"
+                        >
+                          Track My Application →
+                        </button>
+                      </div>
+                    </form>
+                  </motion.div>
+                )}
+
+                {state === "loading" && (
+                  <motion.div key="loading" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="py-12 flex flex-col items-center justify-center">
+                    <div className="relative w-16 h-16 mb-6">
+                      <div className="absolute inset-0 rounded-full border-4 border-[var(--color-mortar-100)]" />
+                      <div className="absolute inset-0 rounded-full border-4 border-t-[var(--color-clay-500)] animate-spin" />
+                    </div>
+                    <p className="text-sm font-bold text-[var(--color-text-heading)] uppercase tracking-widest animate-pulse">Retrieving status…</p>
+                  </motion.div>
+                )}
+
+                {state === "result" && result && (
+                  <motion.div key="result" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="space-y-6">
+                    <div className="p-5 bg-[var(--color-mortar-50)] rounded-2xl border border-[var(--color-border)]">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[var(--color-clay-500)]/10 text-[var(--color-clay-500)] text-[10px] font-black uppercase tracking-widest mb-3">Active Stage</span>
+                      <h3 className="text-lg font-black text-[var(--color-text-heading)] mb-1">{result.status}</h3>
+                      <p className="text-sm text-[var(--color-text-body)] leading-relaxed font-medium">{result.description}</p>
                     </div>
 
-                    <div className="flex gap-3 pt-2">
-                      <button
-                        type="button"
-                        onClick={handleReset}
-                        className="flex-1 py-3 rounded-xl border border-[var(--color-border)] text-[var(--color-text-body)] text-sm font-bold hover:bg-[var(--color-mortar-50)] transition-colors"
-                      >
-                        Search Again
-                      </button>
-                      <button
-                        type="button"
-                        onClick={onClose}
-                        className="flex-1 py-3 rounded-xl bg-[var(--color-ink-700)] text-white text-sm font-bold hover:bg-[var(--color-ink-600)] transition-colors"
-                      >
-                        Done
-                      </button>
+                    {result.step !== null && result.total_steps > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center text-xs font-bold">
+                          <span className="text-[var(--color-text-muted)] uppercase tracking-widest">Progress</span>
+                          <span className="text-[var(--color-clay-500)] font-black">{result.step} of {result.total_steps} Stages</span>
+                        </div>
+                        <div className="h-2 w-full bg-[var(--color-mortar-100)] rounded-full overflow-hidden">
+                          <motion.div initial={{ width: 0 }} animate={{ width: `${(result.step / result.total_steps) * 100}%` }} transition={{ duration: 0.5, ease: "easeOut" }} className="h-full bg-[var(--color-clay-500)] rounded-full" />
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="pt-2 flex gap-3">
+                      <button type="button" onClick={handleReset} className="flex-1 py-3 rounded-xl border border-[var(--color-border)] text-[var(--color-text-body)] text-sm font-bold hover:bg-[var(--color-mortar-50)] transition-colors">← Track Another</button>
+                      <button type="button" onClick={onClose} className="flex-1 py-3 rounded-xl bg-[var(--color-ink-700)] text-white text-sm font-bold hover:bg-[var(--color-ink-600)] transition-colors">Close Window</button>
                     </div>
                   </motion.div>
                 )}
 
-                {/* ── NOT FOUND STATE ── */}
                 {state === "not-found" && (
-                  <motion.div key="not-found" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="text-center py-6">
-                    <div className="w-16 h-16 rounded-3xl bg-[var(--color-mortar-100)] flex items-center justify-center mx-auto mb-5">
-                      <Search className="w-7 h-7 text-[var(--color-text-muted)]" />
+                  <motion.div key="not-found" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="py-6 text-center space-y-5">
+                    <div className="w-14 h-14 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto text-amber-500">
+                      <Search className="w-6 h-6" />
                     </div>
+                    <div className="space-y-2">
+                      <h3 className="text-base font-black text-[var(--color-text-heading)] uppercase tracking-wider">No Application Found</h3>
+                      <p className="text-sm text-[var(--color-text-muted)] max-w-sm mx-auto font-medium leading-relaxed">We couldn't find an active mortgage application matching those details. Please check the inputs or contact support.</p>
+                    </div>
+                    <button type="button" onClick={handleReset} className="w-full py-3 rounded-xl border border-[var(--color-border)] text-[var(--color-text-body)] text-sm font-bold hover:bg-[var(--color-mortar-50)] transition-colors">← Double Check Details</button>
+                  </motion.div>
+                )}
 
-                    <h3 className="text-lg font-black text-[var(--color-text-heading)] mb-2">No Application Found</h3>
-                    <p className="text-[var(--color-text-muted)] text-sm font-medium leading-relaxed mb-6 max-w-xs mx-auto">
-                      We couldn't find an application matching your details. Double-check your information or reach out to our team.
-                    </p>
-
-                    {/* Support contact card */}
-                    <div className="bg-[var(--color-ink-700)] rounded-2xl p-5 text-left mb-5">
-                      <p className="text-white/50 text-[10px] font-black uppercase tracking-widest mb-2">Need Help?</p>
-                      <p className="text-white font-bold text-sm mb-3">Talk to our support team directly</p>
-                      <div className="space-y-2">
-                        <a
-                          href="tel:+2349155553558"
-                          className="flex items-center gap-3 text-[var(--color-clay-200)] text-sm font-bold hover:text-[var(--color-clay-100)] transition-colors font-tabular"
-                        >
-                          <span className="w-7 h-7 rounded-full bg-[var(--color-clay-500)]/15 flex items-center justify-center shrink-0">
-                            <Phone className="w-3.5 h-3.5" />
-                          </span>
-                          +234 915 555 3558
-                        </a>
-                        <a
-                          href="mailto:support@trustbrickspropertieslimited.com.ng"
-                          className="flex items-center gap-3 text-white/60 text-sm font-medium hover:text-white/90 transition-colors"
-                        >
-                          <span className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                              <polyline points="22,6 12,13 2,6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                          </span>
-                          support@trustbricksproperties…
+                {state === "error" && (
+                  <motion.div key="error" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="py-6 text-center space-y-6">
+                    <div className="w-14 h-14 rounded-full bg-[var(--color-red)]/10 flex items-center justify-center mx-auto text-[var(--color-red)]">
+                      <Lock className="w-6 h-6" />
+                    </div>
+                    <div className="space-y-2">
+                      <h3 className="text-base font-black text-[var(--color-text-heading)] uppercase tracking-wider">Query Failed</h3>
+                      <p className="text-sm text-[var(--color-text-muted)] max-w-sm mx-auto font-medium leading-relaxed">{errorMsg || "An error occurred. Please try again later."}</p>
+                      <div className="bg-[var(--color-mortar-50)] p-4 rounded-xl border border-[var(--color-border)] text-left mt-4 space-y-2">
+                        <p className="text-[var(--color-text-muted)] text-[10px] font-black uppercase tracking-widest mb-2">Need Help?</p>
+                        <a href="tel:+2349155553558" className="flex items-center gap-3 text-[var(--color-clay-500)] text-sm font-bold hover:text-[var(--color-clay-600)] transition-colors">
+                          <Phone className="w-3.5 h-3.5" /> +234 915 555 3558
                         </a>
                       </div>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={handleReset}
-                      className="w-full py-3 rounded-xl border border-[var(--color-border)] text-[var(--color-text-body)] text-sm font-bold hover:bg-[var(--color-mortar-50)] transition-colors"
-                    >
-                      ← Try Again
-                    </button>
+                    <button type="button" onClick={handleReset} className="w-full py-3 rounded-xl border border-[var(--color-border)] text-[var(--color-text-body)] text-sm font-bold hover:bg-[var(--color-mortar-50)] transition-colors">← Try Again</button>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -495,4 +420,8 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
       )}
     </AnimatePresence>
   );
+
+  if (!mounted) return null;
+
+  return createPortal(modalContent, document.body);
 }
