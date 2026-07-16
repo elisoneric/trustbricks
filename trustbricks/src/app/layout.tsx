@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Public_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import Preloader from "@/components/Preloader";
 
 /* ── FONT LOADING ────────────────────────────────────────────── */
 const bricolageGrotesque = Bricolage_Grotesque({
@@ -77,7 +78,10 @@ export default function RootLayout({
       lang="en"
       className={`${bricolageGrotesque.variable} ${publicSans.variable} ${ibmPlexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#EDE7DB]">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#EDE7DB]">
+        <Preloader />
+        {children}
+      </body>
     </html>
   );
 }
