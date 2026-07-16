@@ -288,7 +288,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                                 ref={phoneInputRef}
                                 id="app-status-phone"
                                 type="tel"
-                                placeholder="e.g. 08031234567"
+                                placeholder="e.g. 2348031234567"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                                 className="w-full pl-11 pr-4 py-3.5 bg-[var(--color-mortar-50)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text-body)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-1 focus:ring-[var(--color-clay-500)] transition-colors"
