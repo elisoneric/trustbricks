@@ -78,7 +78,7 @@ const TRUST_CHIPS = [
 ];
 
 /* ── COMPONENT ──────────────────────────────────────────────────────────── */
-export default function HeroSection({ siteSettings }: { siteSettings?: any } = {}) {
+export default function HeroSection({ siteSettings, branches = [] }: { siteSettings?: any, branches?: any[] }) {
   const [funnelOpen, setFunnelOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const router = useRouter();
@@ -291,6 +291,7 @@ export default function HeroSection({ siteSettings }: { siteSettings?: any } = {
       <EligibilityFunnel
         isOpen={funnelOpen}
         onClose={() => setFunnelOpen(false)}
+        branches={branches}
       />
     </>
   );

@@ -10,8 +10,16 @@ datasource db {
 model Branch {
   id        String   @id @default(cuid())
   name      String   @unique
-  email     String
+  city      String   @default("")
+  state     String   @default("")
+  address   String   @default("")
+  landmark  String   @default("")
+  phone     String   @default("")
   whatsapp  String
+  email     String
+  hours     String   @default("Mon – Fri: 8am – 5pm")
+  mapQuery  String   @default("")
+  iconType  String   @default("Landmark")
   leads     Lead[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -32,6 +40,8 @@ model Lead {
   phone         String
   employer_type String
   rsa_balance   Float
+  years_in_work Int      @default(0)
+  years_to_retire Int    @default(0)
   is_eligible   Boolean
   status        String   @default("new")
   

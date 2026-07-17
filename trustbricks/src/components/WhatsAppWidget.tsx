@@ -6,8 +6,8 @@ import { Send, X, MessageSquare, Bot, Sparkles, AlertCircle } from "lucide-react
 import type { BranchSlug } from "./EligibilityFunnel";
 import { sendMessageToGemini } from "@/app/actions/chatActions";
 
-/* ── WHATSAPP NUMBERS PER STATE ──────────────────────────────────────────── */
-const WA_NUMBERS: Record<BranchSlug, string> = {
+/* ── WHATSAPP NUMBERS PER STATE (Fallback) ──────────────────────────────────────────── */
+const FALLBACK_WA_NUMBERS: Record<string, string> = {
   abuja:   "+2348030000001",
   lagos:   "+2348050000002",
   adamawa: "+2348070000003",
@@ -21,15 +21,16 @@ interface Message {
 }
 
 interface WhatsAppWidgetProps {
-  selectedBranch?: BranchSlug;
+  selectedBranch?: string;
+  branches?: any[];
 }
 
-export default function WhatsAppWidget({ selectedBranch = "abuja" }: WhatsAppWidgetProps) {
+export default function WhatsAppWidget({ selectedBranch = "abuja", branches = [] }: WhatsAppWidgetProps) {
   const [visible, setVisible] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [jiggle, setJiggle] = useState(false);
-  const [prevBranch, setPrevBranch] = useState<BranchSlug>(selectedBranch);
+  const [prevBranch, setPrevBranch] = useState<string>(selectedBranch);
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -118,12 +119,8 @@ export default function WhatsAppWidget({ selectedBranch = "abuja" }: WhatsAppWid
     return `https://wa.me/${number}?text=${encodeURIComponent(intro)}`;
   };
 
-  const cityLabel: Record<BranchSlug, string> = {
-    abuja:   "Abuja",
-    lagos:   "Lagos",
-    adamawa: "Adamawa",
-    kaduna:  "Kaduna",
-  };
+  const currentBranch = branches.find(b => (b.id || b.slug) === selectedBranch) || branches[0];
+  const cityName = currentBranch?.city || "Head";
 
   const quickReplies = [
     "Am I eligible?",
@@ -160,7 +157,7 @@ export default function WhatsAppWidget({ selectedBranch = "abuja" }: WhatsAppWid
                     </div>
                     <div>
                       <h4 className="font-bold text-sm tracking-tight flex items-center gap-1.5">
-                        Ada <span className="text-[10px] bg-[var(--color-clay-500)]/20 text-[var(--color-clay-500)] px-2 py-0.5 rounded-full font-black uppercase">AI Advisor</span>
+                        Ada <span className="text-[10px] bg-[var(--color-clay-500)]/20 text-[var(--color-clay-500)] px-2 py-0.5 rounded-full font-black uppercase">AI Advisor - {cityName}</span>
                       </h4>
                       <p className="text-[11px] text-[var(--color-text-muted)]">TrustBricks Mortgage Assistant</p>
                     </div>
@@ -271,11 +268,18 @@ export default function WhatsAppWidget({ selectedBranch = "abuja" }: WhatsAppWid
               >
                 <p className="font-bold text-xs mb-0.5 text-[var(--color-text-heading)] flex items-center gap-1.5">
                   <Bot className="w-3.5 h-3.5 text-[var(--color-clay-500)]" />
-                  Chat with Ada ({cityLabel[selectedBranch]} Office)
+                  Chat with Ada ({cityName} Office)
                 </p>
-                <p className="text-xs text-[var(--color-text-muted)] leading-normal">
+                <a
+                  href={`https://wa.me/${branches.find(b => b.slug === selectedBranch)?.whatsapp || "+2348030000000"}?text=${encodeURIComponent(
+                    "Hello TrustBricks! I am interested in the PenCom RSA mortgage."
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-[var(--color-text-muted)] leading-normal hover:text-[var(--color-clay-500)] transition-colors"
+                >
                   Ask me anything about PenCom RSA mortgages!
-                </p>
+                </a>
                 {/* Triangle */}
                 <div aria-hidden="true" className="absolute -bottom-2 right-[26px] w-4 h-2 overflow-hidden">
                   <div className="w-3 h-3 rotate-45 translate-x-0.5 -translate-y-1.5 border-r border-b bg-[var(--color-card)] border-[var(--color-border)]" />

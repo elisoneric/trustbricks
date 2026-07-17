@@ -1,7 +1,7 @@
-import { getLeads, updateLeadStatus, getAdminConfig, updateSiteSettings, addOfficer, removeOfficer, adminLogin, adminLogout } from '@/app/actions/adminActions';
+import { getLeads, updateLeadStatus, getAdminConfig, updateSiteSettings, addOfficer, removeOfficer, adminLogin, adminLogout, getBranches, createBranch, updateBranch, deleteBranch } from '@/app/actions/adminActions';
 import { format } from 'date-fns';
 import { cookies } from 'next/headers';
-import { Search, Filter, ShieldCheck, Mail, Phone, ChevronDown, Plus, Trash, Settings, Users, Database, LogOut, Lock } from 'lucide-react';
+import { Search, Filter, ShieldCheck, Mail, Phone, ChevronDown, Plus, Trash, Settings, Users, Database, LogOut, Lock, MapPin } from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
 
@@ -74,6 +74,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
   const { tab = 'leads' } = await searchParams;
   const { success, leads } = await getLeads();
   const config = await getAdminConfig();
+  const { branches } = await getBranches();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -162,6 +163,18 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
           >
             <Settings className="w-4 h-4" />
             Frontend Customizer
+          </Link>
+          <Link
+            href="/admin?tab=branches"
+            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+              tab === 'branches'
+                ? 'bg-[#0D1F3C] text-white shadow-md'
+                : 'bg-white hover:bg-slate-50 text-[#0D1F3C]/80 border border-slate-200/40'
+            }`}
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            <MapPin className="w-4 h-4" />
+            Branches
           </Link>
         </aside>
 
@@ -478,6 +491,141 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                     </button>
                   </div>
                 </form>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: BRANCHES MANAGER */}
+          {tab === 'branches' && (
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-black text-[#0D1F3C]" style={{ fontFamily: "var(--font-display)" }}>
+                  Branches
+                </h2>
+                <p className="text-slate-500 text-xs mt-0.5">Manage office locations and contact details.</p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-[4fr_6fr] gap-8 items-start">
+                {/* Add Branch Form */}
+                <div className="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-card">
+                  <h3 className="text-lg font-bold text-[#0D1F3C] mb-4" style={{ fontFamily: "var(--font-display)" }}>
+                    Add New Branch
+                  </h3>
+                  <form action={async (formData) => {
+                    'use server';
+                    const data = {
+                      name: formData.get('name') as string,
+                      city: formData.get('city') as string,
+                      state: formData.get('state') as string,
+                      address: formData.get('address') as string,
+                      landmark: formData.get('landmark') as string,
+                      phone: formData.get('phone') as string,
+                      whatsapp: formData.get('whatsapp') as string,
+                      email: formData.get('email') as string,
+                      hours: formData.get('hours') as string,
+                      mapQuery: formData.get('mapQuery') as string,
+                      iconType: formData.get('iconType') as string,
+                    };
+                    await createBranch(data);
+                  }} className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Name</label>
+                        <input name="name" required placeholder="Abuja (HQ)" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">City</label>
+                        <input name="city" required placeholder="Abuja" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">State</label>
+                        <input name="state" required placeholder="FCT" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Icon (Emoji)</label>
+                        <input name="iconType" required placeholder="🏛️" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Address</label>
+                      <input name="address" required className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Phone</label>
+                        <input name="phone" required className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">WhatsApp</label>
+                        <input name="whatsapp" required placeholder="+234..." className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Email</label>
+                        <input name="email" required type="email" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Hours</label>
+                        <input name="hours" required placeholder="Mon - Fri: 8am - 5pm" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Landmark</label>
+                        <input name="landmark" required className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Map Query</label>
+                        <input name="mapQuery" required placeholder="City+Country" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                    </div>
+                    <button type="submit" className="w-full flex items-center justify-center gap-1.5 py-3 rounded-lg bg-[#0D1F3C] hover:bg-[#1E3A5F] text-white text-xs font-bold transition-colors cursor-pointer shadow-md">
+                      <Plus className="w-4 h-4" /> Add Branch
+                    </button>
+                  </form>
+                </div>
+
+                {/* Directory List */}
+                <div className="bg-white rounded-2xl border border-slate-200/60 shadow-card overflow-hidden">
+                  <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">Active Branches ({branches?.length || 0})</span>
+                  </div>
+                  <div className="divide-y divide-slate-100">
+                    {!branches || branches.length === 0 ? (
+                      <div className="p-6 text-center text-slate-400 text-sm">No branches configured.</div>
+                    ) : (
+                      branches.map((b: any) => (
+                        <div key={b.id} className="p-5 flex justify-between items-start gap-4 hover:bg-slate-50/20 transition-colors">
+                          <div className="space-y-1">
+                            <h4 className="font-bold text-slate-900 text-base" style={{ fontFamily: "var(--font-display)" }}>
+                              {b.iconType} {b.name}
+                            </h4>
+                            <p className="text-xs text-slate-500 flex items-center gap-1.5">
+                              <MapPin className="w-3.5 h-3.5 text-slate-400" /> {b.address}, {b.city}, {b.state}
+                            </p>
+                            <p className="text-xs text-slate-500 flex items-center gap-1.5">
+                              <Phone className="w-3.5 h-3.5 text-slate-400" /> {b.phone}
+                            </p>
+                            <p className="text-xs text-slate-500 flex items-center gap-1.5">
+                              <Mail className="w-3.5 h-3.5 text-slate-400" /> {b.email}
+                            </p>
+                          </div>
+                          <form action={async () => {
+                            'use server';
+                            await deleteBranch(b.id);
+                          }}>
+                            <button type="submit" className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all cursor-pointer">
+                              <Trash className="w-4 h-4" />
+                            </button>
+                          </form>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           )}

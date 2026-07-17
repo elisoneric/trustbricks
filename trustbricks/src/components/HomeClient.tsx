@@ -14,23 +14,24 @@ import type { BranchSlug }       from "@/components/EligibilityFunnel";
  * Client-side wrapper that lifts selectedBranch and statusModal state.
  * Keeps page.tsx a Server Component (no "use client" at the page level).
  */
-export default function HomeClient({ siteSettings }: { siteSettings?: any }) {
-  const [selectedBranch,  setSelectedBranch]  = useState<BranchSlug>("abuja");
+export default function HomeClient({ siteSettings, branches = [] }: { siteSettings?: any, branches?: any[] }) {
+  const [selectedBranch,  setSelectedBranch]  = useState<BranchSlug | string>(branches.length > 0 ? branches[0].id : "abuja");
   const [statusModalOpen, setStatusModalOpen] = useState(false);
 
   return (
     <>
       <main id="main-content">
-        <HeroSection siteSettings={siteSettings} />
+        <HeroSection siteSettings={siteSettings} branches={branches} />
         <TrustMarquee />
         <HowItWorks onCheckStatus={() => setStatusModalOpen(true)} />
         <MortgageCalculator />
         <OfficeLocator
           selectedBranch={selectedBranch}
           onBranchChange={setSelectedBranch}
+          branches={branches}
         />
       </main>
-      <WhatsAppWidget selectedBranch={selectedBranch} />
+      <WhatsAppWidget selectedBranch={selectedBranch} branches={branches} />
       <ApplicationStatusModal
         isOpen={statusModalOpen}
         onClose={() => setStatusModalOpen(false)}

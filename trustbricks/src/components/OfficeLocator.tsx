@@ -105,20 +105,16 @@ const detailVariants: Variants = {
   },
 };
 
-/* ── COMPONENT ──────────────────────────────────────────────────────────── */
+/* ── COMPONENT ───────────────────────────────────────────────────────────── */
 interface OfficeLocatorProps {
-  selectedBranch?: BranchSlug;
-  onBranchChange?: (branch: BranchSlug) => void;
+  selectedBranch: string;
+  onBranchChange: (slug: string) => void;
+  branches?: any[];
 }
 
-export default function OfficeLocator({ selectedBranch, onBranchChange }: OfficeLocatorProps = {}) {
-  const [internalSelected, setInternalSelected] = useState<BranchSlug>("abuja");
-  const selected = selectedBranch ?? internalSelected;
-  const setSelected = (b: BranchSlug) => {
-    setInternalSelected(b);
-    onBranchChange?.(b);
-  };
-  const active = OFFICES.find((o) => o.slug === selected)!;
+export default function OfficeLocator({ selectedBranch, onBranchChange, branches = [] }: OfficeLocatorProps) {
+  const activeOffices = branches.length > 0 ? branches : OFFICES;
+  const currentOffice = activeOffices.find((o) => (o.id || o.slug) === selectedBranch) || activeOffices[0];
 
   return (
     <section
@@ -140,7 +136,7 @@ export default function OfficeLocator({ selectedBranch, onBranchChange }: Office
             className="text-[0.6875rem] font-semibold tracking-[0.14em] uppercase mb-3"
             style={{ fontFamily: "var(--font-display)", color: "var(--color-clay-500)" }}
           >
-            4 State Offices
+            {activeOffices.length} State Offices
           </p>
           <h2
             id="offices-heading"
@@ -172,85 +168,89 @@ export default function OfficeLocator({ selectedBranch, onBranchChange }: Office
           role="tablist"
           aria-label="Select an office location"
         >
-          {OFFICES.map((office) => (
-            <motion.button
-              key={office.slug}
-              role="tab"
-              aria-selected={selected === office.slug}
-              aria-controls={`office-detail-${office.slug}`}
-              id={`office-tab-${office.slug}`}
-              variants={cardVariants}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 380, damping: 22 }}
-              onClick={() => setSelected(office.slug)}
-              className="relative flex flex-col items-center gap-2 px-4 py-6 rounded-2xl border-2 transition-all duration-[220ms] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-clay-500)]"
-              style={{
-                borderColor:
-                  selected === office.slug
-                    ? "var(--color-clay-500)"
-                    : "var(--color-border)",
-                backgroundColor:
-                  selected === office.slug
-                    ? "var(--color-clay-50)"
-                    : "var(--color-card)",
-                boxShadow:
-                  selected === office.slug
-                    ? "var(--shadow-card-hover)"
-                    : "var(--shadow-card)",
-              }}
-            >
-              {/* Active clay top bar */}
-              {selected === office.slug && (
-                <motion.div
-                  layoutId="office-active-bar"
-                  className="absolute top-0 left-4 right-4 h-[3px] rounded-full"
-                  style={{ backgroundColor: "var(--color-clay-500)" }}
-                  transition={{ type: "spring", stiffness: 320, damping: 28 }}
-                />
-              )}
-
-              <span
-                aria-hidden="true"
-                style={{ color: selected === office.slug ? "var(--color-clay-500)" : "var(--color-text-muted)" }}
-              >
-                {office.icon}
-              </span>
-              <span
-                className="font-bold text-sm"
+          {activeOffices.map((office) => {
+            const slug = office.id || office.slug;
+            const isActive = slug === selectedBranch;
+            return (
+              <motion.button
+                key={slug}
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={`office-detail-${slug}`}
+                id={`office-tab-${slug}`}
+                variants={cardVariants}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 380, damping: 22 }}
+                onClick={() => onBranchChange(slug)}
+                className="relative flex flex-col items-center gap-2 px-4 py-6 rounded-2xl border-2 transition-all duration-[220ms] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-clay-500)]"
                 style={{
-                  fontFamily: "var(--font-display)",
-                  color:
-                    selected === office.slug
-                      ? "var(--color-ink-700)"
-                      : "var(--color-text-body)",
-                }}
-              >
-                {office.city}
-              </span>
-              <span
-                className="text-[10px] font-medium tracking-wide uppercase"
-                style={{
-                  fontFamily: "var(--font-body)",
-                  color:
-                    selected === office.slug
+                  borderColor:
+                    isActive
                       ? "var(--color-clay-500)"
-                      : "var(--color-text-muted)",
+                      : "var(--color-border)",
+                  backgroundColor:
+                    isActive
+                      ? "var(--color-clay-50)"
+                      : "var(--color-card)",
+                  boxShadow:
+                    isActive
+                      ? "var(--shadow-card-hover)"
+                      : "var(--shadow-card)",
                 }}
               >
-                {office.state}
-              </span>
-            </motion.button>
-          ))}
+                {/* Active clay top bar */}
+                {isActive && (
+                  <motion.div
+                    layoutId="office-active-bar"
+                    className="absolute top-0 left-4 right-4 h-[3px] rounded-full"
+                    style={{ backgroundColor: "var(--color-clay-500)" }}
+                    transition={{ type: "spring", stiffness: 320, damping: 28 }}
+                  />
+                )}
+
+                <span
+                  aria-hidden="true"
+                  style={{ color: isActive ? "var(--color-clay-500)" : "var(--color-text-muted)" }}
+                >
+                  {office.icon}
+                </span>
+                <span
+                  className="font-bold text-sm"
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    color:
+                      isActive
+                        ? "var(--color-ink-700)"
+                        : "var(--color-text-body)",
+                  }}
+                >
+                  {office.city}
+                </span>
+                <span
+                  className="text-[10px] font-medium tracking-wide uppercase"
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    color:
+                      isActive
+                        ? "var(--color-clay-500)"
+                        : "var(--color-text-muted)",
+                  }}
+                >
+                  {office.state}
+                </span>
+              </motion.button>
+            );
+          })}
         </motion.div>
 
         {/* Detail panel */}
         <AnimatePresence mode="wait">
           <motion.div
-            key={selected}
-            id={`office-detail-${selected}`}
+            key={selectedBranch}
+            id={`office-detail-${selectedBranch}`}
             role="tabpanel"
-            aria-labelledby={`office-tab-${selected}`}
+            aria-labelledby={`office-tab-${selectedBranch}`}
             variants={detailVariants}
             initial="hidden"
             animate="visible"
@@ -268,13 +268,13 @@ export default function OfficeLocator({ selectedBranch, onBranchChange }: Office
                   className="text-sm font-semibold mb-0.5"
                   style={{ fontFamily: "var(--font-display)", color: "var(--color-text-heading)" }}
                 >
-                  {active.address}
+                  {currentOffice.address}
                 </p>
                 <p
                   className="text-xs"
                   style={{ fontFamily: "var(--font-body)", color: "var(--color-text-muted)" }}
                 >
-                  {active.landmark}
+                  {currentOffice.landmark}
                 </p>
               </DetailBlock>
 
@@ -283,18 +283,18 @@ export default function OfficeLocator({ selectedBranch, onBranchChange }: Office
               {/* Contact */}
               <DetailBlock label="Contact" icon={<Phone className="w-3.5 h-3.5" />}>
                 <a
-                  href={`tel:${active.phone.replace(/\s/g, "")}`}
+                  href={`tel:${currentOffice.phone.replace(/\s/g, "")}`}
                   className="block text-sm font-semibold mb-1 hover:underline font-tabular"
                   style={{ fontFamily: "var(--font-display)", color: "var(--color-ink-700)" }}
                 >
-                  {active.phone}
+                  {currentOffice.phone}
                 </a>
                 <a
-                  href={`mailto:${active.email}`}
+                  href={`mailto:${currentOffice.email}`}
                   className="block text-xs hover:underline"
                   style={{ fontFamily: "var(--font-body)", color: "var(--color-text-muted)" }}
                 >
-                  {active.email}
+                  {currentOffice.email}
                 </a>
               </DetailBlock>
 
@@ -304,8 +304,8 @@ export default function OfficeLocator({ selectedBranch, onBranchChange }: Office
               <DetailBlock label="Quick Actions" icon={<Zap className="w-3.5 h-3.5" />}>
                 <div className="flex flex-col gap-2">
                   <motion.a
-                    href={`https://wa.me/${active.whatsapp}?text=${encodeURIComponent(
-                      `Hello, I'd like to speak with a Trust Bricks Properties advisor at your ${active.city} office.`
+                    href={`https://wa.me/${currentOffice.whatsapp}?text=${encodeURIComponent(
+                      `Hello, I'd like to speak with a Trust Bricks Properties advisor at your ${currentOffice.city} office.`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -317,13 +317,13 @@ export default function OfficeLocator({ selectedBranch, onBranchChange }: Office
                       fontFamily: "var(--font-display)",
                       backgroundColor: "#25D366",
                     }}
-                    aria-label={`WhatsApp the ${active.city} office`}
+                    aria-label={`WhatsApp the ${currentOffice.city} office`}
                   >
                     <WhatsAppIcon className="w-4 h-4" />
-                    WhatsApp {active.city}
+                    WhatsApp {currentOffice.city}
                   </motion.a>
                   <a
-                    href={`https://maps.google.com/?q=${active.mapQuery}`}
+                    href={`https://maps.google.com/?q=${currentOffice.mapQuery}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-colors duration-[180ms] hover:border-[var(--color-ink-700)] hover:text-[var(--color-ink-700)]"

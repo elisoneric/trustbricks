@@ -11,6 +11,56 @@ const prisma = new PrismaClient();
 // Helper to get filepath to config
 const getConfigPath = () => path.join(process.cwd(), 'src', 'app', 'actions', 'adminConfig.json');
 
+// --- BRANCHES ---
+export async function getBranches() {
+  try {
+    const branches = await prisma.branch.findMany({
+      orderBy: { name: 'asc' },
+    });
+    return { success: true, branches };
+  } catch (error: any) {
+    console.error('[ADMIN GET BRANCHES ERROR]', error);
+    return { success: false, message: 'Failed to fetch branches', branches: [] };
+  }
+}
+
+export async function createBranch(data: {
+  name: string; city: string; state: string; address: string; landmark: string; phone: string; whatsapp: string; email: string; hours: string; mapQuery: string; iconType: string;
+}) {
+  try {
+    const branch = await prisma.branch.create({ data });
+    revalidatePath('/admin');
+    return { success: true, branch };
+  } catch (error: any) {
+    console.error('[ADMIN CREATE BRANCH ERROR]', error);
+    return { success: false, message: 'Failed to create branch' };
+  }
+}
+
+export async function updateBranch(id: string, data: Partial<{
+  name: string; city: string; state: string; address: string; landmark: string; phone: string; whatsapp: string; email: string; hours: string; mapQuery: string; iconType: string;
+}>) {
+  try {
+    const branch = await prisma.branch.update({ where: { id }, data });
+    revalidatePath('/admin');
+    return { success: true, branch };
+  } catch (error: any) {
+    console.error('[ADMIN UPDATE BRANCH ERROR]', error);
+    return { success: false, message: 'Failed to update branch' };
+  }
+}
+
+export async function deleteBranch(id: string) {
+  try {
+    await prisma.branch.delete({ where: { id } });
+    revalidatePath('/admin');
+    return { success: true };
+  } catch (error: any) {
+    console.error('[ADMIN DELETE BRANCH ERROR]', error);
+    return { success: false, message: 'Failed to delete branch' };
+  }
+}
+
 // Get leads for the dashboard
 export async function getLeads() {
   try {

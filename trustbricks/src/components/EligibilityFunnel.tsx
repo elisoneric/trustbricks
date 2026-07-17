@@ -51,8 +51,8 @@ export interface PfaRule {
   minBalance: number;
 }
 
-/* ── BRANCH REGISTRY ──────────────────────────────────────────────────── */
-export const BRANCHES: Branch[] = [
+/* ── BRANCH REGISTRY (Fallback) ──────────────────────────────────────────────────── */
+export const FALLBACK_BRANCHES: Branch[] = [
   { slug: "abuja",    name: "Abuja (FCT)",    emoji: "🏛️" },
   { slug: "lagos",    name: "Lagos",          emoji: "🌊" },
   { slug: "adamawa",  name: "Adamawa",        emoji: "🏔️" },
@@ -61,36 +61,48 @@ export const BRANCHES: Branch[] = [
 
 /* ── PFA REGISTRY ─────────────────────────────────────────────────────── */
 export const PFA_OPTIONS: PfaOption[] = [
-  { slug: "stanbic-ibtc",    label: "Stanbic IBTC Nominees",   group: "Major" },
-  { slug: "gt-pension",      label: "GT Pension (Guaranty Trust Pensions)", group: "Major" },
-  { slug: "citizens-tier-1", label: "Citizens Pensions — Tier 1", group: "Citizens Pensions" },
-  { slug: "citizens-tier-2", label: "Citizens Pensions — Tier 2", group: "Citizens Pensions" },
+  { slug: "stanbic-ibtc",    label: "Stanbic IBTC Pension Managers",   group: "Major" },
+  { slug: "gt-pension",      label: "Guaranty Trust (GT) Pension Managers", group: "Major" },
+  { slug: "accessarm",       label: "AccessARM Pensions",       group: "Major" },
+  { slug: "premium",         label: "Premium Pensions",         group: "Major" },
   { slug: "trustfund",       label: "Trustfund Pensions",      group: "Standard" },
-  { slug: "nupemco",         label: "NUPEMCO",                  group: "Standard" },
-  { slug: "tangerine-apt",   label: "Tangerine APT",            group: "Standard" },
-  { slug: "norrenberger",    label: "Norrenberger",             group: "Standard" },
+  { slug: "nupemco",         label: "NUPEMCO Pensions",         group: "Standard" },
+  { slug: "tangerine-apt",   label: "Tangerine APT Pensions",   group: "Standard" },
+  { slug: "norrenberger",    label: "Norrenberger Pensions",    group: "Standard" },
   { slug: "nlpc",            label: "NLPC Pensions",            group: "Standard" },
-  { slug: "premium",         label: "Premium Pensions",         group: "Standard" },
-  { slug: "accessarm",       label: "AccessARM Pensions",       group: "Standard" },
-  { slug: "leadway-pensure", label: "Leadway Pensure",          group: "Standard" },
+  { slug: "leadway-pensure", label: "Leadway Pensure PFA",      group: "Standard" },
   { slug: "oak",             label: "Oak Pensions",             group: "Standard" },
+  { slug: "citizens",        label: "Citizens Pensions",        group: "Standard" },
+  { slug: "cardinalstone",   label: "CardinalStone Pensions",   group: "Standard" },
+  { slug: "crusader",        label: "Crusader Pensions",        group: "Standard" },
+  { slug: "fcmb",            label: "FCMB Pensions",            group: "Standard" },
+  { slug: "fidelity",        label: "Fidelity Pension Managers", group: "Standard" },
+  { slug: "npf",             label: "NPF Pension",              group: "Standard" },
+  { slug: "pal",             label: "PAL Pensions",             group: "Standard" },
+  { slug: "veritas",         label: "Veritas Glanvills Pensions", group: "Standard" },
 ];
 
 /* ── PFA THRESHOLD RULES ─────────────────────────────────────────────── */
 export const PFA_RULES: Record<PfaSlug, PfaRule> = {
-  "stanbic-ibtc":    { slug: "stanbic-ibtc",    name: "Stanbic IBTC Nominees",             minBalance: 5_000_000 },
-  "gt-pension":      { slug: "gt-pension",       name: "GT Pension",                        minBalance: 1_000_000 },
-  "citizens-tier-1": { slug: "citizens-tier-1",  name: "Citizens Pensions (Tier 1)",        minBalance: 500_000 },
-  "citizens-tier-2": { slug: "citizens-tier-2",  name: "Citizens Pensions (Tier 2)",        minBalance: 200_000 },
-  "trustfund":       { slug: "trustfund",        name: "Trustfund Pensions",                minBalance: 500_000 },
-  "nupemco":         { slug: "nupemco",          name: "NUPEMCO",                           minBalance: 500_000 },
-  "tangerine-apt":   { slug: "tangerine-apt",    name: "Tangerine APT",                     minBalance: 500_000 },
-  "norrenberger":    { slug: "norrenberger",     name: "Norrenberger",                      minBalance: 500_000 },
-  "nlpc":            { slug: "nlpc",             name: "NLPC Pensions",                     minBalance: 500_000 },
-  "premium":         { slug: "premium",          name: "Premium Pensions",                  minBalance: 500_000 },
-  "accessarm":       { slug: "accessarm",        name: "AccessARM Pensions",                minBalance: 500_000 },
-  "leadway-pensure": { slug: "leadway-pensure",  name: "Leadway Pensure",                   minBalance: 500_000 },
-  "oak":             { slug: "oak",              name: "Oak Pensions",                      minBalance: 500_000 },
+  "stanbic-ibtc":    { slug: "stanbic-ibtc",    name: "Stanbic IBTC Pension Managers",     minBalance: 500_000 },
+  "gt-pension":      { slug: "gt-pension",      name: "Guaranty Trust (GT) Pension",       minBalance: 500_000 },
+  "accessarm":       { slug: "accessarm",       name: "AccessARM Pensions",                minBalance: 500_000 },
+  "premium":         { slug: "premium",         name: "Premium Pensions",                  minBalance: 500_000 },
+  "trustfund":       { slug: "trustfund",       name: "Trustfund Pensions",                minBalance: 500_000 },
+  "nupemco":         { slug: "nupemco",         name: "NUPEMCO Pensions",                  minBalance: 500_000 },
+  "tangerine-apt":   { slug: "tangerine-apt",   name: "Tangerine APT Pensions",            minBalance: 500_000 },
+  "norrenberger":    { slug: "norrenberger",    name: "Norrenberger Pensions",             minBalance: 500_000 },
+  "nlpc":            { slug: "nlpc",            name: "NLPC Pensions",                     minBalance: 500_000 },
+  "leadway-pensure": { slug: "leadway-pensure", name: "Leadway Pensure PFA",               minBalance: 500_000 },
+  "oak":             { slug: "oak",             name: "Oak Pensions",                      minBalance: 500_000 },
+  "citizens":        { slug: "citizens",        name: "Citizens Pensions",                 minBalance: 500_000 },
+  "cardinalstone":   { slug: "cardinalstone",   name: "CardinalStone Pensions",            minBalance: 500_000 },
+  "crusader":        { slug: "crusader",        name: "Crusader Pensions",                 minBalance: 500_000 },
+  "fcmb":            { slug: "fcmb",            name: "FCMB Pensions",                     minBalance: 500_000 },
+  "fidelity":        { slug: "fidelity",        name: "Fidelity Pension Managers",         minBalance: 500_000 },
+  "npf":             { slug: "npf",             name: "NPF Pension",                       minBalance: 500_000 },
+  "pal":             { slug: "pal",             name: "PAL Pensions",                      minBalance: 500_000 },
+  "veritas":         { slug: "veritas",         name: "Veritas Glanvills Pensions",        minBalance: 500_000 },
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -103,20 +115,37 @@ export interface EligibilityResult {
   minBalance: number;
   rsaBalance: number;
   shortfall: number;
+  failureReason?: string;
+  yearsInService?: number;
+  yearsToRetire?: number;
 }
 
 export function checkEligibility(
   pfaSlug: PfaSlug,
-  rsaBalance: number
+  rsaBalance: number,
+  yearsInService: number,
+  yearsToRetire: number
 ): EligibilityResult {
   const rule = PFA_RULES[pfaSlug];
-  const isEligible = rsaBalance >= rule.minBalance;
+  let isEligible = true;
+  let failureReason = "";
+
+  if (yearsInService < 5) {
+    isEligible = false;
+    failureReason = "You must have at least 5 years in continuous service.";
+  } else if (yearsToRetire <= 3) {
+    isEligible = false;
+    failureReason = "You must have more than 3 years remaining until retirement.";
+  }
+
   return {
     isEligible,
-    pfaName:    rule.name,
-    minBalance: rule.minBalance,
+    pfaName:    rule ? rule.name : "Unknown PFA",
+    minBalance: rule ? rule.minBalance : 0,
     rsaBalance,
-    shortfall:  isEligible ? 0 : rule.minBalance - rsaBalance,
+    shortfall:  0,
+    yearsInService,
+    yearsToRetire,
   };
 }
 
@@ -146,9 +175,11 @@ type FunnelStep = 1 | 2 | 3 | 4 | 5 | "success" | "ineligible";
 
 interface FunnelState {
   step:        FunnelStep;
-  branch:      BranchSlug | null;
+  branch:      string | null;
   pfa:         PfaSlug | null;
   rsaRaw:      string;         // raw string the user types
+  yearsInServiceRaw: string;
+  yearsToRetireRaw: string;
   result:      EligibilityResult | null;
   leadForm:    LeadFormData;
   submitting:  boolean;
@@ -157,9 +188,11 @@ interface FunnelState {
 }
 
 type FunnelAction =
-  | { type: "SET_BRANCH";    branch: BranchSlug }
+  | { type: "SET_BRANCH";    branch: string }
   | { type: "SET_PFA";       pfa: PfaSlug }
   | { type: "SET_RSA_RAW";   value: string }
+  | { type: "SET_YEARS_IN_SERVICE"; value: string }
+  | { type: "SET_YEARS_TO_RETIRE"; value: string }
   | { type: "VALIDATE";      result: EligibilityResult }
   | { type: "SET_STEP";      step: FunnelStep }
   | { type: "UPDATE_LEAD";   field: keyof LeadFormData; value: string }
@@ -169,7 +202,7 @@ type FunnelAction =
   | { type: "RESET" };
 
 const INITIAL_STATE: FunnelState = {
-  step: 1, branch: null, pfa: null, rsaRaw: "",
+  step: 1, branch: null, pfa: null, rsaRaw: "", yearsInServiceRaw: "", yearsToRetireRaw: "",
   result: null, leadForm: INITIAL_LEAD_FORM, submitting: false,
   submitted: false, errors: {},
 };
@@ -182,6 +215,10 @@ function funnelReducer(state: FunnelState, action: FunnelAction): FunnelState {
       return { ...state, pfa: action.pfa };
     case "SET_RSA_RAW":
       return { ...state, rsaRaw: action.value };
+    case "SET_YEARS_IN_SERVICE":
+      return { ...state, yearsInServiceRaw: action.value };
+    case "SET_YEARS_TO_RETIRE":
+      return { ...state, yearsToRetireRaw: action.value };
     case "VALIDATE":
       return {
         ...state,
@@ -308,9 +345,11 @@ function stepLabel(step: FunnelStep): string {
 interface EligibilityFunnelProps {
   isOpen:  boolean;
   onClose: () => void;
+  branches?: any[];
 }
 
-export default function EligibilityFunnel({ isOpen, onClose }: EligibilityFunnelProps) {
+export default function EligibilityFunnel({ isOpen, onClose, branches = [] }: EligibilityFunnelProps) {
+  const activeBranches = branches.length > 0 ? branches : FALLBACK_BRANCHES;
   const [state, dispatch] = useReducer(funnelReducer, INITIAL_STATE);
   const [isPending, startTransition] = useTransition();
   const dialogId = useId();
@@ -334,8 +373,10 @@ export default function EligibilityFunnel({ isOpen, onClose }: EligibilityFunnel
   const handleStep3Validate = () => {
     if (!state.pfa) return;
     const balance = parseNaira(state.rsaRaw);
-    if (!balance || balance < 1) return;
-    const result = checkEligibility(state.pfa, balance);
+    const yrsService = parseInt(state.yearsInServiceRaw, 10);
+    const yrsRetire = parseInt(state.yearsToRetireRaw, 10);
+    if (!balance || isNaN(yrsService) || isNaN(yrsRetire)) return;
+    const result = checkEligibility(state.pfa, balance, yrsService, yrsRetire);
     dispatch({ type: "VALIDATE", result });
   };
 
@@ -354,6 +395,8 @@ export default function EligibilityFunnel({ isOpen, onClose }: EligibilityFunnel
         formData.append("branch_id", state.branch || "");
         formData.append("pfa_id", state.pfa || "");
         formData.append("rsa_balance", String(state.result?.rsaBalance || 0));
+        formData.append("years_in_work", String(state.result?.yearsInService || 0));
+        formData.append("years_to_retire", String(state.result?.yearsToRetire || 0));
         formData.append("full_name", state.leadForm.fullName);
         formData.append("phone", state.leadForm.phone);
         formData.append("email", state.leadForm.email);
@@ -433,6 +476,7 @@ export default function EligibilityFunnel({ isOpen, onClose }: EligibilityFunnel
                 {state.step === 1 && (
                   <motion.div key="step1" variants={stepVariants} initial="hidden" animate="visible" exit="exit">
                     <Step1Branch
+                      branches={activeBranches}
                       selected={state.branch}
                       onSelect={(b) => dispatch({ type: "SET_BRANCH", branch: b })}
                       onNext={handleStep1Next}
@@ -452,13 +496,17 @@ export default function EligibilityFunnel({ isOpen, onClose }: EligibilityFunnel
                   </motion.div>
                 )}
 
-                {/* STEP 3 — RSA BALANCE */}
+                {/* STEP 3 — RSA BALANCE & DETAILS */}
                 {state.step === 3 && (
                   <motion.div key="step3" variants={stepVariants} initial="hidden" animate="visible" exit="exit">
                     <Step3Balance
                       pfa={state.pfa!}
-                      rawValue={state.rsaRaw}
-                      onChange={(v) => dispatch({ type: "SET_RSA_RAW", value: v })}
+                      rsaRaw={state.rsaRaw}
+                      yearsInServiceRaw={state.yearsInServiceRaw}
+                      yearsToRetireRaw={state.yearsToRetireRaw}
+                      onChangeRsa={(v) => dispatch({ type: "SET_RSA_RAW", value: v })}
+                      onChangeYearsInService={(v) => dispatch({ type: "SET_YEARS_IN_SERVICE", value: v })}
+                      onChangeYearsToRetire={(v) => dispatch({ type: "SET_YEARS_TO_RETIRE", value: v })}
                       onValidate={handleStep3Validate}
                       onBack={() => goToStep(2)}
                     />
@@ -576,10 +624,11 @@ function ProgressBar({ currentStep }: { currentStep: 1 | 2 | 3 }) {
 
 /* ── STEP 1: BRANCH ──────────────────────────────────────────────────────── */
 function Step1Branch({
-  selected, onSelect, onNext,
+  branches, selected, onSelect, onNext,
 }: {
-  selected: BranchSlug | null;
-  onSelect: (b: BranchSlug) => void;
+  branches: any[];
+  selected: string | null;
+  onSelect: (b: string) => void;
   onNext: () => void;
 }) {
   return (
@@ -590,11 +639,11 @@ function Step1Branch({
         hint="Your dedicated advisor will be based at this location."
       />
       <div className="grid grid-cols-2 gap-3 mb-8" role="radiogroup" aria-label="Branch selection">
-        {BRANCHES.map((b) => (
+        {branches.map((b) => (
           <BranchCard
-            key={b.slug}
+            key={b.id || b.slug}
             branch={b}
-            isSelected={selected === b.slug}
+            isSelected={selected === (b.id || b.slug)}
             onSelect={onSelect}
           />
         ))}
@@ -611,9 +660,9 @@ function Step1Branch({
 function BranchCard({
   branch, isSelected, onSelect,
 }: {
-  branch: Branch;
+  branch: any;
   isSelected: boolean;
-  onSelect: (s: BranchSlug) => void;
+  onSelect: (s: string) => void;
 }) {
   return (
     <motion.button
@@ -634,7 +683,7 @@ function BranchCard({
       ].join(" ")}
       style={{ fontFamily: "var(--font-display)" }}
     >
-      <span className="text-[var(--color-clay-500)]" aria-hidden="true">{BRANCH_ICONS[branch.slug]}</span>
+      <span className="text-[var(--color-clay-500)]" aria-hidden="true">{branch.emoji || BRANCH_ICONS[branch.slug as BranchSlug] || <Landmark className="w-6 h-6" />}</span>
       <span>{branch.name}</span>
       {isSelected && (
         <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[var(--color-clay-500)] flex items-center justify-center">
@@ -713,23 +762,7 @@ function Step2Pfa({
         </motion.div>
       )}
 
-      {/* Threshold preview */}
-      {selected && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-3 p-3 rounded-[var(--radius-md)] bg-[var(--color-mortar-50)] border border-[var(--color-mortar-100)]"
-        >
-          <p className="text-xs text-[var(--color-text-body)]" style={{ fontFamily: "var(--font-body)" }}>
-            <span className="font-semibold text-[var(--color-text-heading)]">{selectedOption?.label}</span>
-            {" "}requires a minimum RSA balance of{" "}
-            <span className="font-bold font-tabular text-[var(--color-ink-700)]">
-              ₦{PFA_RULES[selected].minBalance.toLocaleString("en-NG")}
-            </span>
-            .
-          </p>
-        </motion.div>
-      )}
+      {/* Threshold preview removed for standard rules */}
 
       <div className="flex items-center justify-between mt-8">
         <BackButton onClick={onBack} />
@@ -743,69 +776,64 @@ function Step2Pfa({
 
 /* ── STEP 3: RSA BALANCE ─────────────────────────────────────────────────── */
 function Step3Balance({
-  pfa, rawValue, onChange, onValidate, onBack,
+  pfa, rsaRaw, yearsInServiceRaw, yearsToRetireRaw, onChangeRsa, onChangeYearsInService, onChangeYearsToRetire, onValidate, onBack,
 }: {
   pfa: PfaSlug;
-  rawValue: string;
-  onChange: (v: string) => void;
+  rsaRaw: string;
+  yearsInServiceRaw: string;
+  yearsToRetireRaw: string;
+  onChangeRsa: (v: string) => void;
+  onChangeYearsInService: (v: string) => void;
+  onChangeYearsToRetire: (v: string) => void;
   onValidate: () => void;
   onBack: () => void;
 }) {
-  const rule = PFA_RULES[pfa];
-  const parsedBalance = parseNaira(rawValue);
-  const isValid = parsedBalance >= 1;
+  const parsedBalance = parseNaira(rsaRaw);
+  const isValid = parsedBalance >= 1 && yearsInServiceRaw.trim() !== "" && yearsToRetireRaw.trim() !== "";
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const digits = e.target.value.replace(/\D/g, "");
-    onChange(digits);
+  const handleRsaInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChangeRsa(e.target.value.replace(/\D/g, ""));
   };
-
-  const displayValue = rawValue ? formatNaira(rawValue) : "";
+  const displayRsa = rsaRaw ? formatNaira(rsaRaw) : "";
 
   return (
     <div>
       <StepInstruction
         step={3}
-        title="Enter your RSA balance"
-        hint={`Your ${rule.name} account requires a minimum of ₦${rule.minBalance.toLocaleString("en-NG")}.`}
+        title="Check Eligibility & Calculate Equity"
+        hint="Fill in your details to see if you qualify and estimate your 25% contribution."
       />
 
-      <div className="mb-2">
-        <label
-          htmlFor="rsa-balance"
-          className="block text-xs font-semibold text-[var(--color-text-body)] mb-1.5"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
-          RSA Balance
-        </label>
-        <input
-          id="rsa-balance"
-          type="text"
-          inputMode="numeric"
-          value={displayValue}
-          onChange={handleInput}
-          placeholder="₦0"
-          aria-label="Enter your RSA balance in naira"
-          aria-describedby="rsa-hint"
-          className={[
-            "w-full px-4 py-4 rounded-[var(--radius-md)] border-2 bg-[var(--color-card)]",
-            "font-tabular text-lg text-[var(--color-text-heading)] font-bold",
-            "transition-colors duration-[180ms]",
-            "placeholder:text-[var(--color-text-muted)] placeholder:font-normal",
-            "focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/20",
-            isValid
-              ? "border-[var(--color-clay-500)]"
-              : "border-[var(--color-border)] focus:border-[var(--color-clay-500)]",
-          ].join(" ")}
-          style={{ fontFamily: "var(--font-display)" }}
-        />
-        <p
-          id="rsa-hint"
-          className="mt-2 text-xs text-[var(--color-text-muted)]"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
-          Find this on your PFA mobile app, web portal, or your last pension statement.
-        </p>
+      <div className="space-y-4 mb-2">
+        <div>
+          <label className="block text-xs font-semibold text-[var(--color-text-body)] mb-1.5" style={{ fontFamily: "var(--font-body)" }}>
+            RSA Balance
+          </label>
+          <input
+            type="text" inputMode="numeric" value={displayRsa} onChange={handleRsaInput} placeholder="₦0"
+            className="w-full px-4 py-4 rounded-[var(--radius-md)] border-2 bg-[var(--color-card)] font-tabular text-lg text-[var(--color-text-heading)] font-bold transition-colors duration-[180ms] focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-2 border-[var(--color-border)]"
+          />
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-semibold text-[var(--color-text-body)] mb-1.5" style={{ fontFamily: "var(--font-body)" }}>
+              Years in Service
+            </label>
+            <input
+              type="number" value={yearsInServiceRaw} onChange={e => onChangeYearsInService(e.target.value)} placeholder="e.g. 6"
+              className="w-full px-4 py-4 rounded-[var(--radius-md)] border-2 bg-[var(--color-card)] font-tabular text-lg text-[var(--color-text-heading)] font-bold transition-colors duration-[180ms] focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-2 border-[var(--color-border)]"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-[var(--color-text-body)] mb-1.5" style={{ fontFamily: "var(--font-body)" }}>
+              Years to Retire
+            </label>
+            <input
+              type="number" value={yearsToRetireRaw} onChange={e => onChangeYearsToRetire(e.target.value)} placeholder="e.g. 10"
+              className="w-full px-4 py-4 rounded-[var(--radius-md)] border-2 bg-[var(--color-card)] font-tabular text-lg text-[var(--color-text-heading)] font-bold transition-colors duration-[180ms] focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-2 border-[var(--color-border)]"
+            />
+          </div>
+        </div>
       </div>
 
       <div className="flex items-center justify-between mt-8">
@@ -848,9 +876,7 @@ function StepSuccess({
         <strong className="font-tabular text-[var(--color-text-heading)]">
           ₦{result.rsaBalance.toLocaleString("en-NG")}
         </strong>{" "}
-        meets the{" "}
-        <strong>{result.pfaName}</strong> threshold of{" "}
-        <strong className="font-tabular">₦{result.minBalance.toLocaleString("en-NG")}</strong>.
+        meets the required length of service and time to retirement.
       </p>
 
       {/* Stats row */}
@@ -902,14 +928,10 @@ function StepIneligible({
         Not Yet Eligible
       </h3>
       <p className="text-sm text-[var(--color-text-body)] mb-1" style={{ fontFamily: "var(--font-body)" }}>
-        Your RSA balance of{" "}
-        <strong className="font-tabular">₦{result.rsaBalance.toLocaleString("en-NG")}</strong>{" "}
-        is below the{" "}
-        <strong>{result.pfaName}</strong> minimum of{" "}
-        <strong className="font-tabular">₦{result.minBalance.toLocaleString("en-NG")}</strong>.
+        You do not meet the minimum statutory requirements for the PenCom mortgage scheme.
       </p>
       <p className="text-sm text-[var(--color-error)] font-semibold mb-7" style={{ fontFamily: "var(--font-body)" }}>
-        Shortfall: ₦{result.shortfall.toLocaleString("en-NG")}
+        {result.failureReason}
       </p>
 
       <div className="flex flex-col gap-3">
