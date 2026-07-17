@@ -11,29 +11,99 @@ const OFFICES = [
     slug: "abuja",
     name: "Abuja Office (HQ)",
     address: "Plot 234, Wuse Zone 5, FCT",
-    phone: "+234 901 234 5678",
-    email: "abuja@trustbrickspropertieslimited.com.ng",
+    phone: "+234 803 000 0001",
+    email: "abuja@trustbrickproperties.ng",
   },
   {
     slug: "lagos",
     name: "Lagos Hub",
     address: "14 Broad Street, Lagos Island, Lagos",
-    phone: "+234 812 345 6789",
-    email: "lagos@trustbrickspropertieslimited.com.ng",
+    phone: "+234 805 000 0002",
+    email: "lagos@trustbrickproperties.ng",
   },
   {
-    slug: "adamawa",
-    name: "Adamawa Center",
-    address: "72 Galadima Aminu Way, Jimeta, Yola",
-    phone: "+234 803 456 7890",
-    email: "yola@trustbrickspropertieslimited.com.ng",
+    slug: "kano",
+    name: "Kano Center",
+    address: "Plot 45, Murtala Muhammad Way, Kano",
+    phone: "+234 811 000 0005",
+    email: "kano@trustbrickproperties.ng",
+  },
+  {
+    slug: "kwara",
+    name: "Kwara Center",
+    address: "18 Ibrahim Taiwo Road, Ilorin, Kwara",
+    phone: "+234 811 000 0006",
+    email: "kwara@trustbrickproperties.ng",
+  },
+  {
+    slug: "yola",
+    name: "Yola Hub (Adamawa)",
+    address: "12 Atiku Road, Jimeta, Yola, Adamawa",
+    phone: "+234 807 000 0003",
+    email: "adamawa@trustbrickproperties.ng",
+  },
+  {
+    slug: "benue",
+    name: "Benue Center",
+    address: "24 J.S. Tarka Road, Makurdi, Benue",
+    phone: "+234 811 000 0007",
+    email: "benue@trustbrickproperties.ng",
+  },
+  {
+    slug: "ogun",
+    name: "Ogun Center",
+    address: "10 Lalubu Street, Oke-Ilewo, Abeokuta, Ogun",
+    phone: "+234 811 000 0008",
+    email: "ogun@trustbrickproperties.ng",
+  },
+  {
+    slug: "lokoja",
+    name: "Lokoja Center",
+    address: "5 Murtala Way, Lokoja, Kogi",
+    phone: "+234 811 000 0009",
+    email: "lokoja@trustbrickproperties.ng",
+  },
+  {
+    slug: "calabar",
+    name: "Calabar Center",
+    address: "12 Marian Road, Calabar, Cross River",
+    phone: "+234 811 000 0010",
+    email: "calabar@trustbrickproperties.ng",
+  },
+  {
+    slug: "minna",
+    name: "Minna Center",
+    address: "6 Bosso Road, Minna, Niger",
+    phone: "+234 811 000 0011",
+    email: "minna@trustbrickproperties.ng",
+  },
+  {
+    slug: "ibadan",
+    name: "Ibadan Center",
+    address: "30 Ring Road, Challenge, Ibadan, Oyo",
+    phone: "+234 811 000 0012",
+    email: "ibadan@trustbrickproperties.ng",
+  },
+  {
+    slug: "ekiti",
+    name: "Ekiti Center",
+    address: "15 Ado-Iworoko Road, Ado-Ekiti, Ekiti",
+    phone: "+234 811 000 0013",
+    email: "ekiti@trustbrickproperties.ng",
+  },
+  {
+    slug: "bauchi",
+    name: "Bauchi Center",
+    address: "8 Yakubu Bauchi Road, Bauchi",
+    phone: "+234 811 000 0014",
+    email: "bauchi@trustbrickproperties.ng",
   },
   {
     slug: "kaduna",
     name: "Kaduna Hub",
-    address: "10 Yakubu Gowon Way, Kaduna",
-    phone: "+234 809 567 8901",
-    email: "kaduna@trustbrickspropertieslimited.com.ng",
+    address: "8 Ali Akilu Road, Kaduna North, Kaduna",
+    phone: "+234 809 000 0004",
+    email: "kaduna@trustbrickproperties.ng",
   }
 ];
 
@@ -121,7 +191,17 @@ export default function ContactPage() {
                     >
                       <option value="abuja">Abuja Office (HQ)</option>
                       <option value="lagos">Lagos Hub</option>
-                      <option value="adamawa">Adamawa Center</option>
+                      <option value="kano">Kano Center</option>
+                      <option value="kwara">Kwara Center</option>
+                      <option value="yola">Yola Hub (Adamawa)</option>
+                      <option value="benue">Benue Center</option>
+                      <option value="ogun">Ogun Center</option>
+                      <option value="lokoja">Lokoja Center</option>
+                      <option value="calabar">Calabar Center</option>
+                      <option value="minna">Minna Center</option>
+                      <option value="ibadan">Ibadan Center</option>
+                      <option value="ekiti">Ekiti Center</option>
+                      <option value="bauchi">Bauchi Center</option>
                       <option value="kaduna">Kaduna Hub</option>
                     </select>
                   </div>

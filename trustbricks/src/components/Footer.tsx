@@ -105,9 +105,21 @@ export default function Footer({ siteSettings }: { siteSettings?: any } = {}) {
                 <p className="text-xs mt-1">14 Broad Street, Lagos Island</p>
               </div>
             </li>
-            <li className="flex gap-4 mt-6">
-               <span className="text-xs bg-white/5 px-3 py-1.5 rounded-full border border-white/10">Adamawa</span>
-               <span className="text-xs bg-white/5 px-3 py-1.5 rounded-full border border-white/10">Kaduna</span>
+            <li className="flex flex-wrap gap-2 mt-6 max-w-xs">
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Abuja</span>
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Lagos</span>
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Kano</span>
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Kwara</span>
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Yola</span>
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Benue</span>
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Ogun</span>
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Lokoja</span>
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Calabar</span>
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Minna</span>
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Ibadan</span>
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Ekiti</span>
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Bauchi</span>
+               <span className="text-xs bg-white/5 px-2.5 py-1 rounded-full border border-white/10">Kaduna</span>
             </li>
           </ul>
         </div>

@@ -89,7 +89,7 @@ export default function HowItWorksPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-[var(--color-text-heading)] mb-2">Consultation</h3>
-                  <p className="text-[var(--color-text-body)] leading-relaxed">Our regional advisors in Abuja, Lagos, Adamawa, or Kaduna will reach out to guide you through selecting a property and securing your mortgage offer letter.</p>
+                  <p className="text-[var(--color-text-body)] leading-relaxed">Our regional advisors across our 14 Nigerian branches (including Abuja, Lagos, Kano, Yola, Kaduna, and others) will reach out to guide you through selecting a property and securing your mortgage offer letter.</p>
                 </div>
               </div>
               <div className="flex gap-4">

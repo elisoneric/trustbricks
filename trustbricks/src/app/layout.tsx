@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: "%s | Trust Bricks Properties Ltd"
   },
   description:
-    "Use 25% of your Retirement Savings Account (RSA) to fund a home mortgage down payment. PenCom-regulated. Serving Abuja, Lagos, Adamawa, and Kaduna.",
+    "Use 25% of your Retirement Savings Account (RSA) to fund a home mortgage down payment. PenCom-regulated. Serving 14 branches across Nigeria.",
   keywords: [
     "PenCom mortgage",
     "RSA withdrawal",

@@ -28,7 +28,7 @@ export default function PrivacyPolicyPage() {
             </p>
             <ul className="list-disc pl-5 space-y-2">
               <li>Process and calculate your potential 25% downpayment capacity.</li>
-              <li>Provide advisory support through our regional offices in Abuja, Lagos, Adamawa, and Kaduna.</li>
+              <li>Provide advisory support through our 14 regional offices across Nigeria (including Abuja, Lagos, Kano, Yola, Kaduna, and others).</li>
               <li>Coordinate with licensed mortgage banks and your PFA on your behalf, with your explicit authorization.</li>
             </ul>
 
