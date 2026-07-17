@@ -20,8 +20,6 @@ export type BranchSlug = "abuja" | "lagos" | "adamawa" | "kaduna";
 export type PfaSlug =
   | "stanbic-ibtc"
   | "gt-pension"
-  | "citizens-tier-1"
-  | "citizens-tier-2"
   | "trustfund"
   | "nupemco"
   | "tangerine-apt"
@@ -30,7 +28,15 @@ export type PfaSlug =
   | "premium"
   | "accessarm"
   | "leadway-pensure"
-  | "oak";
+  | "oak"
+  | "citizens"
+  | "cardinalstone"
+  | "crusader"
+  | "fcmb"
+  | "fidelity"
+  | "npf"
+  | "pal"
+  | "veritas";
 
 export interface Branch {
   slug: BranchSlug;
@@ -747,21 +753,7 @@ function Step2Pfa({
         </select>
       </div>
 
-      {/* Citizens tier info */}
-      {selected?.startsWith("citizens") && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-3 p-3 rounded-[var(--radius-md)] bg-[var(--color-info)]/8 border border-[var(--color-info)]/20"
-        >
-          <p className="text-xs text-[var(--color-info)] font-medium" style={{ fontFamily: "var(--font-body)" }}>
-            {selected === "citizens-tier-1"
-              ? "Tier 1 minimum: ₦500,000 RSA balance."
-              : "Tier 2 minimum: ₦200,000 RSA balance."}
-          </p>
-        </motion.div>
-      )}
-
+      {/* Citizens tier info removed */}
       {/* Threshold preview removed for standard rules */}
 
       <div className="flex items-center justify-between mt-8">

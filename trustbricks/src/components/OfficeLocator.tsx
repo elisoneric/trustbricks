@@ -332,7 +332,7 @@ export default function OfficeLocator({ selectedBranch, onBranchChange, branches
                       borderColor: "var(--color-border)",
                       color: "var(--color-text-body)",
                     }}
-                    aria-label={`Open ${active.city} office in Google Maps`}
+                    aria-label={`Open ${currentOffice.city} office in Google Maps`}
                   >
                     <MapPin className="w-4 h-4" />
                     Get Directions
@@ -342,7 +342,7 @@ export default function OfficeLocator({ selectedBranch, onBranchChange, branches
                   className="text-[10px] mt-3"
                   style={{ fontFamily: "var(--font-body)", color: "var(--color-text-muted)" }}
                 >
-                  {active.hours}
+                  {currentOffice.hours}
                 </p>
               </DetailBlock>
             </div>

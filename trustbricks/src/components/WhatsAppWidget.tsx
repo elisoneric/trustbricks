@@ -108,8 +108,11 @@ export default function WhatsAppWidget({ selectedBranch = "abuja", branches = []
     setIsLoading(false);
   };
 
+  const currentBranch = branches.find(b => (b.id || b.slug) === selectedBranch) || branches[0];
+  const cityName = currentBranch?.city || "Head";
+
   const getWhatsAppURL = () => {
-    const number = WA_NUMBERS[selectedBranch];
+    const number = currentBranch?.whatsapp?.replace(/[^0-9]/g, '') || "2348030000000";
     // Generate a beautiful summarized transcript to pass to WhatsApp
     const transcript = messages
       .map(m => `${m.sender === "user" ? "Me" : "Ada"}: ${m.text}`)
@@ -118,9 +121,6 @@ export default function WhatsAppWidget({ selectedBranch = "abuja", branches = []
     const intro = `Hi! I was just chatting with Ada on your site about the PenCom mortgage scheme. Here is our conversation:\n\n${transcript}\n\nCan I speak with a live officer to continue?`;
     return `https://wa.me/${number}?text=${encodeURIComponent(intro)}`;
   };
-
-  const currentBranch = branches.find(b => (b.id || b.slug) === selectedBranch) || branches[0];
-  const cityName = currentBranch?.city || "Head";
 
   const quickReplies = [
     "Am I eligible?",
