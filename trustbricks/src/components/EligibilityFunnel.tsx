@@ -1,6 +1,6 @@
 "use client";
 
-import { useReducer, useCallback, useId, useTransition } from "react";
+import { useReducer, useCallback, useId, useTransition, useState } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Landmark, Waves, Mountain, Wheat, Bell, PartyPopper } from "lucide-react";
 import { processMortgageLead } from "@/app/actions/leadRouting";
@@ -659,6 +659,16 @@ function Step1Branch({
   onSelect: (b: string) => void;
   onNext: () => void;
 }) {
+  const [search, setSearch] = useState("");
+
+  const filtered = branches.filter((b) => {
+    const term = search.toLowerCase();
+    const nameMatch = b.name ? b.name.toLowerCase().includes(term) : false;
+    const cityMatch = b.city ? b.city.toLowerCase().includes(term) : false;
+    const stateMatch = b.state ? b.state.toLowerCase().includes(term) : false;
+    return nameMatch || cityMatch || stateMatch;
+  });
+
   return (
     <div>
       <StepInstruction
@@ -666,59 +676,93 @@ function Step1Branch({
         title="Select your nearest branch"
         hint="Your dedicated advisor will be based at this location."
       />
-      <div className="grid grid-cols-2 gap-3 mb-8" role="radiogroup" aria-label="Branch selection">
-        {branches.map((b) => (
-          <BranchCard
-            key={b.id || b.slug}
-            branch={b}
-            isSelected={selected === (b.id || b.slug)}
-            onSelect={onSelect}
-          />
-        ))}
+      
+      {/* Search Input */}
+      <div className="mb-4 relative">
+        <input
+          type="text"
+          placeholder="Search by city, branch or state..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full px-4 py-2.5 pl-10 rounded-[var(--radius-md)] border-2 border-[var(--color-border)] bg-[var(--color-card)] text-sm text-[var(--color-text-heading)] placeholder-slate-400 focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-2 focus:ring-[var(--color-clay-500)]/20 transition-all font-medium"
+          style={{ fontFamily: "var(--font-body)" }}
+        />
+        <span className="absolute left-3.5 top-3.5 text-slate-400">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </span>
+        {search && (
+          <button
+            type="button"
+            onClick={() => setSearch("")}
+            className="absolute right-3.5 top-3.5 text-[11px] text-slate-400 hover:text-[var(--color-clay-500)] font-bold uppercase tracking-wider transition-colors"
+          >
+            Clear
+          </button>
+        )}
       </div>
+
+      {/* Scrollable list of branches */}
+      <div 
+        className="max-h-[220px] overflow-y-auto pr-1 mb-8 border border-[var(--color-border)] rounded-[var(--radius-lg)] bg-[var(--color-card)] divide-y divide-[var(--color-border)] shadow-sm scrollbar-thin"
+        role="radiogroup" 
+        aria-label="Branch selection"
+      >
+        {filtered.length > 0 ? (
+          filtered.map((b) => {
+            const isSelected = selected === b.slug;
+            return (
+              <button
+                key={b.slug}
+                type="button"
+                onClick={() => onSelect(b.slug)}
+                className={[
+                  "w-full flex items-center justify-between px-4 py-3 text-sm font-semibold transition-all duration-[120ms] text-left",
+                  isSelected
+                    ? "bg-[var(--color-clay-50)] text-[var(--color-ink-700)]"
+                    : "text-[var(--color-text-body)] hover:bg-slate-50/50"
+                ].join(" ")}
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-[var(--color-clay-500)] text-lg" aria-hidden="true">
+                    {b.emoji || BRANCH_ICONS[b.slug as BranchSlug] || "📍"}
+                  </span>
+                  <div>
+                    <p className={isSelected ? "text-[var(--color-ink-700)] font-bold text-sm" : "text-[var(--color-text-heading)] font-semibold text-sm"}>
+                      {b.name}
+                    </p>
+                    {b.city && (
+                      <p className="text-[10px] text-slate-400 font-medium mt-0.5">
+                        {b.city}, {b.state || ""}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                {isSelected && (
+                  <span className="w-5 h-5 rounded-full bg-[var(--color-clay-500)] flex items-center justify-center shrink-0">
+                    <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </span>
+                )}
+              </button>
+            );
+          })
+        ) : (
+          <div className="p-8 text-center text-slate-400 text-xs font-medium">
+            No matching branches found.
+          </div>
+        )}
+      </div>
+
       <div className="flex justify-end">
         <PrimaryButton onClick={onNext} disabled={!selected}>
           Continue <ArrowRightSm />
         </PrimaryButton>
       </div>
     </div>
-  );
-}
-
-function BranchCard({
-  branch, isSelected, onSelect,
-}: {
-  branch: any;
-  isSelected: boolean;
-  onSelect: (s: string) => void;
-}) {
-  return (
-    <motion.button
-      type="button"
-      onClick={() => onSelect(branch.slug)}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 380, damping: 22 }}
-      role="radio"
-      aria-checked={isSelected}
-      className={[
-        "relative flex flex-col items-center gap-2 px-4 py-5 rounded-[var(--radius-lg)]",
-        "border-2 text-sm font-semibold transition-all duration-[200ms]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-clay-500)]",
-        isSelected
-          ? "border-[var(--color-clay-500)] bg-[var(--color-clay-50)] text-[var(--color-ink-700)]"
-          : "border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text-body)] hover:border-[var(--color-clay-500)]/40",
-      ].join(" ")}
-      style={{ fontFamily: "var(--font-display)" }}
-    >
-      <span className="text-[var(--color-clay-500)]" aria-hidden="true">{branch.emoji || BRANCH_ICONS[branch.slug as BranchSlug] || <Landmark className="w-6 h-6" />}</span>
-      <span>{branch.name}</span>
-      {isSelected && (
-        <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[var(--color-clay-500)] flex items-center justify-center">
-          <CheckIcon className="w-2.5 h-2.5 text-white" />
-        </span>
-      )}
-    </motion.button>
   );
 }
 
