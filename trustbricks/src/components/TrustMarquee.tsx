@@ -9,7 +9,10 @@ export default function TrustMarquee() {
   const isInView = useInView(containerRef, { margin: "0px 0px 200px 0px" });
   const logos = [
     "PENCOM REGULATED", "STANBIC IBTC", "GT PENSION", "TRUSTFUND",
-    "PREMIUM PENSIONS", "ACCESS ARM", "OAK PENSIONS", "LEADWAY PENSURE"
+    "PREMIUM PENSIONS", "ACCESS ARM", "OAK PENSIONS", "LEADWAY PENSURE",
+    "CITIZENS PENSIONS", "CRUSADER PENSIONS", "NLPC PENSIONS", "NPF PENSIONS",
+    "NUPEMCO", "NORRENBERGER", "CARDINALSTONE", "FCMB PENSIONS",
+    "FIDELITY PENSIONS", "PAL PENSIONS", "VERITAS GLANVILLS", "TANGERINE APT"
   ];
 
   const isPaused = !isInView || reduceMotion;

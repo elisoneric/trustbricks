@@ -72,8 +72,8 @@ const scaleIn: Variants = {
 /* ── TRUST CHIP DATA ─────────────────────────────────────────────────────── */
 const TRUST_CHIPS = [
   { icon: <ShieldCheck className="w-4 h-4 text-[var(--color-moss)]" />, label: "PenCom Regulated" },
-  { icon: <Landmark className="w-4 h-4 text-[var(--color-ink-400)]" />, label: "12 PFAs Supported" },
-  { icon: <MapPin className="w-4 h-4 text-[var(--color-clay-500)]" />, label: "4 State Offices" },
+  { icon: <Landmark className="w-4 h-4 text-[var(--color-ink-400)]" />, label: "19 PFAs Supported" },
+  { icon: <MapPin className="w-4 h-4 text-[var(--color-clay-500)]" />, label: "14 Branches" },
   { icon: <Building2 className="w-4 h-4 text-[var(--color-mortar-500)]" />, label: "RC: 9552712" },
 ];
 
