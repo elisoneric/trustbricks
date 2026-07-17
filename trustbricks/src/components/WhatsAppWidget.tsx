@@ -10,7 +10,18 @@ import { sendMessageToGemini } from "@/app/actions/chatActions";
 const FALLBACK_WA_NUMBERS: Record<string, string> = {
   abuja:   "+2348030000001",
   lagos:   "+2348050000002",
+  kano:    "+2348110000005",
+  kwara:   "+2348110000006",
+  yola:    "+2348070000003",
   adamawa: "+2348070000003",
+  benue:   "+2348110000007",
+  ogun:    "+2348110000008",
+  lokoja:  "+2348110000009",
+  calabar: "+2348110000010",
+  minna:   "+2348110000011",
+  ibadan:  "+2348110000012",
+  ekiti:   "+2348110000013",
+  bauchi:  "+2348110000014",
   kaduna:  "+2348090000004",
 };
 

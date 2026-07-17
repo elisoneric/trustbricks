@@ -10,13 +10,24 @@ const BRANCH_ICONS: Record<BranchSlug, React.ReactNode> = {
   lagos:   <Waves className="w-6 h-6" />,
   adamawa: <Mountain className="w-6 h-6" />,
   kaduna:  <Wheat className="w-6 h-6" />,
+  kano:    <Landmark className="w-6 h-6" />,
+  kwara:   <Wheat className="w-6 h-6" />,
+  yola:    <Mountain className="w-6 h-6" />,
+  benue:   <Wheat className="w-6 h-6" />,
+  ogun:    <Mountain className="w-6 h-6" />,
+  lokoja:  <Waves className="w-6 h-6" />,
+  calabar: <Waves className="w-6 h-6" />,
+  minna:   <Landmark className="w-6 h-6" />,
+  ibadan:  <Landmark className="w-6 h-6" />,
+  ekiti:   <Mountain className="w-6 h-6" />,
+  bauchi:  <Mountain className="w-6 h-6" />,
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
    TYPES & CONSTANTS
 ═══════════════════════════════════════════════════════════════════════════ */
 
-export type BranchSlug = "abuja" | "lagos" | "adamawa" | "kaduna";
+export type BranchSlug = "abuja" | "lagos" | "kano" | "kwara" | "yola" | "adamawa" | "benue" | "ogun" | "lokoja" | "calabar" | "minna" | "ibadan" | "ekiti" | "bauchi" | "kaduna";
 export type PfaSlug =
   | "stanbic-ibtc"
   | "gt-pension"
@@ -61,8 +72,19 @@ export interface PfaRule {
 export const FALLBACK_BRANCHES: Branch[] = [
   { slug: "abuja",    name: "Abuja (FCT)",    emoji: "🏛️" },
   { slug: "lagos",    name: "Lagos",          emoji: "🌊" },
-  { slug: "adamawa",  name: "Adamawa",        emoji: "🏔️" },
+  { slug: "kano",     name: "Kano",           emoji: "🕌" },
+  { slug: "kwara",    name: "Kwara",          emoji: "🌴" },
+  { slug: "yola",     name: "Yola (Adamawa)", emoji: "🏔️" },
+  { slug: "benue",    name: "Benue",          emoji: "🌾" },
+  { slug: "ogun",     name: "Ogun",           emoji: "⛰️" },
+  { slug: "lokoja",   name: "Lokoja",         emoji: "💧" },
+  { slug: "calabar",  name: "Calabar",        emoji: "🌳" },
+  { slug: "minna",    name: "Minna",          emoji: "🏛️" },
+  { slug: "ibadan",   name: "Ibadan",         emoji: "🏺" },
+  { slug: "ekiti",    name: "Ekiti",          emoji: "🏔️" },
+  { slug: "bauchi",   name: "Bauchi",         emoji: "🦒" },
   { slug: "kaduna",   name: "Kaduna",         emoji: "🌾" },
+  { slug: "adamawa",  name: "Adamawa",        emoji: "🏔️" },
 ];
 
 /* ── PFA REGISTRY ─────────────────────────────────────────────────────── */

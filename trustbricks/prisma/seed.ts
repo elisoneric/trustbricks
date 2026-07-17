@@ -7,10 +7,21 @@ async function main() {
 
   // 1. Seed Branches with placeholder contact details (to be edited via admin panel)
   const branches = [
-    { name: 'Abuja', email: 'abuja@trustbricks.com', whatsapp: '+2348000000001' },
-    { name: 'Lagos', email: 'lagos@trustbricks.com', whatsapp: '+2348000000002' },
-    { name: 'Adamawa', email: 'adamawa@trustbricks.com', whatsapp: '+2348000000003' },
-    { name: 'Kaduna', email: 'kaduna@trustbricks.com', whatsapp: '+2348000000004' },
+    { name: 'Abuja', email: 'abuja@trustbrickproperties.ng', whatsapp: '+2348030000001', city: 'Abuja', state: 'FCT', address: 'Plot 234, Cadastral Zone B12, Wuse Zone 5', landmark: 'Near FCDA Secretariat' },
+    { name: 'Lagos', email: 'lagos@trustbrickproperties.ng', whatsapp: '+2348050000002', city: 'Lagos', state: 'Lagos', address: '14 Broad Street, Lagos Island', landmark: 'Opposite First Bank HQ' },
+    { name: 'Kano', email: 'kano@trustbrickproperties.ng', whatsapp: '+2348110000005', city: 'Kano', state: 'Kano', address: 'Plot 45, Murtala Muhammad Way, Kano', landmark: 'Near Kano Central Mosque' },
+    { name: 'Kwara', email: 'kwara@trustbrickproperties.ng', whatsapp: '+2348110000006', city: 'Ilorin', state: 'Kwara', address: '18 Ibrahim Taiwo Road, Ilorin', landmark: 'Near Kwara State Stadium' },
+    { name: 'Yola', email: 'adamawa@trustbrickproperties.ng', whatsapp: '+2348070000003', city: 'Yola', state: 'Adamawa', address: '12 Atiku Road, Jimeta, Yola', landmark: 'Near Adamawa State Government House' },
+    { name: 'Benue', email: 'benue@trustbrickproperties.ng', whatsapp: '+2348110000007', city: 'Makurdi', state: 'Benue', address: '24 J.S. Tarka Road, Makurdi', landmark: 'Near Benue State University' },
+    { name: 'Ogun', email: 'ogun@trustbrickproperties.ng', whatsapp: '+2348110000008', city: 'Abeokuta', state: 'Ogun', address: '10 Lalubu Street, Oke-Ilewo, Abeokuta', landmark: 'Near Abeokuta Sports Club' },
+    { name: 'Lokoja', email: 'lokoja@trustbrickproperties.ng', whatsapp: '+2348110000009', city: 'Lokoja', state: 'Kogi', address: '5 Murtala Way, Lokoja', landmark: 'Near Kogi State Specialist Hospital' },
+    { name: 'Calabar', email: 'calabar@trustbrickproperties.ng', whatsapp: '+2348110000010', city: 'Calabar', state: 'Cross River', address: '12 Marian Road, Calabar', landmark: 'Near Calabar Mall' },
+    { name: 'Minna', email: 'minna@trustbrickproperties.ng', whatsapp: '+2348110000011', city: 'Minna', state: 'Niger', address: '6 Bosso Road, Minna', landmark: 'Near Federal University of Technology Minna' },
+    { name: 'Ibadan', email: 'ibadan@trustbrickproperties.ng', whatsapp: '+2348110000012', city: 'Ibadan', state: 'Oyo', address: '30 Ring Road, Challenge, Ibadan', landmark: 'Near Challenge Bus Stop' },
+    { name: 'Ekiti', email: 'ekiti@trustbrickproperties.ng', whatsapp: '+2348110000013', city: 'Ado-Ekiti', state: 'Ekiti', address: '15 Ado-Iworoko Road, Ado-Ekiti', landmark: 'Near Ekiti State University' },
+    { name: 'Bauchi', email: 'bauchi@trustbrickproperties.ng', whatsapp: '+2348110000014', city: 'Bauchi', state: 'Bauchi', address: '8 Yakubu Bauchi Road, Bauchi', landmark: 'Near Bauchi State Government House' },
+    { name: 'Kaduna', email: 'kaduna@trustbrickproperties.ng', whatsapp: '+2348090000004', city: 'Kaduna', state: 'Kaduna', address: '8 Ali Akilu Road, Kaduna North', landmark: 'Near Barau Dikko Teaching Hospital' },
+    { name: 'Adamawa', email: 'adamawa@trustbrickproperties.ng', whatsapp: '+2348070000003', city: 'Yola', state: 'Adamawa', address: '12 Atiku Road, Jimeta, Yola', landmark: 'Near Adamawa State Government House' },
   ];
 
   for (const branch of branches) {
