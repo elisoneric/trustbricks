@@ -1,7 +1,7 @@
 import { getLeads, updateLeadStatus, getAdminConfig, updateSiteSettings, addOfficer, removeOfficer, adminLogin, adminLogout, getBranches, createBranch, updateBranch, deleteBranch } from '@/app/actions/adminActions';
 import { format } from 'date-fns';
 import { cookies } from 'next/headers';
-import { Search, Filter, ShieldCheck, Mail, Phone, ChevronDown, Plus, Trash, Settings, Users, Database, LogOut, Lock, MapPin, Pencil } from 'lucide-react';
+import { Search, Filter, Mail, Phone, ChevronDown, Plus, Trash, Settings, Users, Database, LogOut, Lock, MapPin, Pencil } from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
 import BranchEditForm from '@/components/BranchEditForm';
@@ -95,9 +95,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
-              <div className="bg-[#0D1F3C] p-2 rounded-lg text-white">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
+              <img src="/logo.png" alt="" className="w-8 h-8" />
               <div className="flex flex-col">
                 <span className="font-extrabold text-[16px] leading-none tracking-tight text-[#0D1F3C]" style={{ fontFamily: "var(--font-display)" }}>
                   TRUST BRICKS

@@ -137,20 +137,7 @@ export default function GlobalNavbar() {
           className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-clay-500)] rounded-md"
           aria-label="Trust Bricks Properties — home"
         >
-          {/* Brick coursing mark — two offset courses, literal to the brand */}
-          <span
-            aria-hidden="true"
-            className="flex flex-col gap-[3px] w-9 h-9 rounded-[8px] bg-[var(--color-ink-700)] p-[6px] select-none"
-          >
-            <span className="flex gap-[3px] flex-1">
-              <span className="flex-1 rounded-[1.5px] bg-[var(--color-clay-500)]" />
-              <span className="flex-1 rounded-[1.5px] bg-[var(--color-clay-500)]" />
-            </span>
-            <span className="flex gap-[3px] flex-1 pl-[9px]">
-              <span className="flex-1 rounded-[1.5px] bg-[var(--color-clay-500)]" />
-              <span className="flex-1 rounded-[1.5px] bg-[var(--color-clay-500)]" />
-            </span>
-          </span>
+          <img src="/logo.png" alt="" aria-hidden="true" className="w-9 h-9 select-none" />
           <span
             className="leading-tight select-none"
             style={{ fontFamily: "var(--font-display)" }}
@@ -165,17 +152,17 @@ export default function GlobalNavbar() {
         </Link>
 
         {/* ── DESKTOP NAV ── */}
-        <ul className="hidden md:flex items-center gap-1" role="list">
+        <ul className="hidden md:flex items-center gap-0 lg:gap-1" role="list">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
                 className={[
-                  "relative px-3 py-1.5 text-sm font-medium text-[var(--color-text-heading)] cursor-pointer",
+                  "relative px-2 lg:px-3 py-1.5 text-xs lg:text-sm font-medium text-[var(--color-text-heading)] cursor-pointer whitespace-nowrap",
                   "transition-colors duration-[300ms] hover:text-[var(--color-clay-500)]",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-clay-500)] rounded",
-                  "after:content-[''] after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px]",
+                  "after:content-[''] after:absolute after:bottom-0 after:left-2 after:right-2 lg:after:left-3 lg:after:right-3 after:h-[2px]",
                   "after:bg-[var(--color-clay-500)] after:scale-x-0 after:origin-left",
                   "after:transition-transform after:duration-[300ms] hover:after:scale-x-100",
                 ].join(" ")}
@@ -188,7 +175,7 @@ export default function GlobalNavbar() {
         </ul>
 
         {/* ── DESKTOP CTAs ── */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2 lg:gap-3">
           {/* Secondary: Check Application status */}
           <motion.button
             type="button"
@@ -197,11 +184,11 @@ export default function GlobalNavbar() {
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 380, damping: 22 }}
             className={[
-              "inline-flex items-center gap-2 px-4 py-2.5 rounded-[var(--radius-pill)]",
-              "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-ink-700)] text-sm font-bold",
+              "group/track inline-flex items-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-2 lg:py-2.5 rounded-[var(--radius-pill)]",
+              "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-ink-700)] text-xs lg:text-sm font-bold",
               "hover:bg-[var(--color-mortar-50)] hover:border-[var(--color-border-emphasis)]",
               "shadow-sm hover:shadow-md",
-              "transition-all duration-[280ms]",
+              "transition-all duration-[280ms] whitespace-nowrap",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-clay-500)]",
             ].join(" ")}
             style={{ fontFamily: "var(--font-display)" }}
@@ -211,7 +198,8 @@ export default function GlobalNavbar() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            Track Application
+            <span className="hidden lg:inline">Track Application</span>
+            <span className="lg:hidden">Track</span>
           </motion.button>
 
           {/* Primary: Check Eligibility */}
@@ -222,17 +210,18 @@ export default function GlobalNavbar() {
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 380, damping: 22 }}
             className={[
-              "inline-flex items-center gap-2 px-5 py-2.5 rounded-[var(--radius-pill)]",
-              "bg-[var(--color-clay-500)] text-white text-sm font-bold",
+              "inline-flex items-center gap-1.5 lg:gap-2 px-3 lg:px-5 py-2 lg:py-2.5 rounded-[var(--radius-pill)]",
+              "bg-[var(--color-clay-500)] text-white text-xs lg:text-sm font-bold",
               "hover:bg-[var(--color-clay-600)]",
               "shadow-[var(--shadow-action-glow)] hover:shadow-[0_0_32px_rgba(184,80,46,0.5)]",
-              "transition-all duration-[280ms]",
+              "transition-all duration-[280ms] whitespace-nowrap",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-clay-500)]",
             ].join(" ")}
             style={{ fontFamily: "var(--font-display)" }}
             aria-label="Open the eligibility checker"
           >
-            Check My Eligibility
+            <span className="hidden lg:inline">Check My Eligibility</span>
+            <span className="lg:hidden">Eligibility</span>
             <ArrowRight className="w-4 h-4 transition-transform duration-[180ms] group-hover:translate-x-1" />
           </motion.a>
         </div>
