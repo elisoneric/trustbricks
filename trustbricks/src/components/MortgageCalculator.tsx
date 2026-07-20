@@ -23,7 +23,7 @@ function useAnimatedNumber(value: number, skip: boolean) {
 const springStandard = { type: "spring" as const, stiffness: 280, damping: 28 };
 const springBouncy = { type: "spring" as const, stiffness: 380, damping: 22 };
 
-export default function MortgageCalculator() {
+export default function MortgageCalculator({ onApply }: { onApply?: () => void }) {
   const reduceMotion = useReducedMotion();
   const [propertyValue, setPropertyValue] = useState(2500000);
   const [rsaBalance, setRsaBalance] = useState(5000000);
@@ -100,7 +100,14 @@ export default function MortgageCalculator() {
               </p>
               <motion.button
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                className="w-full bg-[var(--color-ink-700)] text-white py-4 rounded-xl font-bold shadow-lg hover:bg-[var(--color-ink-600)] hover:shadow-[0_8px_20px_rgba(16,25,43,0.2)] transition-all duration-300 relative overflow-hidden"
+                onClick={() => {
+                  if (onApply) {
+                    onApply();
+                  } else {
+                    document.getElementById("main-content")?.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className="w-full bg-[var(--color-ink-700)] text-white py-4 rounded-xl font-bold shadow-lg hover:bg-[var(--color-ink-600)] hover:shadow-[0_8px_20px_rgba(16,25,43,0.2)] transition-all duration-300 relative overflow-hidden cursor-pointer"
                 style={{ fontFamily: "var(--font-display)" }}
               >
                 Apply With This Value →

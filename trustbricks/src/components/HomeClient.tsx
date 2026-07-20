@@ -8,6 +8,7 @@ import MortgageCalculator        from "@/components/MortgageCalculator";
 import OfficeLocator             from "@/components/OfficeLocator";
 import WhatsAppWidget            from "@/components/WhatsAppWidget";
 import ApplicationStatusModal    from "@/components/ApplicationStatusModal";
+import EligibilityFunnel         from "@/components/EligibilityFunnel";
 import type { BranchSlug }       from "@/components/EligibilityFunnel";
 
 /**
@@ -17,6 +18,7 @@ import type { BranchSlug }       from "@/components/EligibilityFunnel";
 export default function HomeClient({ siteSettings, branches = [] }: { siteSettings?: any, branches?: any[] }) {
   const [selectedBranch,  setSelectedBranch]  = useState<BranchSlug | string>(branches.length > 0 ? branches[0].id : "abuja");
   const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [funnelOpen, setFunnelOpen] = useState(false);
 
   return (
     <>
@@ -24,7 +26,7 @@ export default function HomeClient({ siteSettings, branches = [] }: { siteSettin
         <HeroSection siteSettings={siteSettings} branches={branches} />
         <TrustMarquee />
         <HowItWorks onCheckStatus={() => setStatusModalOpen(true)} />
-        <MortgageCalculator />
+        <MortgageCalculator onApply={() => setFunnelOpen(true)} />
         <OfficeLocator
           selectedBranch={selectedBranch}
           onBranchChange={setSelectedBranch}
@@ -35,6 +37,11 @@ export default function HomeClient({ siteSettings, branches = [] }: { siteSettin
       <ApplicationStatusModal
         isOpen={statusModalOpen}
         onClose={() => setStatusModalOpen(false)}
+      />
+      <EligibilityFunnel
+        isOpen={funnelOpen}
+        onClose={() => setFunnelOpen(false)}
+        branches={branches}
       />
     </>
   );

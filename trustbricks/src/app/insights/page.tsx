@@ -1,6 +1,6 @@
 import { createClient } from "next-sanity";
 import Image from "next/image";
-import Link from "next/link";
+
 import { ArrowRight } from "lucide-react";
 import GlobalNavbar from "@/components/GlobalNavbar";
 
@@ -92,7 +92,7 @@ export default async function InsightsPage() {
       <main className="flex-grow max-w-7xl mx-auto px-6 lg:px-8 py-16 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => (
-            <Link key={post._id} href={`/insights/${post.slug}`} className="group block h-full">
+            <div key={post._id} className="group block h-full">
               <article className="bg-[var(--color-card)] rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-sm h-full flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-[var(--color-ink-700)]/5">
                 {/* Image Container */}
                 <div className="relative h-56 w-full overflow-hidden bg-[var(--color-mortar-50)]">
@@ -134,7 +134,7 @@ export default async function InsightsPage() {
                   </div>
                 </div>
               </article>
-            </Link>
+            </div>
           ))}
         </div>
       </main>

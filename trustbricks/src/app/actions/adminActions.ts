@@ -179,7 +179,8 @@ export async function removeOfficer(id: string) {
 
 // Admin Panel Login Check
 export async function adminLogin(password: string) {
-  if (password === 'admin') {
+  const adminPass = process.env.ADMIN_PASSWORD || 'admin';
+  if (password === adminPass) {
     const cookieStore = await cookies();
     cookieStore.set('admin_session', 'authenticated', {
       httpOnly: true,

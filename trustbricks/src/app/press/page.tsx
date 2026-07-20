@@ -76,10 +76,10 @@ export default function PressPage() {
 
                 <div className="pt-6">
                   <a
-                    href="#"
+                    href={`mailto:press@trustbrickspropertieslimited.com.ng?subject=Press Inquiry: ${encodeURIComponent(article.title)}`}
                     className="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--color-text-heading)] hover:text-[var(--color-clay-500)] transition-colors group"
                   >
-                    <span>Read Full Release</span>
+                    <span>Request Full Release</span>
                     <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
                   </a>
                 </div>
@@ -103,13 +103,12 @@ export default function PressPage() {
               </p>
             </div>
             <div>
-              <button
-                type="button"
-                onClick={() => alert("Downloading Media Kit...")}
-                className="px-6 py-3.5 rounded-xl bg-[var(--color-clay-500)] hover:bg-[var(--color-clay-600)] text-white font-bold text-sm transition-all duration-200 cursor-pointer shadow-lg"
+              <a
+                href="mailto:press@trustbrickspropertieslimited.com.ng?subject=Media Kit Request"
+                className="px-6 py-3.5 rounded-xl bg-[var(--color-clay-500)] hover:bg-[var(--color-clay-600)] text-white font-bold text-sm transition-all duration-200 cursor-pointer shadow-lg inline-block"
               >
-                Download Assets (14MB)
-              </button>
+                Request Media Kit
+              </a>
             </div>
           </motion.div>
         </section>

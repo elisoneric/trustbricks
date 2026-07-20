@@ -419,7 +419,8 @@ export default function EligibilityFunnel({ isOpen, onClose, branches = [] }: El
       try {
         const formData = new FormData();
         formData.append("branch_id", state.branch || "");
-        formData.append("pfa_id", state.pfa || "");
+        const pfaOption = PFA_OPTIONS.find((o) => o.slug === state.pfa);
+        formData.append("pfa_id", pfaOption?.label || state.pfa || "");
         formData.append("rsa_balance", String(state.result?.rsaBalance || 0));
         formData.append("years_in_work", String(state.result?.yearsInService || 0));
         formData.append("years_to_retire", String(state.result?.yearsToRetire || 0));

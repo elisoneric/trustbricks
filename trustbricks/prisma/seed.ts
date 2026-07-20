@@ -21,7 +21,6 @@ async function main() {
     { name: 'Ekiti', email: 'ekiti@trustbrickproperties.ng', whatsapp: '+2348110000013', city: 'Ado-Ekiti', state: 'Ekiti', address: '15 Ado-Iworoko Road, Ado-Ekiti', landmark: 'Near Ekiti State University' },
     { name: 'Bauchi', email: 'bauchi@trustbrickproperties.ng', whatsapp: '+2348110000014', city: 'Bauchi', state: 'Bauchi', address: '8 Yakubu Bauchi Road, Bauchi', landmark: 'Near Bauchi State Government House' },
     { name: 'Kaduna', email: 'kaduna@trustbrickproperties.ng', whatsapp: '+2348090000004', city: 'Kaduna', state: 'Kaduna', address: '8 Ali Akilu Road, Kaduna North', landmark: 'Near Barau Dikko Teaching Hospital' },
-    { name: 'Adamawa', email: 'adamawa@trustbrickproperties.ng', whatsapp: '+2348070000003', city: 'Yola', state: 'Adamawa', address: '12 Atiku Road, Jimeta, Yola', landmark: 'Near Adamawa State Government House' },
   ];
 
   for (const branch of branches) {
@@ -48,12 +47,13 @@ async function main() {
     { name: 'AccessARM', minimum_threshold: 500000 },
     { name: 'Leadway Pensure', minimum_threshold: 500000 },
     { name: 'Oak', minimum_threshold: 500000 },
-    // Placeholders
-    { name: 'PFA Placeholder 1', minimum_threshold: 500000 },
-    { name: 'PFA Placeholder 2', minimum_threshold: 500000 },
-    { name: 'PFA Placeholder 3', minimum_threshold: 500000 },
-    { name: 'PFA Placeholder 4', minimum_threshold: 500000 },
-    { name: 'PFA Placeholder 5', minimum_threshold: 500000 },
+    { name: 'CardinalStone', minimum_threshold: 500000 },
+    { name: 'Crusader', minimum_threshold: 500000 },
+    { name: 'FCMB', minimum_threshold: 500000 },
+    { name: 'Fidelity', minimum_threshold: 500000 },
+    { name: 'NPF', minimum_threshold: 500000 },
+    { name: 'PAL', minimum_threshold: 500000 },
+    { name: 'Veritas Glanvills', minimum_threshold: 500000 },
   ];
 
   for (const pfa of pfas) {

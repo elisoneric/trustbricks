@@ -164,7 +164,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
       if (trimAccount) body.account_number = trimAccount;
 
       const res = await fetch(
-        "https://dev.trustbrickspropertieslimited.com.ng/api/portal/track",
+        "https://equity.trustbrickspropertieslimited.com.ng/api/portal/track",
         {
           method:  "POST",
           headers: { "Content-Type": "application/json" },

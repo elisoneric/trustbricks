@@ -64,19 +64,29 @@ export async function processMortgageLead(formData: FormData): Promise<LeadRespo
       return { success: false, message: 'Invalid numeric fields' };
     }
 
-    // 1. Fetch PFA Rule to validate server-side
-    const pfaRule = await prisma.pfaRule.findUnique({
+    // 1. Fetch PFA Rule to validate server-side (try by ID first, then by name)
+    let pfaRule = await prisma.pfaRule.findUnique({
       where: { id: pfa_id },
     });
+    if (!pfaRule) {
+      pfaRule = await prisma.pfaRule.findUnique({
+        where: { name: pfa_id },
+      });
+    }
 
     if (!pfaRule) {
       return { success: false, message: 'Invalid PFA selected' };
     }
 
-    // 2. Fetch Branch
-    const branch = await prisma.branch.findUnique({
+    // 2. Fetch Branch (try by ID first, then by name)
+    let branch = await prisma.branch.findUnique({
       where: { id: branch_id },
     });
+    if (!branch) {
+      branch = await prisma.branch.findUnique({
+        where: { name: branch_id },
+      });
+    }
 
     if (!branch) {
       return { success: false, message: 'Invalid Branch selected' };
@@ -95,8 +105,8 @@ export async function processMortgageLead(formData: FormData): Promise<LeadRespo
         years_in_work,
         years_to_retire,
         is_eligible,
-        pfa_id,
-        branch_id,
+        pfa_id: pfaRule.id,
+        branch_id: branch.id,
       },
     });
 

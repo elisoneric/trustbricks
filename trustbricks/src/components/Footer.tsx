@@ -51,9 +51,9 @@ export default function Footer({ siteSettings }: { siteSettings?: any } = {}) {
             <p>Phone: {siteSettings?.companyPhone || "+234 800-TRUSTBRICKS"}</p>
           </div>
           <div className="flex items-center gap-4 text-white/50">
-            <a href="#" className="hover:text-white transition-colors"><Facebook /></a>
-            <a href="#" className="hover:text-white transition-colors"><Twitter /></a>
-            <a href="#" className="hover:text-white transition-colors"><Linkedin /></a>
+            <a href="https://facebook.com/trustbricksproperties" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><Facebook /></a>
+            <a href="https://x.com/trustbricksprop" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><Twitter /></a>
+            <a href="https://linkedin.com/company/trustbricksproperties" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><Linkedin /></a>
           </div>
         </div>
 

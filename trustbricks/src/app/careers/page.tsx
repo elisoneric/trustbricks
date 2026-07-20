@@ -90,14 +90,13 @@ export default function CareersPage() {
                 </div>
 
                 <div>
-                  <button
-                    type="button"
-                    onClick={() => alert(`Applying for ${job.title} position...`)}
+                  <a
+                    href={`mailto:careers@trustbrickspropertieslimited.com.ng?subject=Application: ${encodeURIComponent(job.title)}`}
                     className="inline-flex items-center gap-1.5 px-5 py-3 rounded-xl bg-[var(--color-ink-700)] hover:bg-[var(--color-ink-600)] text-white text-xs font-bold transition-all duration-200 cursor-pointer shadow-md"
                   >
                     <span>Apply Now</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
-                  </button>
+                  </a>
                 </div>
               </motion.div>
             ))}

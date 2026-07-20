@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { motion } from "framer-motion";
 import GlobalNavbar from "@/components/GlobalNavbar";
 import Footer from "@/components/Footer";
 import { MapPin, Phone, Mail, Building, CheckCircle2, ChevronRight } from "lucide-react";
+import { submitContactForm } from "@/app/actions/contactActions";
 
 const OFFICES = [
   {
@@ -115,10 +116,20 @@ export default function ContactPage() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    startTransition(async () => {
+      const office = OFFICES.find((o) => o.slug === formData.office);
+      await submitContactForm({
+        name: formData.name,
+        email: formData.email,
+        office: office?.name || formData.office,
+        message: formData.message,
+      });
+      setSubmitted(true);
+    });
   };
 
   return (
@@ -221,10 +232,11 @@ export default function ContactPage() {
 
                   <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-[var(--color-clay-500)] text-white font-bold text-sm hover:bg-[var(--color-clay-600)] shadow-lg shadow-[var(--color-clay-500)]/20 transition-all duration-300 cursor-pointer"
+                    disabled={isPending}
+                    className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-[var(--color-clay-500)] text-white font-bold text-sm hover:bg-[var(--color-clay-600)] shadow-lg shadow-[var(--color-clay-500)]/20 transition-all duration-300 cursor-pointer disabled:opacity-60"
                   >
-                    <span>Send Message</span>
-                    <ChevronRight className="w-4 h-4" />
+                    <span>{isPending ? "Sending..." : "Send Message"}</span>
+                    {!isPending && <ChevronRight className="w-4 h-4" />}
                   </button>
                 </form>
               ) : (

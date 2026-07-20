@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { motion } from "framer-motion";
 import GlobalNavbar from "@/components/GlobalNavbar";
 import Footer from "@/components/Footer";
 import { ShieldCheck, Landmark, CheckCircle2, ChevronRight } from "lucide-react";
+import { submitContactForm } from "@/app/actions/contactActions";
 
 export default function MortgageAdvisoryPage() {
   const [formData, setFormData] = useState({
@@ -15,10 +16,19 @@ export default function MortgageAdvisoryPage() {
     balance: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    startTransition(async () => {
+      await submitContactForm({
+        name: formData.name,
+        email: formData.email,
+        office: "Mortgage Advisory",
+        message: `Phone: ${formData.phone}\nPFA: ${formData.pfa}\nEstimated Balance: ${formData.balance}\n\nRequesting mortgage advisory consultation.`,
+      });
+      setSubmitted(true);
+    });
   };
 
   return (
