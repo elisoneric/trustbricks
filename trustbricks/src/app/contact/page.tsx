@@ -246,31 +246,41 @@ export default function ContactPage() {
               )}
             </motion.div>
 
-            {/* Offices Cards Column */}
+            {/* Office Selector & Details */}
             <div className="space-y-4">
-              {OFFICES.map((office) => {
-                const isActive = formData.office === office.slug;
-                return (
-                  <motion.div
-                    key={office.slug}
-                    animate={{
-                      borderColor: isActive ? "var(--color-clay-500)" : "rgba(198, 184, 158, 0.6)",
-                      scale: isActive ? 1.02 : 1
-                    }}
-                    transition={{ type: "spring", stiffness: 150, damping: 15 }}
-                    className={`bg-[var(--color-card)] rounded-3xl p-6 border-2 shadow-card flex items-start gap-4 transition-all duration-300`}
+              <div className="bg-[var(--color-card)] rounded-2xl p-6 border border-[var(--color-border)] shadow-card">
+                <h3 className="text-lg font-bold text-[var(--color-text-heading)] mb-4" style={{ fontFamily: "var(--font-display)" }}>
+                  Office Directory
+                </h3>
+                <div className="space-y-1 mb-5">
+                  <label htmlFor="office-selector" className="text-xs font-bold text-[var(--color-text-heading)] uppercase tracking-wide">
+                    Select a Branch
+                  </label>
+                  <select
+                    id="office-selector"
+                    value={formData.office}
+                    onChange={(e) => setFormData({ ...formData, office: e.target.value })}
+                    className="w-full px-3 py-3 rounded-xl border border-[var(--color-border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35 bg-[var(--color-card)]"
                   >
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                      isActive ? 'bg-[var(--color-clay-500)]/10 text-[var(--color-clay-500)]' : 'bg-[var(--color-ink-700)]/5 text-[var(--color-ink-700)]'
-                    }`}>
-                      <Building className="w-5 h-5" />
-                    </div>
+                    {OFFICES.map((o) => (
+                      <option key={o.slug} value={o.slug}>{o.name}</option>
+                    ))}
+                  </select>
+                </div>
 
-                    <div className="space-y-2">
-                      <h4 className="font-bold text-[var(--color-text-heading)] text-lg" style={{ fontFamily: "var(--font-display)" }}>
-                        {office.name}
-                      </h4>
-                      <p className="text-xs text-[var(--color-text-body)] leading-relaxed flex items-center gap-1.5">
+                {(() => {
+                  const office = OFFICES.find((o) => o.slug === formData.office) || OFFICES[0];
+                  return (
+                    <div className="rounded-xl border border-[var(--color-border)] p-5 space-y-3 bg-[var(--color-body-bg)]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-[var(--color-clay-500)]/10 text-[var(--color-clay-500)] flex items-center justify-center shrink-0">
+                          <Building className="w-5 h-5" />
+                        </div>
+                        <h4 className="font-bold text-[var(--color-text-heading)] text-base" style={{ fontFamily: "var(--font-display)" }}>
+                          {office.name}
+                        </h4>
+                      </div>
+                      <p className="text-xs text-[var(--color-text-body)] flex items-center gap-1.5">
                         <MapPin className="w-3.5 h-3.5 text-[var(--color-text-muted)] shrink-0" /> {office.address}
                       </p>
                       <p className="text-xs text-[var(--color-text-body)] flex items-center gap-1.5 font-tabular">
@@ -280,9 +290,9 @@ export default function ContactPage() {
                         <Mail className="w-3.5 h-3.5 text-[var(--color-text-muted)] shrink-0" /> {office.email}
                       </p>
                     </div>
-                  </motion.div>
-                );
-              })}
+                  );
+                })()}
+              </div>
             </div>
 
           </div>

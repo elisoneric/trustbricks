@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { Landmark, Waves, Mountain, Wheat, MapPin, Phone, Zap } from "lucide-react";
 import type { BranchSlug } from "./EligibilityFunnel";
 
@@ -75,19 +74,6 @@ const OFFICES: Office[] = [
   },
   {
     slug:      "yola",
-    city:      "Yola",
-    state:     "Adamawa",
-    icon:      <Mountain className="w-6 h-6" />,
-    address:   "12 Atiku Road, Jimeta, Yola",
-    landmark:  "Near Adamawa State Government House",
-    phone:     "+234 807 000 0003",
-    whatsapp:  "+2348070000003",
-    email:     "adamawa@trustbrickproperties.ng",
-    hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Jimeta+Yola+Adamawa+Nigeria",
-  },
-  {
-    slug:      "adamawa",
     city:      "Yola",
     state:     "Adamawa",
     icon:      <Mountain className="w-6 h-6" />,
@@ -219,21 +205,6 @@ const OFFICES: Office[] = [
 ];
 
 /* ── FRAMER VARIANTS ─────────────────────────────────────────────────────── */
-const gridVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
-};
-
-const cardVariants: Variants = {
-  hidden:  { opacity: 0, y: 40, scale: 0.96 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 280, damping: 28 },
-  },
-};
-
 const detailVariants: Variants = {
   hidden:  { opacity: 0, y: 12 },
   visible: {
@@ -301,90 +272,42 @@ export default function OfficeLocator({ selectedBranch, onBranchChange, branches
           </p>
         </motion.div>
 
-        {/* State selector grid */}
+        {/* Branch dropdown selector */}
         <motion.div
-          className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-8"
-          variants={gridVariants}
-          initial="hidden"
-          whileInView="visible"
+          className="max-w-md mx-auto mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          role="tablist"
-          aria-label="Select an office location"
+          transition={{ type: "spring", stiffness: 280, damping: 28 }}
         >
-          {activeOffices.map((office) => {
-            const slug = office.id || office.slug;
-            const isActive = slug === selectedBranch;
-            return (
-              <motion.button
-                key={slug}
-                role="tab"
-                aria-selected={isActive}
-                aria-controls={`office-detail-${slug}`}
-                id={`office-tab-${slug}`}
-                variants={cardVariants}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring", stiffness: 380, damping: 22 }}
-                onClick={() => onBranchChange(slug)}
-                className="relative flex flex-col items-center gap-2 px-4 py-6 rounded-2xl border-2 transition-all duration-[220ms] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-clay-500)]"
-                style={{
-                  borderColor:
-                    isActive
-                      ? "var(--color-clay-500)"
-                      : "var(--color-border)",
-                  backgroundColor:
-                    isActive
-                      ? "var(--color-clay-50)"
-                      : "var(--color-card)",
-                  boxShadow:
-                    isActive
-                      ? "var(--shadow-card-hover)"
-                      : "var(--shadow-card)",
-                }}
-              >
-                {/* Active clay top bar */}
-                {isActive && (
-                  <motion.div
-                    layoutId="office-active-bar"
-                    className="absolute top-0 left-4 right-4 h-[3px] rounded-full"
-                    style={{ backgroundColor: "var(--color-clay-500)" }}
-                    transition={{ type: "spring", stiffness: 320, damping: 28 }}
-                  />
-                )}
-
-                <span
-                  aria-hidden="true"
-                  style={{ color: isActive ? "var(--color-clay-500)" : "var(--color-text-muted)" }}
-                >
-                  {office.icon}
-                </span>
-                <span
-                  className="font-bold text-sm"
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    color:
-                      isActive
-                        ? "var(--color-ink-700)"
-                        : "var(--color-text-body)",
-                  }}
-                >
-                  {office.city}
-                </span>
-                <span
-                  className="text-[10px] font-medium tracking-wide uppercase"
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    color:
-                      isActive
-                        ? "var(--color-clay-500)"
-                        : "var(--color-text-muted)",
-                  }}
-                >
-                  {office.state}
-                </span>
-              </motion.button>
-            );
-          })}
+          <label
+            htmlFor="office-branch-select"
+            className="block text-xs font-bold tracking-wide uppercase mb-2 text-center"
+            style={{ fontFamily: "var(--font-display)", color: "var(--color-clay-500)" }}
+          >
+            Choose your city
+          </label>
+          <select
+            id="office-branch-select"
+            value={selectedBranch}
+            onChange={(e) => onBranchChange(e.target.value)}
+            className="w-full px-4 py-3.5 rounded-xl border-2 text-sm font-semibold appearance-none cursor-pointer transition-colors duration-[180ms] focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/20"
+            style={{
+              fontFamily: "var(--font-display)",
+              borderColor: "var(--color-clay-500)",
+              backgroundColor: "var(--color-card)",
+              color: "var(--color-text-heading)",
+            }}
+          >
+            {activeOffices.map((office) => {
+              const slug = office.id || office.slug;
+              return (
+                <option key={slug} value={slug}>
+                  {office.city}, {office.state}
+                </option>
+              );
+            })}
+          </select>
         </motion.div>
 
         {/* Detail panel */}

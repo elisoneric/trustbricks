@@ -1,9 +1,10 @@
 import { getLeads, updateLeadStatus, getAdminConfig, updateSiteSettings, addOfficer, removeOfficer, adminLogin, adminLogout, getBranches, createBranch, updateBranch, deleteBranch } from '@/app/actions/adminActions';
 import { format } from 'date-fns';
 import { cookies } from 'next/headers';
-import { Search, Filter, ShieldCheck, Mail, Phone, ChevronDown, Plus, Trash, Settings, Users, Database, LogOut, Lock, MapPin } from 'lucide-react';
+import { Search, Filter, ShieldCheck, Mail, Phone, ChevronDown, Plus, Trash, Settings, Users, Database, LogOut, Lock, MapPin, Pencil } from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
+import BranchEditForm from '@/components/BranchEditForm';
 
 export const metadata = {
   title: 'Admin Panel | Trust Bricks Properties Ltd',
@@ -63,7 +64,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
           </form>
           
           <div className="text-[10px] text-slate-500">
-            Hint: Use standard developer passcode <code className="bg-white/5 px-1 py-0.5 rounded text-slate-300">admin</code>
+            Authorized personnel only.
           </div>
         </div>
       </div>
@@ -608,30 +609,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                       <div className="p-6 text-center text-slate-400 text-sm">No branches configured.</div>
                     ) : (
                       branches.map((b: any) => (
-                        <div key={b.id} className="p-5 flex justify-between items-start gap-4 hover:bg-slate-50/20 transition-colors">
-                          <div className="space-y-1">
-                            <h4 className="font-bold text-slate-900 text-base" style={{ fontFamily: "var(--font-display)" }}>
-                              {b.iconType} {b.name}
-                            </h4>
-                            <p className="text-xs text-slate-500 flex items-center gap-1.5">
-                              <MapPin className="w-3.5 h-3.5 text-slate-400" /> {b.address}, {b.city}, {b.state}
-                            </p>
-                            <p className="text-xs text-slate-500 flex items-center gap-1.5">
-                              <Phone className="w-3.5 h-3.5 text-slate-400" /> {b.phone}
-                            </p>
-                            <p className="text-xs text-slate-500 flex items-center gap-1.5">
-                              <Mail className="w-3.5 h-3.5 text-slate-400" /> {b.email}
-                            </p>
-                          </div>
-                          <form action={async () => {
-                            'use server';
-                            await deleteBranch(b.id);
-                          }}>
-                            <button type="submit" className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all cursor-pointer">
-                              <Trash className="w-4 h-4" />
-                            </button>
-                          </form>
-                        </div>
+                        <BranchEditForm key={b.id} branch={b} />
                       ))
                     )}
                   </div>

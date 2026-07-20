@@ -13,7 +13,6 @@ const FALLBACK_WA_NUMBERS: Record<string, string> = {
   kano:    "+2348110000005",
   kwara:   "+2348110000006",
   yola:    "+2348070000003",
-  adamawa: "+2348070000003",
   benue:   "+2348110000007",
   ogun:    "+2348110000008",
   lokoja:  "+2348110000009",

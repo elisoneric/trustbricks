@@ -6,7 +6,7 @@
  * Keeping this separate prevents circular server←→client imports.
  */
 
-export type BranchSlug = "abuja" | "lagos" | "kano" | "kwara" | "yola" | "adamawa" | "benue" | "ogun" | "lokoja" | "calabar" | "minna" | "ibadan" | "ekiti" | "bauchi" | "kaduna";
+export type BranchSlug = "abuja" | "lagos" | "kano" | "kwara" | "yola" | "benue" | "ogun" | "lokoja" | "calabar" | "minna" | "ibadan" | "ekiti" | "bauchi" | "kaduna";
 
 export type PfaSlug =
   | "stanbic-ibtc"

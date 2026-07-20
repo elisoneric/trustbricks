@@ -8,7 +8,6 @@ import { processMortgageLead } from "@/app/actions/leadRouting";
 const BRANCH_ICONS: Record<BranchSlug, React.ReactNode> = {
   abuja:   <Landmark className="w-6 h-6" />,
   lagos:   <Waves className="w-6 h-6" />,
-  adamawa: <Mountain className="w-6 h-6" />,
   kaduna:  <Wheat className="w-6 h-6" />,
   kano:    <Landmark className="w-6 h-6" />,
   kwara:   <Wheat className="w-6 h-6" />,
@@ -27,7 +26,7 @@ const BRANCH_ICONS: Record<BranchSlug, React.ReactNode> = {
    TYPES & CONSTANTS
 ═══════════════════════════════════════════════════════════════════════════ */
 
-export type BranchSlug = "abuja" | "lagos" | "kano" | "kwara" | "yola" | "adamawa" | "benue" | "ogun" | "lokoja" | "calabar" | "minna" | "ibadan" | "ekiti" | "bauchi" | "kaduna";
+export type BranchSlug = "abuja" | "lagos" | "kano" | "kwara" | "yola" | "benue" | "ogun" | "lokoja" | "calabar" | "minna" | "ibadan" | "ekiti" | "bauchi" | "kaduna";
 export type PfaSlug =
   | "stanbic-ibtc"
   | "gt-pension"
@@ -84,7 +83,6 @@ export const FALLBACK_BRANCHES: Branch[] = [
   { slug: "ekiti",    name: "Ekiti",          emoji: "🏔️" },
   { slug: "bauchi",   name: "Bauchi",         emoji: "🦒" },
   { slug: "kaduna",   name: "Kaduna",         emoji: "🌾" },
-  { slug: "adamawa",  name: "Adamawa",        emoji: "🏔️" },
 ];
 
 /* ── PFA REGISTRY ─────────────────────────────────────────────────────── */
@@ -711,12 +709,13 @@ function Step1Branch({
       >
         {filtered.length > 0 ? (
           filtered.map((b) => {
-            const isSelected = selected === b.slug;
+            const branchId = b.id || b.slug;
+            const isSelected = selected === branchId;
             return (
               <button
-                key={b.slug}
+                key={branchId}
                 type="button"
-                onClick={() => onSelect(b.slug)}
+                onClick={() => onSelect(branchId)}
                 className={[
                   "w-full flex items-center justify-between px-4 py-3 text-sm font-semibold transition-all duration-[120ms] text-left",
                   isSelected
@@ -727,7 +726,7 @@ function Step1Branch({
               >
                 <div className="flex items-center gap-3">
                   <span className="text-[var(--color-clay-500)] text-lg" aria-hidden="true">
-                    {b.emoji || BRANCH_ICONS[b.slug as BranchSlug] || "📍"}
+                    {b.iconType || b.emoji || BRANCH_ICONS[b.slug as BranchSlug] || "📍"}
                   </span>
                   <div>
                     <p className={isSelected ? "text-[var(--color-ink-700)] font-bold text-sm" : "text-[var(--color-text-heading)] font-semibold text-sm"}>
