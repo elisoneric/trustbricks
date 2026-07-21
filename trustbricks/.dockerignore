@@ -8,3 +8,5 @@ README.md
 .github
 .env*
 !*.example
+prisma/*.db
+prisma/*.db-journal

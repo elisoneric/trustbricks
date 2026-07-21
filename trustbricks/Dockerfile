@@ -39,9 +39,20 @@ COPY --from=builder /app/public ./public
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
+# Full node_modules (includes the Prisma CLI + ts-node, needed at startup
+# to run `prisma db push` / `prisma db seed` — the standalone output below
+# only bundles what's imported by app code, which excludes the CLI).
+COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
+
 # Automatically leverage output traces to reduce image size
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Schema + seed script + startup entrypoint (applies schema and seeds an
+# empty database on container start — see docker-entrypoint.sh)
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --chown=nextjs:nodejs docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
 
 USER nextjs
 
@@ -49,4 +60,6 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+# IMPORTANT: mount a persistent volume at /app/prisma in production —
+# without one, the SQLite database is wiped on every redeploy.
+ENTRYPOINT ["./docker-entrypoint.sh"]
