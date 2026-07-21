@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useReducedMotion, useInView } from 'framer-motion';
 import { ShieldCheck } from 'lucide-react';
 
@@ -31,28 +31,36 @@ const PFAS: PfaEntry[] = [
   { name: "Tangerine APT",       slug: "tangerine-apt" },
 ];
 
-/* Renders the logo image if it exists at /pfa-logos/{slug}.png; falls back
-   to a styled name badge (dot + name) so the marquee never shows a broken image. */
+/* Probes /pfa-logos/{slug}.png off-DOM before ever rendering an <img> tag, so the
+   marquee never shows a broken/empty image — only a confirmed-loaded logo, or
+   the styled name badge (dot + name) if no logo file exists yet. */
 function PfaBadge({ name, slug }: PfaEntry) {
-  const [failed, setFailed] = useState(false);
+  const [logoOk, setLogoOk] = useState(false);
 
-  if (failed) {
+  useEffect(() => {
+    let cancelled = false;
+    const probe = new window.Image();
+    probe.onload = () => { if (!cancelled) setLogoOk(true); };
+    probe.src = `/pfa-logos/${slug}.png`;
+    return () => { cancelled = true; };
+  }, [slug]);
+
+  if (logoOk) {
     return (
-      <div className="flex items-center gap-2.5 px-1">
-        <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-clay-500)]" />
-        <span className="text-white font-bold tracking-widest text-sm whitespace-nowrap">{name.toUpperCase()}</span>
+      <div className="flex items-center h-9">
+        <img
+          src={`/pfa-logos/${slug}.png`}
+          alt={name}
+          className="h-9 w-auto max-w-[140px] object-contain grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+        />
       </div>
     );
   }
 
   return (
-    <div className="flex items-center h-9">
-      <img
-        src={`/pfa-logos/${slug}.png`}
-        alt={name}
-        className="h-9 w-auto max-w-[140px] object-contain grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
-        onError={() => setFailed(true)}
-      />
+    <div className="flex items-center gap-2.5 px-1">
+      <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-clay-500)]" />
+      <span className="text-white font-bold tracking-widest text-sm whitespace-nowrap">{name.toUpperCase()}</span>
     </div>
   );
 }

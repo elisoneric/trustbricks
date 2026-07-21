@@ -73,7 +73,7 @@ export const FALLBACK_BRANCHES: Branch[] = [
   { slug: "lagos",    name: "Lagos",          emoji: "🌊" },
   { slug: "kano",     name: "Kano",           emoji: "🕌" },
   { slug: "kwara",    name: "Kwara",          emoji: "🌴" },
-  { slug: "yola",     name: "Yola (Adamawa)", emoji: "🏔️" },
+  { slug: "yola",     name: "Adamawa",        emoji: "🏔️" },
   { slug: "benue",    name: "Benue",          emoji: "🌾" },
   { slug: "ogun",     name: "Ogun",           emoji: "⛰️" },
   { slug: "lokoja",   name: "Lokoja",         emoji: "💧" },

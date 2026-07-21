@@ -337,7 +337,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                           <option value="Lagos Hub">Lagos Hub</option>
                           <option value="Kano Center">Kano Center</option>
                           <option value="Kwara Center">Kwara Center</option>
-                          <option value="Yola Hub (Adamawa)">Yola Hub (Adamawa)</option>
+                          <option value="Adamawa">Adamawa</option>
                           <option value="Benue Center">Benue Center</option>
                           <option value="Ogun Center">Ogun Center</option>
                           <option value="Lokoja Center">Lokoja Center</option>
