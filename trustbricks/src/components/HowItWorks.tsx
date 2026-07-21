@@ -107,7 +107,7 @@ export default function HowItWorks({ onCheckStatus }: HowItWorksProps) {
               {/* Left: copy */}
               <div className="flex items-center gap-5">
                 {/* Icon */}
-                <div className="w-14 h-14 rounded-2xl bg-[var(--color-clay-500)] flex items-center justify-center shrink-0 shadow-[0_8px_24px_rgba(184,80,46,0.45)]">
+                <div className="w-14 h-14 rounded-2xl bg-[var(--color-clay-500)] flex items-center justify-center shrink-0 shadow-[0_8px_24px_rgba(205,122,18,0.45)]">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
@@ -125,7 +125,7 @@ export default function HowItWorks({ onCheckStatus }: HowItWorksProps) {
                 onClick={onCheckStatus}
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
-                className="shrink-0 inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[var(--color-clay-500)] text-white text-sm font-black tracking-wide shadow-[0_8px_24px_rgba(184,80,46,0.45)] hover:bg-[var(--color-clay-600)] hover:shadow-[0_12px_36px_rgba(184,80,46,0.6)] transition-all duration-250"
+                className="shrink-0 inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[var(--color-clay-500)] text-white text-sm font-black tracking-wide shadow-[0_8px_24px_rgba(205,122,18,0.45)] hover:bg-[var(--color-clay-600)] hover:shadow-[0_12px_36px_rgba(205,122,18,0.6)] transition-all duration-250"
                 style={{ fontFamily: "var(--font-display)" }}
                 id="check-application-status-btn"
               >

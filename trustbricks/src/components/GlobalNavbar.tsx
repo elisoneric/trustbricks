@@ -211,11 +211,11 @@ export default function GlobalNavbar() {
             transition={{ type: "spring", stiffness: 380, damping: 22 }}
             className={[
               "inline-flex items-center gap-1.5 lg:gap-2 px-3 lg:px-5 py-2 lg:py-2.5 rounded-[var(--radius-pill)]",
-              "bg-[var(--color-clay-500)] text-white text-xs lg:text-sm font-bold",
-              "hover:bg-[var(--color-clay-600)]",
-              "shadow-[var(--shadow-action-glow)] hover:shadow-[0_0_32px_rgba(184,80,46,0.5)]",
+              "bg-[var(--color-ink-700)] text-white text-xs lg:text-sm font-bold",
+              "hover:bg-[var(--color-ink-900)]",
+              "shadow-sm hover:shadow-md",
               "transition-all duration-[280ms] whitespace-nowrap",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-clay-500)]",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-ink-700)]",
             ].join(" ")}
             style={{ fontFamily: "var(--font-display)" }}
             aria-label="Open the eligibility checker"
