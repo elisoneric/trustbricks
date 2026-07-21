@@ -278,7 +278,7 @@ export default function WhatsAppWidget({ selectedBranch = "abuja", branches = []
               >
                 <p className="font-bold text-xs mb-0.5 text-[var(--color-text-heading)] flex items-center gap-1.5">
                   <Bot className="w-3.5 h-3.5 text-[var(--color-clay-500)]" />
-                  Chat with Ada ({cityName} Office)
+                  Chat Customer Service
                 </p>
                 <a
                   href={`https://wa.me/${branches.find(b => b.slug === selectedBranch)?.whatsapp || "+2348030000000"}?text=${encodeURIComponent(
