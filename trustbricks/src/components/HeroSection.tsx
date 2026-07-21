@@ -386,7 +386,6 @@ function HeroInteractiveEstimatorCard({ onCheckEligibility }: { onCheckEligibili
 
   // Calculations
   const equityContribution = rsaBalance * 0.25;
-  const purchasingPower = equityContribution * 5; // Assuming 20% downpayment standard
 
   return (
     <div className="relative w-full rounded-[2.5rem] bg-[var(--color-card)] border border-[var(--color-border)] shadow-[0_40px_80px_-20px_rgba(16,25,43,0.12)] p-2">
@@ -464,24 +463,14 @@ function HeroInteractiveEstimatorCard({ onCheckEligibility }: { onCheckEligibili
             </div>
 
             {/* Target Home Card */}
-            <div className="bg-[var(--color-card)] rounded-3xl p-8 flex flex-col justify-between border border-[var(--color-border)] shadow-sm relative overflow-hidden group">
+            <div className="bg-[var(--color-card)] rounded-3xl p-8 flex items-center border border-[var(--color-border)] shadow-sm relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-clay-500)]/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500" />
-
-              <div>
-                <p className="text-[var(--color-text-muted)] text-xs font-bold uppercase tracking-widest mb-3">Target Home Budget</p>
-                <div className="text-3xl lg:text-4xl font-black text-[var(--color-text-heading)]">
-                  <AnimatedCounter value={purchasingPower} />
-                </div>
-                <p className="text-[var(--color-text-muted)] text-xs mt-3 font-medium leading-relaxed">
-                  Estimate based on 25% RSA equity contribution as 20% of total property value. Final amounts subject to PFA and PenCom approval.
-                </p>
-              </div>
 
               <motion.button
                 onClick={onCheckEligibility}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="mt-6 w-full flex items-center justify-center gap-2 bg-[var(--color-clay-500)]/10 hover:bg-[var(--color-clay-500)]/20 text-[var(--color-clay-500)] py-3.5 rounded-xl font-bold transition-colors"
+                className="w-full flex items-center justify-center gap-2 bg-[var(--color-clay-500)]/10 hover:bg-[var(--color-clay-500)]/20 text-[var(--color-clay-500)] py-3.5 rounded-xl font-bold transition-colors"
                 style={{ fontFamily: "var(--font-display)" }}
               >
                 <Sparkles className="w-4 h-4" />
