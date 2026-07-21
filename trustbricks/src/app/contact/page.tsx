@@ -175,7 +175,7 @@ export default function ContactPage() {
                       placeholder="e.g. Chinwe Obi"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35"
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35"
                     />
                   </div>
 
@@ -188,7 +188,7 @@ export default function ContactPage() {
                       placeholder="chinwe@example.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35"
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35"
                     />
                   </div>
 
@@ -198,7 +198,7 @@ export default function ContactPage() {
                       id="office"
                       value={formData.office}
                       onChange={(e) => setFormData({ ...formData, office: e.target.value })}
-                      className="w-full px-3 py-3 rounded-xl border border-[var(--color-border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35 bg-[var(--color-card)]"
+                      className="w-full px-3 py-3 rounded-xl border border-[var(--color-border)] text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35 bg-[var(--color-card)]"
                     >
                       <option value="abuja">Abuja Office (HQ)</option>
                       <option value="lagos">Lagos Hub</option>
@@ -226,7 +226,7 @@ export default function ContactPage() {
                       placeholder="How can we assist you with your RSA mortgage?"
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35 resize-none"
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35 resize-none"
                     />
                   </div>
 
@@ -272,7 +272,7 @@ export default function ContactPage() {
                     id="office-selector"
                     value={formData.office}
                     onChange={(e) => setFormData({ ...formData, office: e.target.value })}
-                    className="w-full px-3 py-3 rounded-xl border border-[var(--color-border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35 bg-[var(--color-card)]"
+                    className="w-full px-3 py-3 rounded-xl border border-[var(--color-border)] text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35 bg-[var(--color-card)]"
                   >
                     {OFFICES.map((o) => (
                       <option key={o.slug} value={o.slug}>{o.name}</option>

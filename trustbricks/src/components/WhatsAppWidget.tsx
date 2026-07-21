@@ -236,7 +236,7 @@ export default function WhatsAppWidget({ selectedBranch = "abuja", branches = []
                       value={inputText}
                       onChange={(e) => setInputText(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && handleSendMessage(inputText)}
-                      className="flex-1 px-4 py-2.5 rounded-xl border border-[var(--color-border)] focus:outline-none focus:border-[var(--color-clay-500)] text-sm text-[var(--color-text-heading)] bg-[var(--color-mortar-50)]/60"
+                      className="flex-1 px-4 py-2.5 rounded-xl border border-[var(--color-border)] focus:outline-none focus:border-[var(--color-clay-500)] text-base text-[var(--color-text-heading)] bg-[var(--color-mortar-50)]/60"
                     />
                     <button
                       onClick={() => handleSendMessage(inputText)}

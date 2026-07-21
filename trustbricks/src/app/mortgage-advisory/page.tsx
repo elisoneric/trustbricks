@@ -108,7 +108,7 @@ export default function MortgageAdvisoryPage() {
                       placeholder="e.g. Tunde Johnson"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35"
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35"
                     />
                   </div>
 
@@ -121,7 +121,7 @@ export default function MortgageAdvisoryPage() {
                       placeholder="tunde@example.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35"
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35"
                     />
                   </div>
 
@@ -134,7 +134,7 @@ export default function MortgageAdvisoryPage() {
                       placeholder="e.g. +234 803 123 4567"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35"
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35"
                     />
                   </div>
 
@@ -145,7 +145,7 @@ export default function MortgageAdvisoryPage() {
                         id="pfa"
                         value={formData.pfa}
                         onChange={(e) => setFormData({ ...formData, pfa: e.target.value })}
-                        className="w-full px-3 py-3 rounded-xl border border-[var(--color-border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35 bg-[var(--color-card)]"
+                        className="w-full px-3 py-3 rounded-xl border border-[var(--color-border)] text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35 bg-[var(--color-card)]"
                       >
                         <option value="stanbic">Stanbic IBTC</option>
                         <option value="leadway">Leadway PFA</option>
@@ -164,7 +164,7 @@ export default function MortgageAdvisoryPage() {
                         placeholder="e.g. 10,000,000"
                         value={formData.balance}
                         onChange={(e) => setFormData({ ...formData, balance: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35 font-tabular"
+                        className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] text-base focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/35 font-tabular"
                       />
                     </div>
                   </div>

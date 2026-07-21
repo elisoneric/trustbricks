@@ -291,7 +291,7 @@ export default function OfficeLocator({ selectedBranch, onBranchChange, branches
             id="office-branch-select"
             value={selectedBranch}
             onChange={(e) => onBranchChange(e.target.value)}
-            className="w-full px-4 py-3.5 rounded-xl border-2 text-sm font-semibold appearance-none cursor-pointer transition-colors duration-[180ms] focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/20"
+            className="w-full px-4 py-3.5 rounded-xl border-2 text-base font-semibold appearance-none cursor-pointer transition-colors duration-[180ms] focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/20"
             style={{
               fontFamily: "var(--font-display)",
               borderColor: "var(--color-clay-500)",

@@ -53,7 +53,7 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
   };
 
   const inputClass =
-    "flex-grow px-2 py-1.5 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35";
+    "flex-grow px-2 py-1.5 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35";
 
   return (
     <div className="p-5 flex justify-between items-start gap-4 hover:bg-slate-50/20 transition-colors">

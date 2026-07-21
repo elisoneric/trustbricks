@@ -467,7 +467,7 @@ export default function EligibilityFunnel({ isOpen, onClose, branches = [] }: El
           animate="visible"
           exit="exit"
           transition={{ duration: 0.22 }}
-          className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-[rgba(13,31,60,0.85)] backdrop-blur-sm"
+          className="fixed inset-0 z-[500] flex items-center justify-center p-4 bg-[rgba(13,31,60,0.85)] backdrop-blur-sm"
           onClick={handleClose}
           aria-hidden="true"
         >
@@ -684,7 +684,7 @@ function Step1Branch({
           placeholder="Search by city, branch or state..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-4 py-2.5 pl-10 rounded-[var(--radius-md)] border-2 border-[var(--color-border)] bg-[var(--color-card)] text-sm text-[var(--color-text-heading)] placeholder-slate-400 focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-2 focus:ring-[var(--color-clay-500)]/20 transition-all font-medium"
+          className="w-full px-4 py-2.5 pl-10 rounded-[var(--radius-md)] border-2 border-[var(--color-border)] bg-[var(--color-card)] text-base text-[var(--color-text-heading)] placeholder-slate-400 focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-2 focus:ring-[var(--color-clay-500)]/20 transition-all font-medium"
           style={{ fontFamily: "var(--font-body)" }}
         />
         <span className="absolute left-3.5 top-3.5 text-slate-400">
@@ -802,7 +802,7 @@ function Step2Pfa({
           aria-label="Select your Pension Fund Administrator"
           className={[
             "w-full px-4 py-3 rounded-[var(--radius-md)] border-2 bg-[var(--color-card)] appearance-none",
-            "text-sm text-[var(--color-text-heading)] font-medium",
+            "text-base text-[var(--color-text-heading)] font-medium",
             "transition-colors duration-[180ms]",
             "focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-2 focus:ring-[var(--color-clay-500)]/20",
             selected ? "border-[var(--color-clay-500)]" : "border-[var(--color-border)]",
@@ -1261,7 +1261,7 @@ function FormField({
         aria-invalid={!!error}
         aria-describedby={error ? `${id}-error` : undefined}
         className={[
-          "w-full px-4 py-3 rounded-[var(--radius-md)] border-2 bg-[var(--color-card)] text-sm",
+          "w-full px-4 py-3 rounded-[var(--radius-md)] border-2 bg-[var(--color-card)] text-base",
           "text-[var(--color-text-heading)] transition-colors duration-[180ms]",
           "placeholder:text-[var(--color-text-muted)]",
           "focus:outline-none focus:ring-2 focus:ring-[var(--color-clay-500)]/20",

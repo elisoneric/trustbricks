@@ -216,7 +216,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4"
+          className="fixed inset-0 z-[500] flex items-end sm:items-center justify-center p-0 sm:p-4"
           style={{ background: "rgba(16, 25, 43, 0.65)", backdropFilter: "blur(6px)" }}
           onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
         >
@@ -291,7 +291,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                                 placeholder="e.g. 2348031234567"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
-                                className="w-full pl-11 pr-4 py-3.5 bg-[var(--color-mortar-50)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text-body)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-1 focus:ring-[var(--color-clay-500)] transition-colors"
+                                className="w-full pl-11 pr-4 py-3.5 bg-[var(--color-mortar-50)] border border-[var(--color-border)] rounded-xl text-base text-[var(--color-text-body)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-1 focus:ring-[var(--color-clay-500)] transition-colors"
                               />
                             </div>
                           </motion.div>
@@ -316,7 +316,7 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                                 placeholder="Enter your account number"
                                 value={accountNumber}
                                 onChange={(e) => setAccountNumber(e.target.value)}
-                                className="w-full pl-11 pr-4 py-3.5 bg-[var(--color-mortar-50)] border border-[var(--color-border)] rounded-xl text-sm text-[var(--color-text-body)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-1 focus:ring-[var(--color-clay-500)] transition-colors"
+                                className="w-full pl-11 pr-4 py-3.5 bg-[var(--color-mortar-50)] border border-[var(--color-border)] rounded-xl text-base text-[var(--color-text-body)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-clay-500)] focus:ring-1 focus:ring-[var(--color-clay-500)] transition-colors"
                               />
                             </div>
                           </motion.div>

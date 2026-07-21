@@ -4,7 +4,6 @@ import { useState } from "react";
 import HeroSection               from "@/components/HeroSection";
 import TrustMarquee              from "@/components/TrustMarquee";
 import HowItWorks                from "@/components/HowItWorks";
-import MortgageCalculator        from "@/components/MortgageCalculator";
 import OfficeLocator             from "@/components/OfficeLocator";
 import WhatsAppWidget            from "@/components/WhatsAppWidget";
 import ApplicationStatusModal    from "@/components/ApplicationStatusModal";
@@ -26,7 +25,6 @@ export default function HomeClient({ siteSettings, branches = [] }: { siteSettin
         <HeroSection siteSettings={siteSettings} branches={branches} />
         <TrustMarquee />
         <HowItWorks onCheckStatus={() => setStatusModalOpen(true)} />
-        <MortgageCalculator onApply={() => setFunnelOpen(true)} />
         <OfficeLocator
           selectedBranch={selectedBranch}
           onBranchChange={setSelectedBranch}
