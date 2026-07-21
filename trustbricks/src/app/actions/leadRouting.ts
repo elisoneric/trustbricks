@@ -64,7 +64,8 @@ export async function processMortgageLead(formData: FormData): Promise<LeadRespo
       return { success: false, message: 'Invalid numeric fields' };
     }
 
-    // 1. Fetch PFA Rule to validate server-side (try by ID first, then by name)
+    // 1. Resolve PFA Rule (try by ID, then by name); if unrecognized, record it
+    //    on the fly rather than blocking the lead from reaching the admin panel.
     let pfaRule = await prisma.pfaRule.findUnique({
       where: { id: pfa_id },
     });
@@ -73,12 +74,14 @@ export async function processMortgageLead(formData: FormData): Promise<LeadRespo
         where: { name: pfa_id },
       });
     }
-
     if (!pfaRule) {
-      return { success: false, message: 'Invalid PFA selected' };
+      pfaRule = await prisma.pfaRule.create({
+        data: { name: pfa_id || 'Unspecified PFA', minimum_threshold: 0 },
+      });
     }
 
-    // 2. Fetch Branch (try by ID first, then by name)
+    // 2. Resolve Branch (try by ID, then by name); fall back to the first
+    //    branch on record so a lead is never dropped over a branch mismatch.
     let branch = await prisma.branch.findUnique({
       where: { id: branch_id },
     });
@@ -87,9 +90,11 @@ export async function processMortgageLead(formData: FormData): Promise<LeadRespo
         where: { name: branch_id },
       });
     }
-
     if (!branch) {
-      return { success: false, message: 'Invalid Branch selected' };
+      branch = await prisma.branch.findFirst({ orderBy: { name: 'asc' } });
+    }
+    if (!branch) {
+      return { success: false, message: 'No branches are configured yet. Please contact support directly.' };
     }
 
     // 3. Strict Server-Side Mathematical Validation

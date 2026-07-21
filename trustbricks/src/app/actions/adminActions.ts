@@ -30,6 +30,8 @@ export async function createBranch(data: {
   try {
     const branch = await prisma.branch.create({ data });
     revalidatePath('/admin');
+    revalidatePath('/');
+    revalidatePath('/contact');
     return { success: true, branch };
   } catch (error: any) {
     console.error('[ADMIN CREATE BRANCH ERROR]', error);
@@ -43,6 +45,8 @@ export async function updateBranch(id: string, data: Partial<{
   try {
     const branch = await prisma.branch.update({ where: { id }, data });
     revalidatePath('/admin');
+    revalidatePath('/');
+    revalidatePath('/contact');
     return { success: true, branch };
   } catch (error: any) {
     console.error('[ADMIN UPDATE BRANCH ERROR]', error);
@@ -54,6 +58,8 @@ export async function deleteBranch(id: string) {
   try {
     await prisma.branch.delete({ where: { id } });
     revalidatePath('/admin');
+    revalidatePath('/');
+    revalidatePath('/contact');
     return { success: true };
   } catch (error: any) {
     console.error('[ADMIN DELETE BRANCH ERROR]', error);

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { updateBranch, deleteBranch } from "@/app/actions/adminActions";
-import { MapPin, Phone, Mail, Trash, Pencil, X, Check, Building, MessageCircle } from "lucide-react";
+import { MapPin, Phone, Mail, Trash, Pencil, X, Check, Building, MessageCircle, Tag, Clock } from "lucide-react";
 
 interface BranchEditFormProps {
   branch: {
@@ -23,6 +23,8 @@ interface BranchEditFormProps {
 
 export default function BranchEditForm({ branch }: BranchEditFormProps) {
   const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(branch.name);
+  const [iconType, setIconType] = useState(branch.iconType);
   const [phone, setPhone] = useState(branch.phone);
   const [whatsapp, setWhatsapp] = useState(branch.whatsapp || "");
   const [email, setEmail] = useState(branch.email);
@@ -30,11 +32,12 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
   const [city, setCity] = useState(branch.city);
   const [state, setState] = useState(branch.state);
   const [landmark, setLandmark] = useState(branch.landmark || "");
+  const [hours, setHours] = useState(branch.hours || "");
   const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
     setSaving(true);
-    await updateBranch(branch.id, { phone, whatsapp, email, address, city, state, landmark });
+    await updateBranch(branch.id, { name, iconType, phone, whatsapp, email, address, city, state, landmark, hours });
     setSaving(false);
     setEditing(false);
   };
@@ -44,6 +47,8 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
   };
 
   const handleCancel = () => {
+    setName(branch.name);
+    setIconType(branch.iconType);
     setPhone(branch.phone);
     setWhatsapp(branch.whatsapp || "");
     setEmail(branch.email);
@@ -51,6 +56,7 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
     setCity(branch.city);
     setState(branch.state);
     setLandmark(branch.landmark || "");
+    setHours(branch.hours || "");
     setEditing(false);
   };
 
@@ -66,6 +72,11 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
 
         {editing ? (
           <div className="mt-2 space-y-2">
+            <div className="flex items-center gap-2">
+              <Tag className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <input type="text" value={iconType} onChange={(e) => setIconType(e.target.value)} placeholder="Icon (emoji)" className={`${inputClass} max-w-[70px]`} />
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Branch Name" className={inputClass} />
+            </div>
             <div className="flex items-center gap-2">
               <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Address" className={inputClass} />
@@ -90,6 +101,10 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
             <div className="flex items-center gap-2">
               <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className={inputClass} />
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <input type="text" value={hours} onChange={(e) => setHours(e.target.value)} placeholder="Hours (e.g. Mon – Fri: 8am – 5pm)" className={inputClass} />
             </div>
             <div className="flex gap-2 mt-2">
               <button
