@@ -369,25 +369,42 @@ export default function OfficeLocator({ selectedBranch, onBranchChange, branches
               {/* Actions */}
               <DetailBlock label="Quick Actions" icon={<Zap className="w-3.5 h-3.5" />}>
                 <div className="flex flex-col gap-2">
-                  <motion.a
-                    href={`https://wa.me/${currentOffice.whatsapp}?text=${encodeURIComponent(
-                      `Hello, I'd like to speak with a Trust Bricks Properties advisor at your ${currentOffice.city} office.`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    transition={{ type: "spring", stiffness: 380, damping: 22 }}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white"
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      backgroundColor: "#25D366",
-                    }}
-                    aria-label={`WhatsApp the ${currentOffice.city} office`}
-                  >
-                    <WhatsAppIcon className="w-4 h-4" />
-                    WhatsApp {currentOffice.city}
-                  </motion.a>
+                  <div className="flex items-center gap-2">
+                    <motion.a
+                      href={`tel:${(currentOffice.phone || currentOffice.whatsapp).replace(/\s+/g, "")}`}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      transition={{ type: "spring", stiffness: 380, damping: 22 }}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white"
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        backgroundColor: "var(--color-ink-700)",
+                      }}
+                      aria-label={`Call the ${currentOffice.city} office`}
+                    >
+                      <Phone className="w-4 h-4" />
+                      Call
+                    </motion.a>
+                    <motion.a
+                      href={`https://wa.me/${currentOffice.whatsapp}?text=${encodeURIComponent(
+                        `Hello, I'd like to speak with a Trust Bricks Properties advisor at your ${currentOffice.city} office.`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      transition={{ type: "spring", stiffness: 380, damping: 22 }}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white"
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        backgroundColor: "#25D366",
+                      }}
+                      aria-label={`WhatsApp the ${currentOffice.city} office`}
+                    >
+                      <WhatsAppIcon className="w-4 h-4" />
+                      WhatsApp
+                    </motion.a>
+                  </div>
                   <a
                     href={`https://maps.google.com/?q=${currentOffice.mapQuery}`}
                     target="_blank"
