@@ -2,7 +2,7 @@
 
 import { useReducer, useCallback, useId, useTransition, useState } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-import { Landmark, Waves, Mountain, Wheat, Bell, PartyPopper } from "lucide-react";
+import { Landmark, Waves, Mountain, Wheat, Bell, PartyPopper, Share2 } from "lucide-react";
 import { processMortgageLead } from "@/app/actions/leadRouting";
 
 const BRANCH_ICONS: Record<BranchSlug, React.ReactNode> = {
@@ -166,6 +166,7 @@ export function checkEligibility(
 
   return {
     isEligible,
+    failureReason,
     pfaName:    rule ? rule.name : "Unknown PFA",
     minBalance: rule ? rule.minBalance : 0,
     rsaBalance,
@@ -960,6 +961,40 @@ function StepSuccess({
       <PrimaryButton onClick={onContinue} fullWidth>
         Claim Your Spot — Enter Your Details <ArrowRightSm />
       </PrimaryButton>
+
+      <ShareButtons className="mt-6 pt-5 border-t border-[var(--color-border)]" />
+    </div>
+  );
+}
+
+/* ── SHARE BUTTONS ──────────────────────────────────────────────────────── */
+const SITE_URL = "https://trustbrickspropertieslimited.com.ng";
+const SHARE_TEXT = "Check if you can access 25% of your RSA for a residential mortgage under PenCom guidelines.";
+
+function ShareButtons({ className }: { className?: string }) {
+  const encodedUrl = encodeURIComponent(SITE_URL);
+  const encodedText = encodeURIComponent(SHARE_TEXT);
+  const btnClass = "flex items-center justify-center w-10 h-10 rounded-full transition-colors";
+
+  return (
+    <div className={className}>
+      <p className="text-xs text-[var(--color-text-muted)] font-semibold mb-2 flex items-center gap-1.5">
+        <Share2 className="w-3.5 h-3.5" /> Share with someone who might qualify
+      </p>
+      <div className="flex gap-2 justify-center">
+        <a href={`https://wa.me/?text=${encodedText}%20${encodedUrl}`} target="_blank" rel="noopener noreferrer" className={`${btnClass} bg-[#25D366] text-white hover:bg-[#1da851]`} aria-label="Share on WhatsApp">
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492l4.636-1.468A11.948 11.948 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818c-2.168 0-4.178-.69-5.82-1.862l-.418-.295-2.747.87.893-2.656-.326-.436A9.786 9.786 0 012.182 12c0-5.422 4.396-9.818 9.818-9.818S21.818 6.578 21.818 12s-4.396 9.818-9.818 9.818z"/></svg>
+        </a>
+        <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`} target="_blank" rel="noopener noreferrer" className={`${btnClass} bg-[#1877F2] text-white hover:bg-[#0d65d9]`} aria-label="Share on Facebook">
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href={`https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`} target="_blank" rel="noopener noreferrer" className={`${btnClass} bg-[#0F1419] text-white hover:bg-[#2a2f35]`} aria-label="Share on X">
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`} target="_blank" rel="noopener noreferrer" className={`${btnClass} bg-[#0A66C2] text-white hover:bg-[#004182]`} aria-label="Share on LinkedIn">
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+      </div>
     </div>
   );
 }
@@ -972,9 +1007,12 @@ function StepIneligible({
   onRestart: () => void;
   onClose: () => void;
 }) {
+  // Mirrors checkEligibility's priority: service-years shortfall is checked first.
+  const isServiceIssue = (result.yearsInService ?? 99) < 5;
+  const isRetirementIssue = !isServiceIssue && (result.yearsToRetire ?? 99) <= 3;
+
   return (
     <div className="text-center">
-      {/* X icon */}
       <div
         className="mx-auto mb-5 w-20 h-20 rounded-full bg-[var(--color-error)]/8 flex items-center justify-center"
         aria-hidden="true"
@@ -983,30 +1021,51 @@ function StepIneligible({
       </div>
 
       <h3 className="text-xl font-black text-[var(--color-text-heading)] mb-2" style={{ fontFamily: "var(--font-display)" }}>
-        Not Yet Eligible
+        {isRetirementIssue ? "Not Eligible" : "Not Yet Eligible"}
       </h3>
-      <p className="text-sm text-[var(--color-text-body)] mb-1" style={{ fontFamily: "var(--font-body)" }}>
-        You do not currently meet the PenCom statutory requirements for the RSA equity contribution scheme.
-      </p>
-      <p className="text-sm text-[var(--color-error)] font-semibold mb-7" style={{ fontFamily: "var(--font-body)" }}>
-        {result.failureReason}
-      </p>
+
+      {/* Specific reason card */}
+      <div className="rounded-xl bg-[var(--color-error)]/5 border border-[var(--color-error)]/15 p-4 mb-4 text-left">
+        <p className="text-xs font-bold text-[var(--color-error)] uppercase tracking-wider mb-1">
+          {isRetirementIssue ? "Retirement Timeline" : "Service Duration"}
+        </p>
+        <p className="text-sm text-[var(--color-text-body)]" style={{ fontFamily: "var(--font-body)" }}>
+          {isRetirementIssue ? (
+            <>You have <strong>{result.yearsToRetire} year{result.yearsToRetire === 1 ? "" : "s"}</strong> until retirement. PenCom requires more than 3 years remaining before retirement to access RSA equity contribution.</>
+          ) : (
+            <>You have <strong>{result.yearsInService} year{result.yearsInService === 1 ? "" : "s"}</strong> of service. PenCom requires a minimum of 60 months (5 years) of continuous contributions under the Contributory Pension Scheme.</>
+          )}
+        </p>
+      </div>
+
+      {isRetirementIssue ? (
+        <p className="text-xs text-[var(--color-text-muted)] mb-6" style={{ fontFamily: "var(--font-body)" }}>
+          Unfortunately, this requirement cannot be met as your retirement date approaches. However, you may know someone who could benefit from this scheme.
+        </p>
+      ) : (
+        <p className="text-xs text-[var(--color-text-muted)] mb-6" style={{ fontFamily: "var(--font-body)" }}>
+          You need <strong>{5 - (result.yearsInService ?? 0)} more year{(5 - (result.yearsInService ?? 0)) === 1 ? "" : "s"}</strong> of contributions to become eligible. Keep contributing and check back then.
+        </p>
+      )}
 
       <div className="flex flex-col gap-3">
-        <a
-          href={`https://wa.me/2348030000000?text=${encodeURIComponent("Hello, I'd like to be notified when I meet the requirements for the PenCom RSA equity contribution scheme.")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={[
-            "flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-[var(--radius-pill)]",
-            "bg-[#25D366] text-white font-bold text-sm",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]",
-          ].join(" ")}
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          <Bell className="w-4 h-4" />
-          Notify Me When I Qualify
-        </a>
+        {!isRetirementIssue && (
+          <a
+            href={`https://wa.me/2348030000000?text=${encodeURIComponent("Hello, I have " + (result.yearsInService ?? 0) + " years of service and would like to be notified when I meet the 5-year requirement for the PenCom RSA equity contribution scheme.")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={[
+              "flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-[var(--radius-pill)]",
+              "bg-[#25D366] text-white font-bold text-sm",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]",
+            ].join(" ")}
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            <Bell className="w-4 h-4" />
+            Notify Me When I Qualify
+          </a>
+        )}
+
         <button
           type="button"
           onClick={onRestart}
@@ -1018,8 +1077,10 @@ function StepIneligible({
           ].join(" ")}
           style={{ fontFamily: "var(--font-display)" }}
         >
-          Try a Different PFA
+          Try Again
         </button>
+
+        <ShareButtons className="mt-4 pt-4 border-t border-[var(--color-border)]" />
       </div>
     </div>
   );
