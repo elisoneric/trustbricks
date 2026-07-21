@@ -1,16 +1,9 @@
 'use server';
 
-import { headers } from 'next/headers';
 import { PrismaClient } from '@prisma/client';
 import nodemailer from 'nodemailer';
 
 const prisma = new PrismaClient();
-
-// In-memory rate limiter: IP -> { count, timestamp }
-// Suitable for single VPS / Docker deployment
-const RATE_LIMIT_MAP = new Map<string, { count: number; timestamp: number }>();
-const RATE_LIMIT_MAX = 3; // Max 3 submissions per IP per hour
-const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 export type LeadResponse = {
   success: boolean;
@@ -20,30 +13,6 @@ export type LeadResponse = {
 
 export async function processMortgageLead(formData: FormData): Promise<LeadResponse> {
   try {
-    // --- RATE LIMITING START ---
-    const headersList = await headers();
-    const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown';
-    
-    if (ip !== 'unknown') {
-      const now = Date.now();
-      const record = RATE_LIMIT_MAP.get(ip);
-      
-      if (record) {
-        if (now - record.timestamp > RATE_LIMIT_WINDOW_MS) {
-          // Reset window
-          RATE_LIMIT_MAP.set(ip, { count: 1, timestamp: now });
-        } else if (record.count >= RATE_LIMIT_MAX) {
-          console.warn(`[RATE LIMIT] IP ${ip} exceeded max submissions`);
-          return { success: false, message: 'You have exceeded the maximum number of submissions. Please try again later.' };
-        } else {
-          // Increment count
-          RATE_LIMIT_MAP.set(ip, { count: record.count + 1, timestamp: record.timestamp });
-        }
-      } else {
-        RATE_LIMIT_MAP.set(ip, { count: 1, timestamp: now });
-      }
-    }
-    // --- RATE LIMITING END ---
     const full_name = formData.get('full_name') as string;
     const phone = formData.get('phone') as string;
     const employer_type = formData.get('employer_type') as string;
