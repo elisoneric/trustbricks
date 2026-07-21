@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque, Public_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import Preloader from "@/components/Preloader";
+import CookieConsent from "@/components/CookieConsent";
 
 /* ── FONT LOADING ────────────────────────────────────────────── */
 const bricolageGrotesque = Bricolage_Grotesque({
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
     template: "%s | Trust Bricks Properties Ltd"
   },
   description:
-    "Use 25% of your Retirement Savings Account (RSA) to fund a home mortgage down payment. PenCom-regulated. Serving 14 branches across Nigeria.",
+    "Access up to 25% of your Retirement Savings Account (RSA) as equity contribution towards a residential mortgage, in compliance with PenCom guidelines. 14 branches across Nigeria.",
   keywords: [
     "PenCom mortgage",
     "RSA withdrawal",
@@ -44,7 +45,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://trustbrickspropertieslimited.com.ng'),
   openGraph: {
     title: "Trust Bricks Properties Ltd | Unlock Your Dream Home",
-    description: "Teamwork Makes The Dream Work — use 25% of your RSA to fund your home mortgage down payment.",
+    description: "Access up to 25% of your RSA as equity contribution towards a residential mortgage under PenCom guidelines.",
     url: "https://trustbrickspropertieslimited.com.ng",
     siteName: "Trust Bricks Properties",
     locale: "en_NG",
@@ -61,7 +62,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Trust Bricks Properties Ltd | Unlock Your Dream Home",
-    description: "Use 25% of your Retirement Savings Account (RSA) to fund your home mortgage. We make the PenCom process seamless.",
+    description: "Access up to 25% of your RSA as equity contribution towards a residential mortgage. We simplify the PenCom application process.",
     images: ["https://trustbrickspropertieslimited.com.ng/twitter-image.jpg"],
   },
   robots: {
@@ -81,6 +82,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-[#EDE7DB]">
         <Preloader />
         {children}
+        <CookieConsent />
       </body>
     </html>
   );

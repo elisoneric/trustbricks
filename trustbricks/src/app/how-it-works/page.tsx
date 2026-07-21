@@ -36,10 +36,10 @@ export default function HowItWorksPage() {
               1. What is the PenCom RSA Mortgage Policy?
             </h2>
             <p className="text-[var(--color-text-body)] leading-relaxed mb-4">
-              The National Pension Commission (PenCom) recently approved guidelines allowing Nigerian workers to use up to 25% of their Retirement Savings Account (RSA) balance as equity contribution for a residential mortgage.
+              In accordance with Section 89(2) of the Pension Reform Act 2014, the National Pension Commission (PenCom) has issued guidelines permitting active contributors to access up to 25% of their Retirement Savings Account (RSA) balance as equity contribution towards a residential mortgage.
             </p>
             <p className="text-[var(--color-text-body)] leading-relaxed">
-              This means if you have been contributing to your pension and dreaming of homeownership, your pension can now serve as the critical down payment required by mortgage banks.
+              If you are an active contributor under the Contributory Pension Scheme (CPS) and have been contributing for a minimum of 60 months, your RSA balance can serve as the equity contribution required by licensed Primary Mortgage Banks (PMBs).
             </p>
           </section>
 

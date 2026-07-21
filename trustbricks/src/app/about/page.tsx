@@ -43,8 +43,8 @@ export default function AboutPage() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-clay-500)] to-[var(--color-clay-600)]">Dream Work.</span>
             </h1>
             <p className="text-lg text-[var(--color-text-body)] leading-relaxed">
-              Trust Bricks Properties Ltd is a premier real estate and mortgage facilitation firm in Nigeria.
-              We are dedicated to helping working professionals utilize the PenCom guidelines to purchase their own homes.
+              Trust Bricks Properties Ltd is a mortgage facilitation and real estate advisory firm in Nigeria.
+              We assist active contributors under the Contributory Pension Scheme (CPS) in accessing up to 25% of their RSA balance as equity contribution towards residential mortgages, in accordance with PenCom guidelines.
             </p>
           </motion.div>
         </section>

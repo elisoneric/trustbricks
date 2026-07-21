@@ -120,7 +120,7 @@ export default function Footer({ siteSettings }: { siteSettings?: any } = {}) {
       <div className="max-w-7xl mx-auto px-6 border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40 font-medium">
         <p className="font-tabular">TRUST BRICKS PROPERTIES LTD. © 2026 (RC: 9552712). All rights reserved.</p>
         <p className="flex items-center gap-2">
-          <ShieldCheck /> Regulated and Compliant with PenCom RSA Guidelines.
+          <ShieldCheck /> Operating in compliance with PenCom RSA Equity Contribution Guidelines.
         </p>
       </div>
     </footer>

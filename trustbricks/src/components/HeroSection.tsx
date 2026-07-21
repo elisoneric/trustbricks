@@ -122,8 +122,8 @@ export default function HeroSection({ siteSettings, branches = [] }: { siteSetti
     setFunnelOpen(true);
   };
 
-  const displayTitle = siteSettings?.heroTitle || "Your RSA Balance Can Open Your Front Door";
-  const displaySubtitle = siteSettings?.heroSubtitle || "Unlock 25% of your Retirement Savings Account to finance your residential mortgage down payment. We simplify the verification, banking matches, and PFA approvals.";
+  const displayTitle = siteSettings?.heroTitle || "Your RSA Can Open Your Front Door";
+  const displaySubtitle = siteSettings?.heroSubtitle || "Access up to 25% of your Retirement Savings Account (RSA) as equity contribution towards a residential mortgage under PenCom guidelines. We handle the verification, documentation, and PFA coordination.";
   const displaySlogan = siteSettings?.slogan || "We Value your trust";
 
   // Word-level reveal (opacity/y only — highlighted words carry the clay gradient)
@@ -473,7 +473,7 @@ function HeroInteractiveEstimatorCard({ onCheckEligibility }: { onCheckEligibili
                   <AnimatedCounter value={purchasingPower} />
                 </div>
                 <p className="text-[var(--color-text-muted)] text-xs mt-3 font-medium leading-relaxed">
-                  Assuming your 25% RSA equity is used as a 20% downpayment on the total property.
+                  Estimate based on 25% RSA equity contribution as 20% of total property value. Final amounts subject to PFA and PenCom approval.
                 </p>
               </div>
 

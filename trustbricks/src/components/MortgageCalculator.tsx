@@ -96,7 +96,7 @@ export default function MortgageCalculator({ onApply }: { onApply?: () => void }
                 {formatCurrency(animatedContribution)}
               </div>
               <p className="text-xs text-[var(--color-text-muted)] mb-8 font-medium px-4 leading-relaxed">
-                * Based on PenCom guidelines. Capped at 25% of total property value.
+                * Estimate only, based on PenCom guidelines. Maximum equity contribution is 25% of your RSA balance. Final approval is determined by your PFA and PenCom. This does not constitute financial advice.
               </p>
               <motion.button
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}

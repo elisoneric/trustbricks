@@ -156,8 +156,8 @@ export async function processMortgageLead(formData: FormData): Promise<LeadRespo
       success: true,
       leadId: lead.id,
       message: is_eligible 
-        ? 'Congratulations! You are eligible for the mortgage.' 
-        : 'Unfortunately, your RSA balance does not meet the minimum threshold.',
+        ? 'You meet the PenCom requirements for the RSA equity contribution scheme.'
+        : 'Your current RSA balance does not meet the minimum threshold set by your PFA.',
     };
 
   } catch (error: any) {

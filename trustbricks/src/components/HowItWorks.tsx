@@ -40,17 +40,17 @@ interface HowItWorksProps {
 export default function HowItWorks({ onCheckStatus }: HowItWorksProps) {
   const reduceMotion = useReducedMotion();
   const steps = [
-    { icon: <CheckCircle />, title: "Verify Eligibility", desc: "Run your RSA balance through our real-time checker. Know your exact 25% qualification status instantly." },
-    { icon: <Building />, title: "We Handle The PFA", desc: "Our specialized advisors coordinate directly with your PFA to secure the equity release. No paperwork stress." },
-    { icon: <Key />, title: "Receive Your Keys", desc: "Your equity is applied as a down payment. You move into your new home while your pension remains secure." }
+    { icon: <CheckCircle />, title: "Verify Eligibility", desc: "Check your RSA contribution history and balance against PenCom requirements. Confirm your 25% equity contribution capacity instantly." },
+    { icon: <Building />, title: "We Coordinate With Your PFA", desc: "Our advisors liaise directly with your Pension Fund Administrator to process the equity contribution application and required documentation." },
+    { icon: <Key />, title: "Receive Your Keys", desc: "Your 25% RSA equity contribution is disbursed directly to the licensed mortgage lender. You move into your new home while your pension remains secure." }
   ];
 
   return (
     <section id="how-it-works" className="py-32 bg-[var(--color-card)] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-20">
-          <span className="text-[var(--color-clay-500)] font-extrabold text-sm tracking-widest uppercase mb-4 block">The 25% RSA Process</span>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--color-text-heading)]" style={{ fontFamily: "var(--font-display)" }}>From Pension to Property.</h2>
+          <span className="text-[var(--color-clay-500)] font-extrabold text-sm tracking-widest uppercase mb-4 block">The RSA Equity Contribution Process</span>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--color-text-heading)]" style={{ fontFamily: "var(--font-display)" }}>From RSA to Residential Mortgage.</h2>
           <div className="divider-brick w-40 mx-auto mt-8" />
         </div>
 

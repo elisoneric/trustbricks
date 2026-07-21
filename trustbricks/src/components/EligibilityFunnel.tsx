@@ -927,14 +927,14 @@ function StepSuccess({
       </motion.div>
 
       <h3 className="text-2xl font-black text-[var(--color-success)] mb-2" style={{ fontFamily: "var(--font-display)" }}>
-        You Qualify!
+        You Meet the Requirements!
       </h3>
       <p className="text-sm text-[var(--color-text-body)] mb-6" style={{ fontFamily: "var(--font-body)" }}>
         Your RSA balance of{" "}
         <strong className="font-tabular text-[var(--color-text-heading)]">
           ₦{result.rsaBalance.toLocaleString("en-NG")}
         </strong>{" "}
-        meets the required length of service and time to retirement.
+        meets the PenCom statutory requirements for length of service and time to retirement.
       </p>
 
       {/* Stats row */}
@@ -986,7 +986,7 @@ function StepIneligible({
         Not Yet Eligible
       </h3>
       <p className="text-sm text-[var(--color-text-body)] mb-1" style={{ fontFamily: "var(--font-body)" }}>
-        You do not meet the minimum statutory requirements for the PenCom mortgage scheme.
+        You do not currently meet the PenCom statutory requirements for the RSA equity contribution scheme.
       </p>
       <p className="text-sm text-[var(--color-error)] font-semibold mb-7" style={{ fontFamily: "var(--font-body)" }}>
         {result.failureReason}
@@ -994,7 +994,7 @@ function StepIneligible({
 
       <div className="flex flex-col gap-3">
         <a
-          href={`https://wa.me/2348030000000?text=${encodeURIComponent("Hello, I'd like to be notified when I'm eligible for the PenCom mortgage scheme.")}`}
+          href={`https://wa.me/2348030000000?text=${encodeURIComponent("Hello, I'd like to be notified when I meet the requirements for the PenCom RSA equity contribution scheme.")}`}
           target="_blank"
           rel="noopener noreferrer"
           className={[
