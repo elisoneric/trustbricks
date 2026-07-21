@@ -29,7 +29,7 @@ export default function Footer({ siteSettings }: { siteSettings?: any } = {}) {
         {/* Brand Column */}
         <div className="space-y-6">
           <div className="flex items-center gap-3">
-             <img src="/logo.png" alt="" aria-hidden="true" className="h-10 w-auto select-none" />
+             <img src="/logo.png?v=3" alt="" aria-hidden="true" className="h-10 w-auto select-none" />
              <span className="font-extrabold text-[16px] leading-none tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
                TRUST BRICKS<span className="text-[var(--color-clay-500)]">.</span>
              </span>

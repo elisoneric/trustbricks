@@ -137,7 +137,7 @@ export default function GlobalNavbar() {
           className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-clay-500)] rounded-md"
           aria-label="Trust Bricks Properties — home"
         >
-          <img src="/logo.png" alt="" aria-hidden="true" className="h-10 w-auto select-none" />
+          <img src="/logo.png?v=3" alt="" aria-hidden="true" className="h-10 w-auto select-none" />
           <span
             className="leading-tight select-none"
             style={{ fontFamily: "var(--font-display)" }}

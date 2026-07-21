@@ -95,7 +95,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="" className="h-10 w-auto" />
+              <img src="/logo.png?v=3" alt="" className="h-10 w-auto" />
               <div className="flex flex-col">
                 <span className="font-extrabold text-[16px] leading-none tracking-tight text-[#0D1F3C]" style={{ fontFamily: "var(--font-display)" }}>
                   TRUST BRICKS
