@@ -128,7 +128,7 @@ export default function GlobalNavbar() {
       ].join(" ")}
     >
       <nav
-        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-[72px] flex items-center justify-between"
+        className="w-full px-4 sm:px-6 lg:px-8 h-[72px] flex items-center justify-between"
         aria-label="Primary navigation"
       >
         {/* ── LOGO ── */}
