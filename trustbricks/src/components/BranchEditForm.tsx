@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { updateBranch, deleteBranch } from "@/app/actions/adminActions";
-import { MapPin, Phone, Mail, Trash, Pencil, X, Check, Building } from "lucide-react";
+import { MapPin, Phone, Mail, Trash, Pencil, X, Check, Building, MessageCircle } from "lucide-react";
 
 interface BranchEditFormProps {
   branch: {
@@ -24,6 +24,7 @@ interface BranchEditFormProps {
 export default function BranchEditForm({ branch }: BranchEditFormProps) {
   const [editing, setEditing] = useState(false);
   const [phone, setPhone] = useState(branch.phone);
+  const [whatsapp, setWhatsapp] = useState(branch.whatsapp || "");
   const [email, setEmail] = useState(branch.email);
   const [address, setAddress] = useState(branch.address);
   const [city, setCity] = useState(branch.city);
@@ -33,7 +34,7 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
 
   const handleSave = async () => {
     setSaving(true);
-    await updateBranch(branch.id, { phone, email, address, city, state, landmark });
+    await updateBranch(branch.id, { phone, whatsapp, email, address, city, state, landmark });
     setSaving(false);
     setEditing(false);
   };
@@ -44,6 +45,7 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
 
   const handleCancel = () => {
     setPhone(branch.phone);
+    setWhatsapp(branch.whatsapp || "");
     setEmail(branch.email);
     setAddress(branch.address);
     setCity(branch.city);
@@ -79,7 +81,11 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
             </div>
             <div className="flex items-center gap-2">
               <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone" className={inputClass} />
+              <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone (CSU line)" className={inputClass} />
+            </div>
+            <div className="flex items-center gap-2">
+              <MessageCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <input type="text" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="WhatsApp (e.g. +2348020772033)" className={inputClass} />
             </div>
             <div className="flex items-center gap-2">
               <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
@@ -117,6 +123,9 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
             )}
             <p className="text-xs text-slate-500 flex items-center gap-1.5">
               <Phone className="w-3.5 h-3.5 text-slate-400" /> {branch.phone || "—"}
+            </p>
+            <p className="text-xs text-slate-500 flex items-center gap-1.5">
+              <MessageCircle className="w-3.5 h-3.5 text-slate-400" /> {branch.whatsapp || "—"}
             </p>
             <p className="text-xs text-slate-500 flex items-center gap-1.5">
               <Mail className="w-3.5 h-3.5 text-slate-400" /> {branch.email}

@@ -26,7 +26,7 @@ async function main() {
   for (const branch of branches) {
     await prisma.branch.upsert({
       where: { name: branch.name },
-      update: { address: branch.address, city: branch.city, state: branch.state, landmark: branch.landmark, ...(branch as any).phone ? { phone: (branch as any).phone } : {} },
+      update: { address: branch.address, city: branch.city, state: branch.state, landmark: branch.landmark, whatsapp: branch.whatsapp, ...(branch as any).phone ? { phone: (branch as any).phone } : {} },
       create: branch,
     });
   }
