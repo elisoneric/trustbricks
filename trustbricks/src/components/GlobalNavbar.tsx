@@ -121,10 +121,10 @@ export default function GlobalNavbar() {
     <header
       role="banner"
       className={[
-        "fixed z-[100] transition-all duration-500",
+        "fixed top-0 inset-x-0 z-[100] w-full transition-all duration-300",
         scrolled
-          ? "top-4 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-[90%] md:max-w-5xl rounded-2xl bg-[#FDFBF7]/90 backdrop-blur-[16px] saturate-[1.8] border border-[var(--color-border)] shadow-[0_8px_32px_rgba(16,25,43,0.08)]"
-          : "top-0 inset-x-0 bg-transparent",
+          ? "bg-[#FDFBF7]/95 backdrop-blur-[16px] saturate-[1.8] border-b border-[var(--color-border)] shadow-[0_4px_20px_rgba(16,25,43,0.06)]"
+          : "bg-[#FDFBF7]/80 backdrop-blur-[12px] border-b border-transparent",
       ].join(" ")}
     >
       <nav
@@ -137,7 +137,7 @@ export default function GlobalNavbar() {
           className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-clay-500)] rounded-md"
           aria-label="Trust Bricks Properties — home"
         >
-          <img src="/logo.png" alt="" aria-hidden="true" className="w-9 h-9 select-none" />
+          <img src="/logo.png" alt="" aria-hidden="true" className="h-10 w-auto select-none" />
           <span
             className="leading-tight select-none"
             style={{ fontFamily: "var(--font-display)" }}
