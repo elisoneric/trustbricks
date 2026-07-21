@@ -54,12 +54,19 @@ COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --chown=nextjs:nodejs docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh
 
+# Dedicated directory for the SQLite file, kept separate from ./prisma
+# (schema.prisma/seed.ts) — mounting a persistent volume directly onto
+# ./prisma would hide those files, since a bind mount replaces whatever
+# the image put at that path.
+RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
+
 USER nextjs
 
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# IMPORTANT: mount a persistent volume at /app/prisma in production —
-# without one, the SQLite database is wiped on every redeploy.
+# IMPORTANT: mount a persistent volume at /app/data in production, and set
+# DATABASE_URL="file:/app/data/dev.db" — without both, the SQLite database
+# is wiped on every redeploy.
 ENTRYPOINT ["./docker-entrypoint.sh"]
