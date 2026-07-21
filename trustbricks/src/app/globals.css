@@ -26,13 +26,13 @@
   --color-ink-800: #0A121F;
   --color-ink-900: #05090F;
 
-  /* ── CLAY PALETTE (primary accent — burnt terracotta brick) ── */
-  --color-clay-50:  #FBE9E1;
-  --color-clay-100: #F3C9B5;
-  --color-clay-200: #E4A583;
-  --color-clay-500: #B8502E;
-  --color-clay-600: #A0431F;
-  --color-clay-700: #833518;
+  /* ── BRAND GOLD / AMBER PALETTE (primary accent — matching logo #CD7A12) ── */
+  --color-clay-50:  #FDF5E8;
+  --color-clay-100: #F9E4C4;
+  --color-clay-200: #F1C990;
+  --color-clay-500: #CD7A12;
+  --color-clay-600: #B2650B;
+  --color-clay-700: #8E4F06;
 
   /* ── MORTAR PALETTE (secondary neutral — grey between the bricks) ── */
   --color-mortar-50:  #F5F3EF;
@@ -71,7 +71,7 @@
   --shadow-card:        0 1px 3px rgba(16,25,43,0.06), 0 4px 16px rgba(16,25,43,0.06);
   --shadow-card-hover:  0 8px 32px rgba(16,25,43,0.14);
   --shadow-nav:         0 1px 0 #DBD5C7;
-  --shadow-action-glow: 0 0 24px rgba(184,80,46,0.4), 0 4px 16px rgba(184,80,46,0.22);
+  --shadow-action-glow: 0 0 24px rgba(205,122,18,0.4), 0 4px 16px rgba(205,122,18,0.22);
   --shadow-dialog:      0 24px 64px rgba(16,25,43,0.22);
   --shadow-glass:       0 4px 32px rgba(16,25,43,0.12), inset 0 1px 0 rgba(255,255,255,0.15);
 
