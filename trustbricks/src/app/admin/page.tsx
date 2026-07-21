@@ -51,7 +51,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                 type="password"
                 required
                 placeholder="Enter admin password"
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/50 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/50 focus:border-transparent transition-all"
               />
             </div>
             
@@ -302,7 +302,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                         type="text"
                         required
                         placeholder="e.g. Samuel Ade"
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
                       />
                     </div>
                     <div className="space-y-1">
@@ -312,7 +312,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                         type="email"
                         required
                         placeholder="samuel@trustbrickproperties.ng"
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -320,7 +320,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Role</label>
                         <select
                           name="role"
-                          className="w-full px-2 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
+                          className="w-full px-2 py-2 bg-white border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
                         >
                           <option value="Conversion Officer">Conversion Officer</option>
                           <option value="Lead Advisor">Lead Advisor</option>
@@ -331,7 +331,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Branch</label>
                         <select
                           name="branch"
-                          className="w-full px-2 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
+                          className="w-full px-2 py-2 bg-white border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
                         >
                           <option value="Abuja (HQ)">Abuja (HQ)</option>
                           <option value="Lagos Hub">Lagos Hub</option>
@@ -436,7 +436,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                         name="slogan"
                         type="text"
                         defaultValue={config.site.slogan}
-                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
+                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
                       />
                     </div>
                     <div className="space-y-1">
@@ -445,7 +445,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                         name="rcNumber"
                         type="text"
                         defaultValue={config.site.rcNumber}
-                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
+                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
                       />
                     </div>
                   </div>
@@ -456,7 +456,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                       name="heroTitle"
                       type="text"
                       defaultValue={config.site.heroTitle}
-                      className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
+                      className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
                     />
                   </div>
 
@@ -466,7 +466,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                       name="heroSubtitle"
                       rows={3}
                       defaultValue={config.site.heroSubtitle}
-                      className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35 resize-none"
+                      className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35 resize-none"
                     />
                   </div>
 
@@ -477,7 +477,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                         name="companyPhone"
                         type="text"
                         defaultValue={config.site.companyPhone}
-                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
+                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
                       />
                     </div>
                     <div className="space-y-1">
@@ -486,7 +486,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                         name="companyEmail"
                         type="text"
                         defaultValue={config.site.companyEmail}
-                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
+                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
                       />
                     </div>
                   </div>
@@ -540,55 +540,55 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Name</label>
-                        <input name="name" required placeholder="Abuja (HQ)" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                        <input name="name" required placeholder="Abuja (HQ)" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                       </div>
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">City</label>
-                        <input name="city" required placeholder="Abuja" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                        <input name="city" required placeholder="Abuja" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">State</label>
-                        <input name="state" required placeholder="FCT" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                        <input name="state" required placeholder="FCT" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                       </div>
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Icon (Emoji)</label>
-                        <input name="iconType" required placeholder="🏛️" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                        <input name="iconType" required placeholder="🏛️" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                       </div>
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Address</label>
-                      <input name="address" required className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      <input name="address" required className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Phone</label>
-                        <input name="phone" required className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                        <input name="phone" required className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                       </div>
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">WhatsApp</label>
-                        <input name="whatsapp" required placeholder="+234..." className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                        <input name="whatsapp" required placeholder="+234..." className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Email</label>
-                        <input name="email" required type="email" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                        <input name="email" required type="email" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                       </div>
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Hours</label>
-                        <input name="hours" required placeholder="Mon - Fri: 8am - 5pm" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                        <input name="hours" required placeholder="Mon - Fri: 8am - 5pm" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Landmark</label>
-                        <input name="landmark" required className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                        <input name="landmark" required className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                       </div>
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Map Query</label>
-                        <input name="mapQuery" required placeholder="City+Country" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                        <input name="mapQuery" required placeholder="City+Country" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                       </div>
                     </div>
                     <button type="submit" className="w-full flex items-center justify-center gap-1.5 py-3 rounded-lg bg-[#0D1F3C] hover:bg-[#1E3A5F] text-white text-xs font-bold transition-colors cursor-pointer shadow-md">
