@@ -9,6 +9,28 @@ interface PfaEntry {
   slug: string;
 }
 
+const PFA_LOGO_PATH_MAP: Record<string, string> = {
+  "stanbic-ibtc": "/pfa-logos/stanbic-ibtc.png",
+  "gt-pension": "/pfa-logos/gt-pension.png",
+  "trustfund": "/pfa-logos/trustfund.png",
+  "premium-pensions": "/pfa-logos/premium-pensions.png",
+  "access-arm": "/pfa-logos/access-arm.png",
+  "oak-pensions": "/pfa-logos/oak-pensions.png",
+  "leadway-pensure": "/pfa-logos/leadway-pensure.png",
+  "citizens-pensions": "/pfa-logos/citizens-pensions.png",
+  "crusader-pensions": "/pfa-logos/crusader-pensions.png",
+  "nlpc-pensions": "/pfa-logos/nlpc-pensions.jpg",
+  "npf-pension": "/pfa-logos/npf-pension.png",
+  "nupemco": "/pfa-logos/nupemco.png",
+  "norrenberger": "/pfa-logos/norrenberger.png",
+  "cardinalstone": "/pfa-logos/cardinalstone.webp",
+  "fcmb-pensions": "/pfa-logos/fcmb-pensions.png",
+  "fidelity-pensions": "/pfa-logos/fidelity-pensions.png",
+  "pal-pensions": "/pfa-logos/pal-pensions.png",
+  "veritas-glanvills": "/pfa-logos/veritas-glanvills.png",
+  "tangerine-apt": "/pfa-logos/tangerine-apt.jpg",
+};
+
 const PFAS: PfaEntry[] = [
   { name: "Stanbic IBTC",        slug: "stanbic-ibtc" },
   { name: "GT Pension",          slug: "gt-pension" },
@@ -31,25 +53,23 @@ const PFAS: PfaEntry[] = [
   { name: "Tangerine APT",       slug: "tangerine-apt" },
 ];
 
-/* Probes /pfa-logos/{slug}.png off-DOM before ever rendering an <img> tag, so the
-   marquee never shows a broken/empty image — only a confirmed-loaded logo, or
-   the styled name badge (dot + name) if no logo file exists yet. */
 function PfaBadge({ name, slug }: PfaEntry) {
   const [logoOk, setLogoOk] = useState(false);
+  const logoPath = PFA_LOGO_PATH_MAP[slug] || `/pfa-logos/${slug}.png`;
 
   useEffect(() => {
     let cancelled = false;
     const probe = new window.Image();
     probe.onload = () => { if (!cancelled) setLogoOk(true); };
-    probe.src = `/pfa-logos/${slug}.png`;
+    probe.src = logoPath;
     return () => { cancelled = true; };
-  }, [slug]);
+  }, [logoPath]);
 
   if (logoOk) {
     return (
       <div className="flex items-center h-9">
         <img
-          src={`/pfa-logos/${slug}.png`}
+          src={logoPath}
           alt={name}
           className="h-9 w-auto max-w-[140px] object-contain grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
         />
@@ -77,8 +97,6 @@ export default function TrustMarquee() {
       <div className="absolute left-0 w-32 h-full bg-gradient-to-r from-[var(--color-ink-700)] to-transparent z-10 pointer-events-none"></div>
       <div className="absolute right-0 w-32 h-full bg-gradient-to-l from-[var(--color-ink-700)] to-transparent z-10 pointer-events-none"></div>
 
-      {/* CSS-driven (0% -> -50%) so it stays seamless regardless of font/content width,
-          and pausing via animation-play-state never causes a jump-to-start snap. */}
       <div className={`marquee-track gap-14 items-center pl-16${isPaused ? " is-paused" : ""}`}>
         {[0, 1].flatMap((loop) => [
           <div key={`pencom-${loop}`} className="flex items-center gap-2 px-1 opacity-90 shrink-0">

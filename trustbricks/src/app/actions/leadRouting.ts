@@ -13,60 +13,82 @@ export type LeadResponse = {
 
 export async function processMortgageLead(formData: FormData): Promise<LeadResponse> {
   try {
-    const full_name = formData.get('full_name') as string;
-    const phone = formData.get('phone') as string;
-    const employer_type = formData.get('employer_type') as string;
+    const full_name = (formData.get('full_name') as string)?.trim();
+    const phone = (formData.get('phone') as string)?.trim();
+    const email = (formData.get('email') as string)?.trim() || '';
+    const employer_type = (formData.get('employer_type') as string)?.trim() || 'Private Sector';
     const rsa_balance_str = formData.get('rsa_balance') as string;
     const years_in_work_str = formData.get('years_in_work') as string;
     const years_to_retire_str = formData.get('years_to_retire') as string;
-    const branch_id = formData.get('branch_id') as string;
-    const pfa_id = formData.get('pfa_id') as string;
+    const branch_id = (formData.get('branch_id') as string)?.trim();
+    const pfa_id = (formData.get('pfa_id') as string)?.trim();
 
-    if (!full_name || !phone || !rsa_balance_str || !branch_id || !pfa_id || !years_in_work_str || !years_to_retire_str) {
-      return { success: false, message: 'Missing required fields' };
+    if (!full_name || !phone) {
+      return { success: false, message: 'Please provide your full name and phone number.' };
     }
 
-    const rsa_balance = parseFloat(rsa_balance_str);
-    const years_in_work = parseInt(years_in_work_str, 10);
-    const years_to_retire = parseInt(years_to_retire_str, 10);
-    if (isNaN(rsa_balance) || isNaN(years_in_work) || isNaN(years_to_retire)) {
-      return { success: false, message: 'Invalid numeric fields' };
-    }
+    const rsa_balance = parseFloat(rsa_balance_str || '0') || 0;
+    const years_in_work = parseInt(years_in_work_str || '0', 10) || 0;
+    const years_to_retire = parseInt(years_to_retire_str || '0', 10) || 0;
 
-    // 1. Resolve PFA Rule (try by ID, then by name); if unrecognized, record it
-    //    on the fly rather than blocking the lead from reaching the admin panel.
-    let pfaRule = await prisma.pfaRule.findUnique({
-      where: { id: pfa_id },
-    });
-    if (!pfaRule) {
-      pfaRule = await prisma.pfaRule.findUnique({
-        where: { name: pfa_id },
+    // 1. Resolve PFA Rule robustly
+    let pfaRule = null;
+    if (pfa_id) {
+      pfaRule = await prisma.pfaRule.findFirst({
+        where: {
+          OR: [
+            { id: pfa_id },
+            { name: { equals: pfa_id } }
+          ]
+        }
       });
     }
+
+    if (!pfaRule) {
+      pfaRule = await prisma.pfaRule.findFirst({ orderBy: { createdAt: 'asc' } });
+    }
+
     if (!pfaRule) {
       pfaRule = await prisma.pfaRule.create({
-        data: { name: pfa_id || 'Unspecified PFA', minimum_threshold: 0 },
+        data: {
+          name: pfa_id || 'Stanbic IBTC',
+          minimum_threshold: 5000000
+        }
       });
     }
 
-    // 2. Resolve Branch (try by ID, then by name); fall back to the first
-    //    branch on record so a lead is never dropped over a branch mismatch.
-    let branch = await prisma.branch.findUnique({
-      where: { id: branch_id },
-    });
-    if (!branch) {
-      branch = await prisma.branch.findUnique({
-        where: { name: branch_id },
+    // 2. Resolve Branch robustly
+    let branch = null;
+    if (branch_id) {
+      branch = await prisma.branch.findFirst({
+        where: {
+          OR: [
+            { id: branch_id },
+            { name: { equals: branch_id } }
+          ]
+        }
       });
     }
+
     if (!branch) {
       branch = await prisma.branch.findFirst({ orderBy: { name: 'asc' } });
     }
+
     if (!branch) {
-      return { success: false, message: 'No branches are configured yet. Please contact support directly.' };
+      branch = await prisma.branch.create({
+        data: {
+          name: 'Abuja',
+          city: 'Abuja',
+          state: 'FCT',
+          whatsapp: '+2347078387777',
+          phone: '+2347078387777',
+          email: 'abuja@trustbrickproperties.ng',
+          address: 'Area 3, block 5, House 4 Cross River Street Garki, Abuja',
+        }
+      });
     }
 
-    // 3. Strict Server-Side Mathematical Validation
+    // 3. Strict Server-Side Validation
     const is_eligible = years_in_work >= 5 && years_to_retire >= 3;
 
     // 4. Save to Database
@@ -74,7 +96,7 @@ export async function processMortgageLead(formData: FormData): Promise<LeadRespo
       data: {
         full_name,
         phone,
-        employer_type: employer_type || 'Unknown',
+        employer_type,
         rsa_balance,
         years_in_work,
         years_to_retire,
@@ -105,6 +127,7 @@ export async function processMortgageLead(formData: FormData): Promise<LeadRespo
             <h2>New Mortgage Lead Submitted</h2>
             <p><strong>Name:</strong> ${full_name}</p>
             <p><strong>Phone:</strong> ${phone}</p>
+            <p><strong>Email:</strong> ${email || 'N/A'}</p>
             <p><strong>Employer Type:</strong> ${employer_type}</p>
             <p><strong>RSA Balance:</strong> ₦${rsa_balance.toLocaleString('en-NG')}</p>
             <p><strong>Years in Service:</strong> ${years_in_work}</p>
@@ -135,10 +158,10 @@ export async function processMortgageLead(formData: FormData): Promise<LeadRespo
     };
 
   } catch (error: any) {
-    console.error('[LEAD ROUTING ERROR]', error);
+    console.error('[LEAD ROUTING ERROR]', error?.stack || error);
     return {
       success: false,
-      message: 'An unexpected error occurred while processing your lead.',
+      message: error?.message || 'An unexpected error occurred while processing your lead.',
     };
   }
 }

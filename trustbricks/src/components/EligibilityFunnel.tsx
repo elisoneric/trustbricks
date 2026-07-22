@@ -419,16 +419,16 @@ export default function EligibilityFunnel({ isOpen, onClose, branches = [] }: El
     startTransition(async () => {
       try {
         const formData = new FormData();
-        formData.append("branch_id", state.branch || "");
+        formData.append("branch_id", state.branch || "Abuja");
         const pfaOption = PFA_OPTIONS.find((o) => o.slug === state.pfa);
-        formData.append("pfa_id", pfaOption?.label || state.pfa || "");
-        formData.append("rsa_balance", String(state.result?.rsaBalance || 0));
-        formData.append("years_in_work", String(state.result?.yearsInService || 0));
-        formData.append("years_to_retire", String(state.result?.yearsToRetire || 0));
+        formData.append("pfa_id", pfaOption?.label || state.pfa || "Stanbic IBTC");
+        formData.append("rsa_balance", String(state.result?.rsaBalance ?? parseNaira(state.rsaRaw) ?? 0));
+        formData.append("years_in_work", String(state.result?.yearsInService ?? parseInt(state.yearsInServiceRaw, 10) ?? 0));
+        formData.append("years_to_retire", String(state.result?.yearsToRetire ?? parseInt(state.yearsToRetireRaw, 10) ?? 0));
         formData.append("full_name", state.leadForm.fullName);
         formData.append("phone", state.leadForm.phone);
         formData.append("email", state.leadForm.email);
-        formData.append("employer_type", state.leadForm.employer);
+        formData.append("employer_type", state.leadForm.employer || "Private Sector");
 
         const response = await processMortgageLead(formData);
 
