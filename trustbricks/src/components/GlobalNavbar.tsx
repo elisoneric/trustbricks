@@ -129,12 +129,12 @@ export default function GlobalNavbar() {
         {/* ── LOGO ── */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-clay-500)] rounded-md"
+          className="flex items-center gap-2.5 group outline-none focus:outline-none border-none ring-0 rounded-md"
           aria-label="Trust Bricks Properties — home"
         >
-          <img src="/logo.png?v=3" alt="" aria-hidden="true" className="h-10 w-auto select-none" />
+          <img src="/logo.png?v=3" alt="" aria-hidden="true" className="h-10 w-auto select-none border-none outline-none shadow-none ring-0" />
           <span
-            className="leading-tight select-none"
+            className="leading-tight select-none border-none outline-none"
             style={{ fontFamily: "var(--font-display)" }}
           >
             <span className="block text-[11px] font-semibold tracking-[0.12em] uppercase text-[var(--color-clay-500)]">
