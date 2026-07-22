@@ -89,12 +89,7 @@ export default function GlobalNavbar() {
 
   const handleEligibilityClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (pathname === "/") {
-      // Already on home — fire event directly so HeroSection opens instantly
-      window.dispatchEvent(new CustomEvent("openEligibilityFunnel"));
-    } else {
-      router.push("/?eligibility=true", { scroll: false });
-    }
+    router.push("/apply");
     setMobileOpen(false);
   };
 

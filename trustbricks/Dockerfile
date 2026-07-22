@@ -1,7 +1,6 @@
 FROM node:22-alpine AS base
-# Prisma's schema/query engine binaries need OpenSSL — Alpine doesn't ship
-# it by default, and without it the engine crashes with an unparseable error.
-RUN apk add --no-cache openssl
+# Prisma's schema/query engine binaries need OpenSSL & su-exec for privilege dropping
+RUN apk add --no-cache openssl su-exec
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -59,8 +58,8 @@ RUN chmod +x ./docker-entrypoint.sh
 # Dedicated directory for SQLite data storage
 RUN mkdir -p /app/data && chown -R nextjs:nodejs /app/data
 
-USER nextjs
-
 EXPOSE 3000
 
+# Entrypoint runs as root initially to ensure mounted volume (/app/data) ownership,
+# then uses su-exec to drop privileges to nextjs before executing server.js
 ENTRYPOINT ["./docker-entrypoint.sh"]

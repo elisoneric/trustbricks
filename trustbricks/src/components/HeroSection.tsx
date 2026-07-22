@@ -119,7 +119,7 @@ export default function HeroSection({ siteSettings, branches = [] }: { siteSetti
 
   const handleEligibilityClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    setFunnelOpen(true);
+    router.push("/apply");
   };
 
   const displayTitle = siteSettings?.heroTitle || "Your RSA Can Open Your Front Door";
@@ -258,7 +258,7 @@ export default function HeroSection({ siteSettings, branches = [] }: { siteSetti
             animate="visible"
             className="w-full max-w-5xl mx-auto mt-4"
           >
-            <HeroInteractiveEstimatorCard onCheckEligibility={() => setFunnelOpen(true)} />
+            <HeroInteractiveEstimatorCard onCheckEligibility={() => router.push("/apply")} />
           </motion.div>
 
           {/* Trust Chips Below Widget */}
@@ -286,13 +286,6 @@ export default function HeroSection({ siteSettings, branches = [] }: { siteSetti
           }
         `}} />
       </section>
-
-      {/* ── ELIGIBILITY FUNNEL MODAL ── */}
-      <EligibilityFunnel
-        isOpen={funnelOpen}
-        onClose={() => setFunnelOpen(false)}
-        branches={branches}
-      />
     </>
   );
 }
