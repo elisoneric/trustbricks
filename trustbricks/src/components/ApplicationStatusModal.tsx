@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Phone, CreditCard, Lock, Search, CheckCircle2 } from "lucide-react";
+import { trackLeadStatus } from "@/app/actions/leadRouting";
 
 /* ─── TYPES ──────────────────────────────────────────────────────────────── */
 interface StatusResponse {
@@ -159,41 +160,48 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
     setState("loading");
 
     try {
-      const body: Record<string, string> = {};
-      if (trimPhone)   body.phone_number = trimPhone;
-      if (trimAccount) body.account_number = trimAccount;
+      const searchTerm = trimPhone || trimAccount;
 
-      const res = await fetch(
-        "https://equity.trustbrickspropertieslimited.com.ng/api/portal/track",
-        {
-          method:  "POST",
-          headers: { "Content-Type": "application/json" },
-          body:    JSON.stringify(body),
-        }
-      );
-
-      if (res.status === 429) {
-        throw new Error("Too many attempts. Please wait a minute and try again.");
-      }
-      if (res.status === 422) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.detail || "Invalid input. Please check your details.");
-      }
-      if (!res.ok) {
-        throw new Error("Something went wrong. Please try again later.");
-      }
-
-      const data: StatusResponse = await res.json();
-
-      if (data.found) {
-        setResult(data);
+      // 1. Check local database first via Server Action
+      const localResult = await trackLeadStatus(searchTerm);
+      if (localResult.found) {
+        setResult(localResult);
         setState("result");
-      } else {
-        setState("not-found");
+        return;
       }
+
+      // 2. Fallback to external tracking API if available
+      try {
+        const body: Record<string, string> = {};
+        if (trimPhone)   body.phone_number = trimPhone;
+        if (trimAccount) body.account_number = trimAccount;
+
+        const res = await fetch(
+          "https://equity.trustbrickspropertieslimited.com.ng/api/portal/track",
+          {
+            method:  "POST",
+            headers: { "Content-Type": "application/json" },
+            body:    JSON.stringify(body),
+          }
+        );
+
+        if (res.ok) {
+          const data: StatusResponse = await res.json();
+          if (data.found) {
+            setResult(data);
+            setState("result");
+            return;
+          }
+        }
+      } catch (externalErr) {
+        console.warn("External tracking API endpoint unreachable, falling back to local result.", externalErr);
+      }
+
+      // If not found in either database, show clean Not Found screen instead of Query Failed error
+      setState("not-found");
     } catch (err: any) {
-      setErrorMsg(err.message || "An unexpected error occurred.");
-      setState("error");
+      console.error("[APPLICATION TRACKING ERROR]", err);
+      setState("not-found");
     }
   };
 

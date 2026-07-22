@@ -11,6 +11,14 @@ export type LeadResponse = {
   leadId?: string;
 };
 
+export type TrackStatusResponse = {
+  found: boolean;
+  status: string | null;
+  description: string | null;
+  step: number | null;
+  total_steps: number;
+};
+
 export async function processMortgageLead(formData: FormData): Promise<LeadResponse> {
   try {
     const full_name = (formData.get('full_name') as string)?.trim();
@@ -163,5 +171,48 @@ export async function processMortgageLead(formData: FormData): Promise<LeadRespo
       success: false,
       message: error?.message || 'An unexpected error occurred while processing your lead.',
     };
+  }
+}
+
+export async function trackLeadStatus(phoneOrAccount: string): Promise<TrackStatusResponse> {
+  try {
+    const rawInput = phoneOrAccount.trim();
+    if (!rawInput) {
+      return { found: false, status: null, description: null, step: null, total_steps: 4 };
+    }
+
+    const digitsOnly = rawInput.replace(/[^0-9]/g, '');
+
+    // Search in database by phone number or ID
+    const lead = await prisma.lead.findFirst({
+      where: {
+        OR: [
+          { phone: { contains: rawInput } },
+          ...(digitsOnly ? [{ phone: { contains: digitsOnly } }] : []),
+          { id: rawInput }
+        ]
+      },
+      include: {
+        branch: true,
+        pfa: true,
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    if (lead) {
+      const isNew = lead.status === 'new';
+      return {
+        found: true,
+        status: isNew ? 'Verification & PFA Review' : lead.status.toUpperCase(),
+        description: `Application for ${lead.full_name} (${lead.pfa.name}) is currently undergoing verification by our ${lead.branch.name} regional advisory desk.`,
+        step: isNew ? 2 : 3,
+        total_steps: 4,
+      };
+    }
+
+    return { found: false, status: null, description: null, step: null, total_steps: 4 };
+  } catch (error) {
+    console.error('[TRACK LEAD ERROR]', error);
+    return { found: false, status: null, description: null, step: null, total_steps: 4 };
   }
 }
