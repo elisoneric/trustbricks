@@ -1,13 +1,10 @@
 FROM node:22-alpine AS base
 # Prisma's schema/query engine binaries need OpenSSL — Alpine doesn't ship
-# it by default, and without it the engine crashes with an unparseable
-# error instead of running (surfaces as "Could not parse schema engine
-# response... Unexpected token 'E', 'Error load'...").
+# it by default, and without it the engine crashes with an unparseable error.
 RUN apk add --no-cache openssl
 
 # Install dependencies only when needed
 FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
@@ -33,6 +30,9 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+ENV DATABASE_URL="file:/app/data/dev.db"
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -44,34 +44,23 @@ COPY --from=builder /app/public ./public
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
-# Full node_modules (includes the Prisma CLI + ts-node, needed at startup
-# to run `prisma db push` / `prisma db seed` — the standalone output below
-# only bundles what's imported by app code, which excludes the CLI).
-COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
+# Copy node_modules from BUILDER (crucial for Prisma generated engine binaries)
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 # Automatically leverage output traces to reduce image size
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Schema + seed script + startup entrypoint (applies schema and seeds an
-# empty database on container start — see docker-entrypoint.sh)
+# Schema + seed script + startup entrypoint
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --chown=nextjs:nodejs docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh
 
-# Dedicated directory for the SQLite file, kept separate from ./prisma
-# (schema.prisma/seed.ts) — mounting a persistent volume directly onto
-# ./prisma would hide those files, since a bind mount replaces whatever
-# the image put at that path.
-RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
+# Dedicated directory for SQLite data storage
+RUN mkdir -p /app/data && chown -R nextjs:nodejs /app/data
 
 USER nextjs
 
 EXPOSE 3000
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
 
-# IMPORTANT: mount a persistent volume at /app/data in production, and set
-# DATABASE_URL="file:/app/data/dev.db" — without both, the SQLite database
-# is wiped on every redeploy.
 ENTRYPOINT ["./docker-entrypoint.sh"]
