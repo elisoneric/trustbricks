@@ -24,7 +24,7 @@ export default async function ApplySuccessPage({
     <div className="min-h-screen bg-[var(--color-body-bg)] font-sans antialiased selection:bg-[var(--color-clay-500)] selection:text-white flex flex-col justify-between">
       <GlobalNavbar />
 
-      <main id="main-content" className="flex-grow py-16 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto w-full">
+      <main id="main-content" className="flex-grow pt-28 sm:pt-36 pb-16 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto w-full">
         <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-3xl p-8 sm:p-12 shadow-xl text-center space-y-8 relative overflow-hidden">
           
           {/* ICON BADGE */}

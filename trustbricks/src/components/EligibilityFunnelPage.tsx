@@ -608,21 +608,7 @@ export default function EligibilityFunnelPage({ branches = [] }: { branches?: an
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[var(--color-text-body)] mb-1">
-                    Employer / Sector
-                  </label>
-                  <select
-                    value={state.leadForm.employer}
-                    onChange={(e) => dispatch({ type: "UPDATE_LEAD", field: "employer", value: e.target.value })}
-                    className="w-full px-4 py-3 bg-white border border-[var(--color-border)] rounded-xl text-base text-[var(--color-text-heading)] focus:ring-2 focus:ring-[var(--color-clay-500)] outline-none"
-                  >
-                    <option value="Private Sector">Private Sector</option>
-                    <option value="Federal Government">Federal Civil Service</option>
-                    <option value="State Government">State Civil Service</option>
-                    <option value="Self Employed / Business Owner">Self Employed / Entrepreneur</option>
-                  </select>
-                </div>
+
 
                 {/* NDPA CONSENT CHECKBOX */}
                 <div className="pt-2">

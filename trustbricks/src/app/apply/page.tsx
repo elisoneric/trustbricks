@@ -17,7 +17,7 @@ export default async function ApplyPage() {
   return (
     <div className="min-h-screen bg-[var(--color-body-bg)] font-sans antialiased selection:bg-[var(--color-clay-500)] selection:text-white flex flex-col justify-between">
       <GlobalNavbar />
-      <main id="main-content" className="flex-grow">
+      <main id="main-content" className="flex-grow pt-28 sm:pt-36 pb-12">
         <EligibilityFunnelPage branches={branches || []} />
       </main>
       <Footer siteSettings={siteSettings} />
