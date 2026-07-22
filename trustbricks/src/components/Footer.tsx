@@ -86,14 +86,14 @@ export default function Footer({ siteSettings }: { siteSettings?: any } = {}) {
               <span className="text-[var(--color-clay-500)] mt-1"><Building /></span>
               <div>
                 <p className="text-white font-semibold">Abuja Office (HQ)</p>
-                <p className="text-xs mt-1">Plot 234, Wuse Zone 5, FCT</p>
+                <p className="text-xs mt-1">Area 3, block 5, House 4 Cross River Street Garki, Abuja</p>
               </div>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-white/40 mt-1"><Building /></span>
               <div>
-                <p className="text-white font-semibold">Lagos Hub</p>
-                <p className="text-xs mt-1">14 Broad Street, Lagos Island</p>
+                <p className="text-white font-semibold">Lagos Office</p>
+                <p className="text-xs mt-1">TOWRY CLOSE, IDEJO STREET, OFF ADEOLA ODEKU VICTORIA ISLAND, LAGOS</p>
               </div>
             </li>
             <li className="flex flex-wrap gap-2 mt-6 max-w-xs">

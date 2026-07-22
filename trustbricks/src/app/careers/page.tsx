@@ -16,7 +16,7 @@ const JOBS = [
   {
     title: "Regional Sales Coordinator",
     department: "Real Estate Partners",
-    location: "Lagos Hub",
+    location: "Lagos Office",
     type: "Full-Time",
     posted: "1 week ago",
   },

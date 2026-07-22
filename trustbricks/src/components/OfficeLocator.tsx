@@ -25,182 +25,182 @@ const OFFICES: Office[] = [
     city:      "Abuja",
     state:     "FCT",
     icon:      <Landmark className="w-6 h-6" />,
-    address:   "Plot 234, Cadastral Zone B12, Wuse Zone 5",
-    landmark:  "Near FCDA Secretariat",
-    phone:     "+234 803 000 0001",
-    whatsapp:  "+2348030000001",
+    address:   "Area 3, block 5, House 4 Cross River Street Garki, Abuja",
+    landmark:  "Cross River Street Garki",
+    phone:     "+2347078387777",
+    whatsapp:  "+2347078387777",
     email:     "abuja@trustbrickproperties.ng",
     hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Wuse+Zone+5+Abuja+Nigeria",
+    mapQuery:  "Cross+River+Street+Garki+Abuja+Nigeria",
   },
   {
     slug:      "lagos",
     city:      "Lagos",
     state:     "Lagos",
     icon:      <Waves className="w-6 h-6" />,
-    address:   "14 Broad Street, Lagos Island",
-    landmark:  "Opposite First Bank HQ",
-    phone:     "+234 805 000 0002",
-    whatsapp:  "+2348050000002",
+    address:   "TOWRY CLOSE, IDEJO STREET ,OFF ADEOLA ODEKU VICTORIA ISLAND,LAGOS",
+    landmark:  "OFF ADEOLA ODEKU VICTORIA ISLAND",
+    phone:     "+2349065652920",
+    whatsapp:  "+2349065652920",
     email:     "lagos@trustbrickproperties.ng",
     hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Broad+Street+Lagos+Island+Nigeria",
+    mapQuery:  "Adeola+Odeku+Victoria+Island+Lagos+Nigeria",
   },
   {
     slug:      "kano",
     city:      "Kano",
     state:     "Kano",
     icon:      <Landmark className="w-6 h-6" />,
-    address:   "Plot 45, Murtala Muhammad Way, Kano",
-    landmark:  "Near Kano Central Mosque",
-    phone:     "+234 811 000 0005",
-    whatsapp:  "+2348110000005",
+    address:   "10/24 Ruqayya Plaza, Civic Centre, Opposite MTN.",
+    landmark:  "Opposite MTN, Civic Centre",
+    phone:     "+2348085537624",
+    whatsapp:  "+2348085537624",
     email:     "kano@trustbrickproperties.ng",
     hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Murtala+Muhammad+Way+Kano+Nigeria",
-  },
-  {
-    slug:      "kwara",
-    city:      "Ilorin",
-    state:     "Kwara",
-    icon:      <Wheat className="w-6 h-6" />,
-    address:   "18 Ibrahim Taiwo Road, Ilorin",
-    landmark:  "Near Kwara State Stadium",
-    phone:     "+234 811 000 0006",
-    whatsapp:  "+2348110000006",
-    email:     "kwara@trustbrickproperties.ng",
-    hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Ibrahim+Taiwo+Road+Ilorin+Nigeria",
-  },
-  {
-    slug:      "yola",
-    city:      "Yola",
-    state:     "Adamawa",
-    icon:      <Mountain className="w-6 h-6" />,
-    address:   "12 Atiku Road, Jimeta, Yola",
-    landmark:  "Near Adamawa State Government House",
-    phone:     "+234 807 000 0003",
-    whatsapp:  "+2348070000003",
-    email:     "adamawa@trustbrickproperties.ng",
-    hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Jimeta+Yola+Adamawa+Nigeria",
-  },
-  {
-    slug:      "benue",
-    city:      "Makurdi",
-    state:     "Benue",
-    icon:      <Wheat className="w-6 h-6" />,
-    address:   "24 J.S. Tarka Road, Makurdi",
-    landmark:  "Near Benue State University",
-    phone:     "+234 811 000 0007",
-    whatsapp:  "+2348110000007",
-    email:     "benue@trustbrickproperties.ng",
-    hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "JS+Tarka+Road+Makurdi+Nigeria",
-  },
-  {
-    slug:      "ogun",
-    city:      "Abeokuta",
-    state:     "Ogun",
-    icon:      <Mountain className="w-6 h-6" />,
-    address:   "10 Lalubu Street, Oke-Ilewo, Abeokuta",
-    landmark:  "Near Abeokuta Sports Club",
-    phone:     "+234 811 000 0008",
-    whatsapp:  "+2348110000008",
-    email:     "ogun@trustbrickproperties.ng",
-    hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Lalubu+Street+Oke+Ilewo+Abeokuta+Nigeria",
-  },
-  {
-    slug:      "lokoja",
-    city:      "Lokoja",
-    state:     "Kogi",
-    icon:      <Waves className="w-6 h-6" />,
-    address:   "5 Murtala Way, Lokoja",
-    landmark:  "Near Kogi State Specialist Hospital",
-    phone:     "+234 811 000 0009",
-    whatsapp:  "+2348110000009",
-    email:     "lokoja@trustbrickproperties.ng",
-    hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Murtala+Way+Lokoja+Nigeria",
-  },
-  {
-    slug:      "calabar",
-    city:      "Calabar",
-    state:     "Cross River",
-    icon:      <Waves className="w-6 h-6" />,
-    address:   "12 Marian Road, Calabar",
-    landmark:  "Near Calabar Mall",
-    phone:     "+234 811 000 0010",
-    whatsapp:  "+2348110000010",
-    email:     "calabar@trustbrickproperties.ng",
-    hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Marian+Road+Calabar+Nigeria",
-  },
-  {
-    slug:      "minna",
-    city:      "Minna",
-    state:     "Niger",
-    icon:      <Landmark className="w-6 h-6" />,
-    address:   "6 Bosso Road, Minna",
-    landmark:  "Near Federal University of Technology Minna",
-    phone:     "+234 811 000 0011",
-    whatsapp:  "+2348110000011",
-    email:     "minna@trustbrickproperties.ng",
-    hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Bosso+Road+Minna+Nigeria",
+    mapQuery:  "Civic+Centre+Kano+Nigeria",
   },
   {
     slug:      "ibadan",
     city:      "Ibadan",
     state:     "Oyo",
     icon:      <Landmark className="w-6 h-6" />,
-    address:   "30 Ring Road, Challenge, Ibadan",
-    landmark:  "Near Challenge Bus Stop",
-    phone:     "+234 811 000 0012",
-    whatsapp:  "+2348110000012",
+    address:   "No 19 Oshin street, Bodija Estate, Ibadan.",
+    landmark:  "Bodija Estate",
+    phone:     "+2347031631941",
+    whatsapp:  "+2347031631941",
     email:     "ibadan@trustbrickproperties.ng",
     hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Ring+Road+Challenge+Ibadan+Nigeria",
+    mapQuery:  "Bodija+Estate+Ibadan+Nigeria",
   },
   {
-    slug:      "ekiti",
-    city:      "Ado-Ekiti",
-    state:     "Ekiti",
-    icon:      <Mountain className="w-6 h-6" />,
-    address:   "15 Ado-Iworoko Road, Ado-Ekiti",
-    landmark:  "Near Ekiti State University",
-    phone:     "+234 811 000 0013",
-    whatsapp:  "+2348110000013",
-    email:     "ekiti@trustbrickproperties.ng",
+    slug:      "minna",
+    city:      "Minna",
+    state:     "Niger",
+    icon:      <Landmark className="w-6 h-6" />,
+    address:   "Jaiye Plaza shiroro road opposite unity block Minna.",
+    landmark:  "Opposite Unity Block",
+    phone:     "+2348020772033",
+    whatsapp:  "+2348020772033",
+    email:     "minna@trustbrickproperties.ng",
     hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Ado+Iworoko+Road+Ado+Ekiti+Nigeria",
+    mapQuery:  "Shiroro+Road+Minna+Nigeria",
   },
   {
-    slug:      "bauchi",
-    city:      "Bauchi",
-    state:     "Bauchi",
+    slug:      "yola",
+    city:      "Yola",
+    state:     "Adamawa",
     icon:      <Mountain className="w-6 h-6" />,
-    address:   "8 Yakubu Bauchi Road, Bauchi",
-    landmark:  "Near Bauchi State Government House",
-    phone:     "+234 811 000 0014",
-    whatsapp:  "+2348110000014",
-    email:     "bauchi@trustbrickproperties.ng",
+    address:   "Abdullahi Bashir Road Dougerei",
+    landmark:  "Dougerei",
+    phone:     "+2349136881719",
+    whatsapp:  "+2349136881719",
+    email:     "adamawa@trustbrickproperties.ng",
     hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Yakubu+Bauchi+Road+Bauchi+Nigeria",
+    mapQuery:  "Dougerei+Yola+Adamawa+Nigeria",
   },
   {
     slug:      "kaduna",
     city:      "Kaduna",
     state:     "Kaduna",
     icon:      <Wheat className="w-6 h-6" />,
-    address:   "8 Ali Akilu Road, Kaduna North",
-    landmark:  "Near Barau Dikko Teaching Hospital",
-    phone:     "+234 809 000 0004",
-    whatsapp:  "+2348090000004",
+    address:   "FIRST FLOOR, SUIT 212, 11 COURSE ROAD OPP 54 COMPLEX AMSSCO PLAZA BY MURTALA SQUARE KADUNA",
+    landmark:  "OPP 54 COMPLEX AMSSCO PLAZA BY MURTALA SQUARE",
+    phone:     "+2348141735416",
+    whatsapp:  "+2348141735416",
     email:     "kaduna@trustbrickproperties.ng",
     hours:     "Mon – Fri: 8am – 5pm",
-    mapQuery:  "Ali+Akilu+Road+Kaduna+Nigeria",
+    mapQuery:  "Murtala+Square+Kaduna+Nigeria",
+  },
+  {
+    slug:      "bauchi",
+    city:      "Bauchi",
+    state:     "Bauchi",
+    icon:      <Mountain className="w-6 h-6" />,
+    address:   "F1 Jos Road, Adjacent AHMIS Filling Station Bauchi.",
+    landmark:  "Adjacent AHMIS Filling Station",
+    phone:     "+2349032899612",
+    whatsapp:  "+2349032899612",
+    email:     "bauchi@trustbrickproperties.ng",
+    hours:     "Mon – Fri: 8am – 5pm",
+    mapQuery:  "Jos+Road+Bauchi+Nigeria",
+  },
+  {
+    slug:      "kwara",
+    city:      "Ilorin",
+    state:     "Kwara",
+    icon:      <Wheat className="w-6 h-6" />,
+    address:   "",
+    landmark:  "",
+    phone:     "",
+    whatsapp:  "",
+    email:     "kwara@trustbrickproperties.ng",
+    hours:     "Mon – Fri: 8am – 5pm",
+    mapQuery:  "Ilorin+Kwara+Nigeria",
+  },
+  {
+    slug:      "benue",
+    city:      "Makurdi",
+    state:     "Benue",
+    icon:      <Wheat className="w-6 h-6" />,
+    address:   "No 7 Ashby Investment House, New Bridge Road, Makurdi",
+    landmark:  "Contact: Mr James Gyuren",
+    phone:     "+2347037382530",
+    whatsapp:  "+2347037382530",
+    email:     "benue@trustbrickproperties.ng",
+    hours:     "Mon – Fri: 8am – 5pm",
+    mapQuery:  "Makurdi+Benue+Nigeria",
+  },
+  {
+    slug:      "ogun",
+    city:      "Abeokuta",
+    state:     "Ogun",
+    icon:      <Mountain className="w-6 h-6" />,
+    address:   "",
+    landmark:  "",
+    phone:     "",
+    whatsapp:  "",
+    email:     "ogun@trustbrickproperties.ng",
+    hours:     "Mon – Fri: 8am – 5pm",
+    mapQuery:  "Abeokuta+Ogun+Nigeria",
+  },
+  {
+    slug:      "lokoja",
+    city:      "Lokoja",
+    state:     "Kogi",
+    icon:      <Waves className="w-6 h-6" />,
+    address:   "",
+    landmark:  "",
+    phone:     "",
+    whatsapp:  "",
+    email:     "lokoja@trustbrickproperties.ng",
+    hours:     "Mon – Fri: 8am – 5pm",
+    mapQuery:  "Lokoja+Kogi+Nigeria",
+  },
+  {
+    slug:      "calabar",
+    city:      "Calabar",
+    state:     "Cross River",
+    icon:      <Waves className="w-6 h-6" />,
+    address:   "",
+    landmark:  "",
+    phone:     "",
+    whatsapp:  "",
+    email:     "calabar@trustbrickproperties.ng",
+    hours:     "Mon – Fri: 8am – 5pm",
+    mapQuery:  "Calabar+Cross+River+Nigeria",
+  },
+  {
+    slug:      "ekiti",
+    city:      "Ado-Ekiti",
+    state:     "Ekiti",
+    icon:      <Mountain className="w-6 h-6" />,
+    address:   "",
+    landmark:  "",
+    phone:     "",
+    whatsapp:  "",
+    email:     "ekiti@trustbrickproperties.ng",
+    hours:     "Mon – Fri: 8am – 5pm",
+    mapQuery:  "Ado+Ekiti+Nigeria",
   },
 ];
 
@@ -227,8 +227,8 @@ interface OfficeLocatorProps {
 }
 
 export default function OfficeLocator({ selectedBranch, onBranchChange, branches = [] }: OfficeLocatorProps) {
-  const activeOffices = branches.length > 0 ? branches : OFFICES;
-  const currentOffice = activeOffices.find((o) => (o.id || o.slug) === selectedBranch) || activeOffices[0];
+  const activeOffices = OFFICES;
+  const currentOffice = activeOffices.find((o) => ((o as any).id || o.slug) === selectedBranch) || activeOffices[0];
 
   return (
     <section
@@ -300,7 +300,7 @@ export default function OfficeLocator({ selectedBranch, onBranchChange, branches
             }}
           >
             {activeOffices.map((office) => {
-              const slug = office.id || office.slug;
+              const slug = (office as any).id || office.slug;
               return (
                 <option key={slug} value={slug}>
                   {office.city}, {office.state}
@@ -334,13 +334,13 @@ export default function OfficeLocator({ selectedBranch, onBranchChange, branches
                   className="text-sm font-semibold mb-0.5"
                   style={{ fontFamily: "var(--font-display)", color: "var(--color-text-heading)" }}
                 >
-                  {currentOffice.address}
+                  {currentOffice.address || "Office location details coming soon"}
                 </p>
                 <p
                   className="text-xs"
                   style={{ fontFamily: "var(--font-body)", color: "var(--color-text-muted)" }}
                 >
-                  {currentOffice.landmark}
+                  {currentOffice.landmark || (currentOffice.address ? "" : "Contact regional advisor for assistance")}
                 </p>
               </DetailBlock>
 
@@ -348,13 +348,22 @@ export default function OfficeLocator({ selectedBranch, onBranchChange, branches
 
               {/* Contact */}
               <DetailBlock label="Contact" icon={<Phone className="w-3.5 h-3.5" />}>
-                <a
-                  href={`tel:${currentOffice.phone.replace(/\s/g, "")}`}
-                  className="block text-sm font-semibold mb-1 hover:underline font-tabular"
-                  style={{ fontFamily: "var(--font-display)", color: "var(--color-ink-700)" }}
-                >
-                  {currentOffice.phone}
-                </a>
+                {currentOffice.phone ? (
+                  <a
+                    href={`tel:${currentOffice.phone.replace(/\s/g, "")}`}
+                    className="block text-sm font-semibold mb-1 hover:underline font-tabular"
+                    style={{ fontFamily: "var(--font-display)", color: "var(--color-ink-700)" }}
+                  >
+                    {currentOffice.phone}
+                  </a>
+                ) : (
+                  <p
+                    className="text-sm font-semibold mb-1 font-tabular"
+                    style={{ fontFamily: "var(--font-display)", color: "var(--color-text-muted)" }}
+                  >
+                    Official line pending
+                  </p>
+                )}
                 <a
                   href={`mailto:${currentOffice.email}`}
                   className="block text-xs hover:underline"
@@ -370,56 +379,62 @@ export default function OfficeLocator({ selectedBranch, onBranchChange, branches
               <DetailBlock label="Quick Actions" icon={<Zap className="w-3.5 h-3.5" />}>
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
-                    <motion.a
-                      href={`tel:${(currentOffice.phone || currentOffice.whatsapp).replace(/\s+/g, "")}`}
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      transition={{ type: "spring", stiffness: 380, damping: 22 }}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white"
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        backgroundColor: "var(--color-ink-700)",
-                      }}
-                      aria-label={`Call the ${currentOffice.city} office`}
-                    >
-                      <Phone className="w-4 h-4" />
-                      Call
-                    </motion.a>
-                    <motion.a
-                      href={`https://wa.me/${currentOffice.whatsapp}?text=${encodeURIComponent(
-                        `Hello, I'd like to speak with a Trust Bricks Properties advisor at your ${currentOffice.city} office.`
-                      )}`}
+                    {currentOffice.phone ? (
+                      <motion.a
+                        href={`tel:${currentOffice.phone.replace(/\s+/g, "")}`}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        transition={{ type: "spring", stiffness: 380, damping: 22 }}
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white"
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          backgroundColor: "var(--color-ink-700)",
+                        }}
+                        aria-label={`Call the ${currentOffice.city} office`}
+                      >
+                        <Phone className="w-4 h-4" />
+                        Call
+                      </motion.a>
+                    ) : null}
+                    {currentOffice.whatsapp ? (
+                      <motion.a
+                        href={`https://wa.me/${currentOffice.whatsapp}?text=${encodeURIComponent(
+                          `Hello, I'd like to speak with a Trust Bricks Properties advisor at your ${currentOffice.city} office.`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        transition={{ type: "spring", stiffness: 380, damping: 22 }}
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white"
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          backgroundColor: "#25D366",
+                        }}
+                        aria-label={`WhatsApp the ${currentOffice.city} office`}
+                      >
+                        <WhatsAppIcon className="w-4 h-4" />
+                        WhatsApp
+                      </motion.a>
+                    ) : null}
+                  </div>
+                  {currentOffice.address && currentOffice.mapQuery ? (
+                    <a
+                      href={`https://maps.google.com/?q=${currentOffice.mapQuery}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      transition={{ type: "spring", stiffness: 380, damping: 22 }}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-colors duration-[180ms] hover:border-[var(--color-ink-700)] hover:text-[var(--color-ink-700)]"
                       style={{
                         fontFamily: "var(--font-display)",
-                        backgroundColor: "#25D366",
+                        borderColor: "var(--color-border)",
+                        color: "var(--color-text-body)",
                       }}
-                      aria-label={`WhatsApp the ${currentOffice.city} office`}
+                      aria-label={`Open ${currentOffice.city} office in Google Maps`}
                     >
-                      <WhatsAppIcon className="w-4 h-4" />
-                      WhatsApp
-                    </motion.a>
-                  </div>
-                  <a
-                    href={`https://maps.google.com/?q=${currentOffice.mapQuery}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-colors duration-[180ms] hover:border-[var(--color-ink-700)] hover:text-[var(--color-ink-700)]"
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      borderColor: "var(--color-border)",
-                      color: "var(--color-text-body)",
-                    }}
-                    aria-label={`Open ${currentOffice.city} office in Google Maps`}
-                  >
-                    <MapPin className="w-4 h-4" />
-                    Get Directions
-                  </a>
+                      <MapPin className="w-4 h-4" />
+                      Get Directions
+                    </a>
+                  ) : null}
                 </div>
                 <p
                   className="text-[10px] mt-3"

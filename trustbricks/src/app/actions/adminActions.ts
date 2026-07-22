@@ -125,7 +125,7 @@ export async function getAdminConfig() {
         rcNumber: "9552712"
       },
       officers: [
-        { id: "1", name: "Adewale Fashola", email: "adewale@trustbrickproperties.ng", role: "Senior Conversion Officer", branch: "Lagos Hub" },
+        { id: "1", name: "Adewale Fashola", email: "adewale@trustbrickproperties.ng", role: "Senior Conversion Officer", branch: "Lagos Office" },
         { id: "2", name: "Amina Usman", email: "amina@trustbrickproperties.ng", role: "Lead Conversion Officer", branch: "Abuja (HQ)" }
       ]
     };

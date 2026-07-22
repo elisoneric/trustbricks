@@ -8,20 +8,20 @@ import { sendMessageToGemini } from "@/app/actions/chatActions";
 
 /* ── WHATSAPP NUMBERS PER STATE (Fallback) ──────────────────────────────────────────── */
 const FALLBACK_WA_NUMBERS: Record<string, string> = {
-  abuja:   "+2348030000001",
-  lagos:   "+2348050000002",
-  kano:    "+2348110000005",
-  kwara:   "+2348110000006",
-  yola:    "+2348070000003",
-  benue:   "+2348110000007",
-  ogun:    "+2348110000008",
-  lokoja:  "+2348110000009",
-  calabar: "+2348110000010",
-  minna:   "+2348110000011",
-  ibadan:  "+2348110000012",
-  ekiti:   "+2348110000013",
-  bauchi:  "+2348110000014",
-  kaduna:  "+2348090000004",
+  abuja:   "+2347078387777",
+  lagos:   "+2349065652920",
+  kano:    "+2348085537624",
+  kwara:   "",
+  yola:    "+2349136881719",
+  benue:   "+2347037382530",
+  ogun:    "",
+  lokoja:  "",
+  calabar: "",
+  minna:   "+2348020772033",
+  ibadan:  "+2347031631941",
+  ekiti:   "",
+  bauchi:  "+2349032899612",
+  kaduna:  "+2348141735416",
 };
 
 interface Message {

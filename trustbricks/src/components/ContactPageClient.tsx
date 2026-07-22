@@ -15,6 +15,19 @@ interface BranchRecord {
   email: string;
 }
 
+const DEFAULT_BRANCH_MAP: Record<string, { address: string; phone: string }> = {
+  abuja:   { address: "Area 3, block 5, House 4 Cross River Street Garki, Abuja", phone: "+2347078387777" },
+  lagos:   { address: "TOWRY CLOSE, IDEJO STREET ,OFF ADEOLA ODEKU VICTORIA ISLAND,LAGOS", phone: "+2349065652920" },
+  kano:    { address: "10/24 Ruqayya Plaza, Civic Centre, Opposite MTN.", phone: "+2348085537624" },
+  ibadan:  { address: "No 19 Oshin street, Bodija Estate, Ibadan.", phone: "+2347031631941" },
+  minna:   { address: "Jaiye Plaza shiroro road opposite unity block Minna.", phone: "+2348020772033" },
+  yola:    { address: "Abdullahi Bashir Road Dougerei", phone: "+2349136881719" },
+  adamawa: { address: "Abdullahi Bashir Road Dougerei", phone: "+2349136881719" },
+  kaduna:  { address: "FIRST FLOOR, SUIT 212, 11 COURSE ROAD OPP 54 COMPLEX AMSSCO PLAZA BY MURTALA SQUARE KADUNA", phone: "+2348141735416" },
+  bauchi:  { address: "F1 Jos Road, Adjacent AHMIS Filling Station Bauchi.", phone: "+2349032899612" },
+  benue:   { address: "No 7 Ashby Investment House, New Bridge Road, Makurdi", phone: "+2347037382530" },
+};
+
 export default function ContactPageClient({ branches }: { branches: BranchRecord[] }) {
   const firstBranchId = branches[0]?.id || "";
   const [formData, setFormData] = useState({
@@ -40,7 +53,15 @@ export default function ContactPageClient({ branches }: { branches: BranchRecord
     });
   };
 
-  const selectedOffice = branches.find((b) => b.id === formData.office) || branches[0];
+  const rawOffice = branches.find((b) => b.id === formData.office) || branches[0];
+  const branchKey = rawOffice?.name?.toLowerCase() || "";
+  const fallback = DEFAULT_BRANCH_MAP[branchKey];
+
+  const selectedOffice = rawOffice ? {
+    ...rawOffice,
+    address: (rawOffice.address && !rawOffice.address.includes("Cadastral") && !rawOffice.address.includes("Broad Street")) ? rawOffice.address : (fallback?.address || rawOffice.address || ""),
+    phone: (rawOffice.phone && !rawOffice.phone.includes("803 000 0001")) ? rawOffice.phone : (fallback?.phone || rawOffice.phone || ""),
+  } : null;
 
   return (
     <section className="max-w-6xl mx-auto px-6 lg:px-8">
@@ -186,10 +207,13 @@ export default function ContactPageClient({ branches }: { branches: BranchRecord
                   </h4>
                 </div>
                 <p className="text-xs text-[var(--color-text-body)] flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-[var(--color-text-muted)] shrink-0" /> {selectedOffice.address}{selectedOffice.city || selectedOffice.state ? `, ${selectedOffice.city}, ${selectedOffice.state}` : ""}
+                  <MapPin className="w-3.5 h-3.5 text-[var(--color-text-muted)] shrink-0" />
+                  {selectedOffice.address
+                    ? `${selectedOffice.address}${selectedOffice.city || selectedOffice.state ? `, ${selectedOffice.city}, ${selectedOffice.state}` : ""}`
+                    : "Office location details coming soon"}
                 </p>
                 <p className="text-xs text-[var(--color-text-body)] flex items-center gap-1.5 font-tabular">
-                  <Phone className="w-3.5 h-3.5 text-[var(--color-text-muted)] shrink-0" /> {selectedOffice.phone}
+                  <Phone className="w-3.5 h-3.5 text-[var(--color-text-muted)] shrink-0" /> {selectedOffice.phone || "Official line pending"}
                 </p>
                 <p className="text-xs text-[var(--color-text-body)] flex items-center gap-1.5 break-all">
                   <Mail className="w-3.5 h-3.5 text-[var(--color-text-muted)] shrink-0" /> {selectedOffice.email}

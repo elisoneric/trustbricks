@@ -334,7 +334,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                           className="w-full px-2 py-2 bg-white border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
                         >
                           <option value="Abuja (HQ)">Abuja (HQ)</option>
-                          <option value="Lagos Hub">Lagos Hub</option>
+                          <option value="Lagos Office">Lagos Office</option>
                           <option value="Kano Center">Kano Center</option>
                           <option value="Kwara Center">Kwara Center</option>
                           <option value="Adamawa">Adamawa</option>
