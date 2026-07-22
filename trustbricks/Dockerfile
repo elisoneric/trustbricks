@@ -1,4 +1,9 @@
 FROM node:22-alpine AS base
+# Prisma's schema/query engine binaries need OpenSSL — Alpine doesn't ship
+# it by default, and without it the engine crashes with an unparseable
+# error instead of running (surfaces as "Could not parse schema engine
+# response... Unexpected token 'E', 'Error load'...").
+RUN apk add --no-cache openssl
 
 # Install dependencies only when needed
 FROM base AS deps
