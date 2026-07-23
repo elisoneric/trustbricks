@@ -7,6 +7,11 @@ import type { Role } from "@/lib/types";
 const prisma = new PrismaClient();
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  // Coolify sits behind Traefik (a reverse proxy) — without this, Auth.js
+  // rejects every request with "UntrustedHost" because the Host header it
+  // sees doesn't match what it infers from NEXTAUTH_URL. Safe to trust here
+  // since Traefik is the only thing routing traffic to this container.
+  trustHost: true,
   session: { strategy: "jwt" },
   pages: { signIn: "/admin/login" },
   providers: [
