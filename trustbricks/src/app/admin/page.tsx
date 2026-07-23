@@ -1,12 +1,22 @@
 import { getLeads, updateLeadStatus, getAdminConfig, updateSiteSettings, getBranches, createBranch, updateBranch, deleteBranch } from '@/app/actions/adminActions';
 import { getUsers, createUser, setUserActive } from '@/app/actions/userActions';
+import { getProperties } from '@/app/actions/propertyActions';
+import { getTestimonials } from '@/app/actions/testimonialActions';
+import { getJobs } from '@/app/actions/jobActions';
+import { getGalleryImages } from '@/app/actions/galleryActions';
+import { getBlogPosts } from '@/app/actions/blogActions';
 import { auth, signOut } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { format } from 'date-fns';
-import { Mail, Phone, ChevronDown, Plus, Settings, Users as UsersIcon, Database, LogOut, MapPin, ShieldCheck } from 'lucide-react';
+import { Mail, Phone, ChevronDown, Plus, Settings, Users as UsersIcon, Database, LogOut, MapPin, ShieldCheck, Home, Star, Briefcase, Image as ImageIcon, FileText } from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
 import BranchEditForm from '@/components/BranchEditForm';
+import PropertiesTab from '@/components/admin/PropertiesTab';
+import TestimonialsTab from '@/components/admin/TestimonialsTab';
+import CareersTab from '@/components/admin/CareersTab';
+import GalleryTab from '@/components/admin/GalleryTab';
+import BlogTab from '@/components/admin/BlogTab';
 
 export const metadata = {
   title: 'Admin Panel | Trust Bricks Properties Ltd',
@@ -30,6 +40,11 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
   const config = isSuperAdmin ? await getAdminConfig() : null;
   const { branches } = await getBranches();
   const usersResult = isSuperAdmin && tab === 'users' ? await getUsers() : null;
+  const propertiesResult = isSuperAdmin && tab === 'properties' ? await getProperties() : null;
+  const testimonialsResult = isSuperAdmin && tab === 'testimonials' ? await getTestimonials() : null;
+  const jobsResult = isSuperAdmin && tab === 'careers' ? await getJobs() : null;
+  const galleryResult = isSuperAdmin && tab === 'gallery' ? await getGalleryImages() : null;
+  const blogResult = isSuperAdmin && tab === 'blog' ? await getBlogPosts() : null;
   const myBranch = !isSuperAdmin ? branches?.find((b: any) => b.id === branchId) : null;
 
   const getStatusColor = (status: string) => {
@@ -136,6 +151,66 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
               >
                 <MapPin className="w-4 h-4" />
                 Branches
+              </Link>
+              <Link
+                href="/admin?tab=properties"
+                className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+                  tab === 'properties'
+                    ? 'bg-[#0D1F3C] text-white shadow-md'
+                    : 'bg-white hover:bg-slate-50 text-[#0D1F3C]/80 border border-slate-200/40'
+                }`}
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                <Home className="w-4 h-4" />
+                Properties
+              </Link>
+              <Link
+                href="/admin?tab=testimonials"
+                className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+                  tab === 'testimonials'
+                    ? 'bg-[#0D1F3C] text-white shadow-md'
+                    : 'bg-white hover:bg-slate-50 text-[#0D1F3C]/80 border border-slate-200/40'
+                }`}
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                <Star className="w-4 h-4" />
+                Testimonials
+              </Link>
+              <Link
+                href="/admin?tab=careers"
+                className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+                  tab === 'careers'
+                    ? 'bg-[#0D1F3C] text-white shadow-md'
+                    : 'bg-white hover:bg-slate-50 text-[#0D1F3C]/80 border border-slate-200/40'
+                }`}
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                <Briefcase className="w-4 h-4" />
+                Careers
+              </Link>
+              <Link
+                href="/admin?tab=gallery"
+                className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+                  tab === 'gallery'
+                    ? 'bg-[#0D1F3C] text-white shadow-md'
+                    : 'bg-white hover:bg-slate-50 text-[#0D1F3C]/80 border border-slate-200/40'
+                }`}
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                <ImageIcon className="w-4 h-4" />
+                Gallery
+              </Link>
+              <Link
+                href="/admin?tab=blog"
+                className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+                  tab === 'blog'
+                    ? 'bg-[#0D1F3C] text-white shadow-md'
+                    : 'bg-white hover:bg-slate-50 text-[#0D1F3C]/80 border border-slate-200/40'
+                }`}
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                <FileText className="w-4 h-4" />
+                Blog
               </Link>
             </>
           )}
@@ -583,6 +658,31 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                 </div>
               </div>
             </div>
+          )}
+
+          {/* TAB: PROPERTIES (SUPER_ADMIN only) */}
+          {isSuperAdmin && tab === 'properties' && (
+            <PropertiesTab properties={propertiesResult?.properties || []} />
+          )}
+
+          {/* TAB: TESTIMONIALS (SUPER_ADMIN only) */}
+          {isSuperAdmin && tab === 'testimonials' && (
+            <TestimonialsTab testimonials={testimonialsResult?.testimonials || []} />
+          )}
+
+          {/* TAB: CAREERS (SUPER_ADMIN only) */}
+          {isSuperAdmin && tab === 'careers' && (
+            <CareersTab jobs={jobsResult?.jobs || []} />
+          )}
+
+          {/* TAB: GALLERY (SUPER_ADMIN only) */}
+          {isSuperAdmin && tab === 'gallery' && (
+            <GalleryTab images={galleryResult?.images || []} />
+          )}
+
+          {/* TAB: BLOG (SUPER_ADMIN only) */}
+          {isSuperAdmin && tab === 'blog' && (
+            <BlogTab posts={blogResult?.posts || []} />
           )}
         </main>
       </div>
