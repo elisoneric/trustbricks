@@ -1,17 +1,44 @@
 'use server';
 
+import { PrismaClient } from '@prisma/client';
 import nodemailer from 'nodemailer';
+
+const prisma = new PrismaClient();
 
 export async function submitContactForm(data: {
   name: string;
   email: string;
   office: string;
+  officeBranchId?: string;
   message: string;
 }) {
   try {
     if (!data.name || !data.email || !data.message) {
       return { success: false, message: 'Missing required fields' };
     }
+
+    // Persist first so the message is never silently lost even if email fails
+    // or SMTP isn't configured — visible in the admin panel either way.
+    try {
+      await prisma.contactMessage.create({
+        data: {
+          name: data.name,
+          email: data.email,
+          office_branch_id: data.officeBranchId || null,
+          message: data.message,
+        },
+      });
+    } catch (dbErr) {
+      console.error('[CONTACT FORM] Failed to persist message:', dbErr);
+    }
+
+    const branch = data.officeBranchId
+      ? await prisma.branch.findUnique({ where: { id: data.officeBranchId } })
+      : null;
+    const hqBranch = branch?.isHQ ? null : await prisma.branch.findFirst({ where: { isHQ: true } });
+    const toEmail = branch?.csuEmail || branch?.email || 'customerservice@trustbrickspropertieslimited.com.ng';
+    const ccEmail = hqBranch ? (hqBranch.csuEmail || hqBranch.email) : null;
+    const ccList = ccEmail && ccEmail !== toEmail ? [ccEmail] : undefined;
 
     if (process.env.SMTP_USER && process.env.SMTP_PASS) {
       const transporter = nodemailer.createTransport({
@@ -26,7 +53,8 @@ export async function submitContactForm(data: {
 
       await transporter.sendMail({
         from: `"Trust Bricks Contact Form" <${process.env.SMTP_USER}>`,
-        to: 'customerservice@trustbrickspropertieslimited.com.ng',
+        to: toEmail,
+        cc: ccList,
         replyTo: data.email,
         subject: `Contact Form: ${data.name} — ${data.office}`,
         html: `

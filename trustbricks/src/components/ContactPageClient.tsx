@@ -47,6 +47,7 @@ export default function ContactPageClient({ branches }: { branches: BranchRecord
         name: formData.name,
         email: formData.email,
         office: office?.name || formData.office,
+        officeBranchId: office?.id,
         message: formData.message,
       });
       setSubmitted(true);
