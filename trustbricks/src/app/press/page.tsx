@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import GlobalNavbar from "@/components/GlobalNavbar";
 import Footer from "@/components/Footer";
-import { Calendar, ArrowRight, Rss } from "lucide-react";
+import { Calendar, ArrowRight } from "lucide-react";
 
 const ARTICLES = [
   {
@@ -86,31 +86,6 @@ export default function PressPage() {
               </motion.article>
             ))}
           </div>
-
-          {/* Media Kit Section */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="mt-16 bg-[var(--color-ink-700)] rounded-3xl p-8 md:p-12 text-white flex flex-col md:flex-row justify-between items-center gap-8"
-          >
-            <div className="space-y-3 max-w-xl">
-              <h2 className="text-2xl font-bold flex items-center gap-2" style={{ fontFamily: "var(--font-display)" }}>
-                <Rss className="w-6 h-6 text-[var(--color-clay-500)]" /> Media Kit & Resources
-              </h2>
-              <p className="text-sm text-white/70 leading-relaxed">
-                Looking for brand assets, logos, office photos, or certified executive headshots of the Trust Bricks management team? Download our official package.
-              </p>
-            </div>
-            <div>
-              <a
-                href="mailto:press@trustbrickspropertieslimited.com.ng?subject=Media Kit Request"
-                className="px-6 py-3.5 rounded-xl bg-[var(--color-clay-500)] hover:bg-[var(--color-clay-600)] text-white font-bold text-sm transition-all duration-200 cursor-pointer shadow-lg inline-block"
-              >
-                Request Media Kit
-              </a>
-            </div>
-          </motion.div>
         </section>
       </main>
 

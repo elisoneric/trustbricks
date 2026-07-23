@@ -209,7 +209,11 @@ export default function ContactPageClient({ branches }: { branches: BranchRecord
                 <p className="text-xs text-[var(--color-text-body)] flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-[var(--color-text-muted)] shrink-0" />
                   {selectedOffice.address
-                    ? `${selectedOffice.address}${selectedOffice.city || selectedOffice.state ? `, ${selectedOffice.city}, ${selectedOffice.state}` : ""}`
+                    ? [
+                        selectedOffice.address,
+                        selectedOffice.city && !selectedOffice.address.includes(selectedOffice.city) ? selectedOffice.city : null,
+                        selectedOffice.state && !selectedOffice.address.includes(selectedOffice.state) ? selectedOffice.state : null,
+                      ].filter(Boolean).join(", ")
                     : "Office location details coming soon"}
                 </p>
                 <p className="text-xs text-[var(--color-text-body)] flex items-center gap-1.5 font-tabular">

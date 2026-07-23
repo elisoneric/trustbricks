@@ -15,7 +15,7 @@ const getConfigPath = () => path.join(process.cwd(), 'src', 'app', 'actions', 'a
 export async function getBranches() {
   try {
     const branches = await prisma.branch.findMany({
-      orderBy: { name: 'asc' },
+      orderBy: [{ name: 'asc' }, { id: 'asc' }],
     });
     return { success: true, branches };
   } catch (error: any) {
