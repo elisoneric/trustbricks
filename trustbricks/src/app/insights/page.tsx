@@ -1,50 +1,24 @@
-import Image from "next/image";
-
-import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, FileText } from "lucide-react";
 import GlobalNavbar from "@/components/GlobalNavbar";
+import Footer from "@/components/Footer";
+import { getBlogPosts } from "@/app/actions/blogActions";
+import { getAdminConfig } from "@/app/actions/adminActions";
 
 export const metadata = {
   title: "Insights & News | Trust Bricks Properties Ltd",
   description: "Stay updated with the latest in Nigerian real estate, PenCom RSA mortgages, and homeownership tips.",
 };
 
-// Placeholder posts until the Blog admin tab (Phase 4) is wired up to the
-// BlogPost model — this page previously used an unfinished Sanity CMS
-// integration that was never configured with real content.
-const MOCK_POSTS = [
-  {
-    _id: "1",
-    title: "How to Access 25% of Your RSA for a Mortgage",
-    authorName: "Amina Yusuf",
-    mainImage: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    publishedAt: new Date().toISOString(),
-  },
-  {
-    _id: "2",
-    title: "Top 5 Up-and-Coming Neighborhoods in Abuja",
-    authorName: "Chinedu Okonkwo",
-    mainImage: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    publishedAt: new Date(Date.now() - 86400000).toISOString(),
-  },
-  {
-    _id: "3",
-    title: "Understanding the New PenCom Guidelines for 2024",
-    authorName: "Sarah Adebayo",
-    mainImage: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    publishedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-  },
-];
-
 export default async function InsightsPage() {
-  const posts = MOCK_POSTS;
+  const { posts } = await getBlogPosts(true);
+  const config = await getAdminConfig();
 
   return (
     <div className="min-h-screen bg-[var(--color-body-bg)] flex flex-col font-sans antialiased">
       <GlobalNavbar />
 
-      {/* Header Section */}
       <section className="relative overflow-hidden pt-32 pb-16 px-6 lg:px-8 bg-[var(--color-ink-700)] text-white">
-        {/* Brick coursing texture, quiet */}
         <div
           className="absolute inset-0 pattern-brick opacity-[0.05]"
           style={{ ["--brick-line" as any]: "white", ["--brick-bg" as any]: "transparent" }}
@@ -59,56 +33,55 @@ export default async function InsightsPage() {
         </div>
       </section>
 
-      {/* Blog Grid */}
       <main className="flex-grow max-w-7xl mx-auto px-6 lg:px-8 py-16 w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post) => (
-            <div key={post._id} className="group block h-full">
-              <article className="bg-[var(--color-card)] rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-sm h-full flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-[var(--color-ink-700)]/5">
-                {/* Image Container */}
-                <div className="relative h-56 w-full overflow-hidden bg-[var(--color-mortar-50)]">
-                  {post.mainImage ? (
-                    <Image
-                      src={post.mainImage}
-                      alt={post.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[var(--color-text-muted)]">
-                      No Image
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </div>
-
-                {/* Content */}
-                <div className="p-6 flex flex-col flex-grow">
-                  <div className="flex items-center gap-2 text-xs font-medium text-[var(--color-clay-500)] mb-3 uppercase tracking-wider">
-                    <span className="font-tabular">{new Date(post.publishedAt).toLocaleDateString('en-NG', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+        {!posts || posts.length === 0 ? (
+          <div className="text-center py-16 text-[var(--color-text-muted)]">
+            <FileText className="w-10 h-10 mx-auto mb-3 opacity-40" />
+            <p className="text-sm">No posts published yet — check back soon.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post: any) => (
+              <Link key={post.id} href={`/insights/${post.slug}`} className="group block h-full">
+                <article className="bg-[var(--color-card)] rounded-2xl overflow-hidden border border-[var(--color-border)] shadow-sm h-full flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-[var(--color-ink-700)]/5">
+                  <div className="relative h-56 w-full overflow-hidden bg-[var(--color-mortar-50)]">
+                    {post.coverImage ? (
+                      <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-[var(--color-text-muted)]">No Image</div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
 
-                  <h2 className="text-xl font-bold text-[var(--color-text-heading)] mb-4 line-clamp-2 group-hover:text-[var(--color-clay-500)] transition-colors" style={{ fontFamily: "var(--font-display)" }}>
-                    {post.title}
-                  </h2>
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="flex items-center gap-2 text-xs font-medium text-[var(--color-clay-500)] mb-3 uppercase tracking-wider">
+                      <span className="font-tabular">{new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-NG', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                    </div>
 
-                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-[var(--color-border)]">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-[var(--color-ink-700)] flex items-center justify-center text-[10px] font-bold text-white uppercase">
-                        {post.authorName ? post.authorName.charAt(0) : 'T'}
+                    <h2 className="text-xl font-bold text-[var(--color-text-heading)] mb-4 line-clamp-2 group-hover:text-[var(--color-clay-500)] transition-colors" style={{ fontFamily: "var(--font-display)" }}>
+                      {post.title}
+                    </h2>
+
+                    <div className="mt-auto flex items-center justify-between pt-4 border-t border-[var(--color-border)]">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-[var(--color-ink-700)] flex items-center justify-center text-[10px] font-bold text-white uppercase">
+                          {post.authorName ? post.authorName.charAt(0) : 'T'}
+                        </div>
+                        <span className="text-sm font-medium text-[var(--color-text-body)]">
+                          {post.authorName || 'Trust Bricks Team'}
+                        </span>
                       </div>
-                      <span className="text-sm font-medium text-[var(--color-text-body)]">
-                        {post.authorName || 'Trust Bricks Team'}
-                      </span>
+                      <ArrowRight className="w-5 h-5 text-[var(--color-clay-500)] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                     </div>
-                    <ArrowRight className="w-5 h-5 text-[var(--color-clay-500)] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                   </div>
-                </div>
-              </article>
-            </div>
-          ))}
-        </div>
+                </article>
+              </Link>
+            ))}
+          </div>
+        )}
       </main>
+
+      <Footer siteSettings={config?.site} />
     </div>
   );
 }

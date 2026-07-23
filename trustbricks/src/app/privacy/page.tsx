@@ -1,9 +1,16 @@
-"use client";
-
 import GlobalNavbar from "@/components/GlobalNavbar";
 import Footer from "@/components/Footer";
+import { getAdminConfig } from "@/app/actions/adminActions";
 
-export default function PrivacyPolicyPage() {
+export const metadata = {
+  title: "Privacy Policy | Trust Bricks Properties Ltd",
+};
+
+export default async function PrivacyPolicyPage() {
+  const config = await getAdminConfig();
+  const dpoName = config?.site?.dpoName || "";
+  const dpoEmail = config?.site?.dpoEmail || "dpo@trustbrickspropertieslimited.com.ng";
+
   return (
     <div className="min-h-screen bg-[var(--color-body-bg)] flex flex-col font-sans antialiased">
       <GlobalNavbar />
@@ -26,7 +33,7 @@ export default function PrivacyPolicyPage() {
                 <strong>Data Controller:</strong> Trust Bricks Properties Ltd is the controller and responsible for your personal data.
               </p>
               <p className="mt-2">
-                <strong>Contact Details:</strong> For any privacy-specific concerns, you can reach our Data Protection Officer (DPO) at dpo@trustbricks.com or visit any of our regional offices.
+                <strong>Contact Details:</strong> For any privacy-specific concerns, you can reach our Data Protection Officer{dpoName ? ` (${dpoName})` : " (DPO)"} at {dpoEmail} or visit any of our regional offices.
               </p>
             </section>
 
@@ -104,7 +111,7 @@ export default function PrivacyPolicyPage() {
         </section>
       </main>
 
-      <Footer />
+      <Footer siteSettings={config?.site} />
     </div>
   );
 }

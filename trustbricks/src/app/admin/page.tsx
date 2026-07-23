@@ -454,7 +454,10 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                   const vision = formData.get('vision') as string;
                   const mission = formData.get('mission') as string;
                   const aboutBody = formData.get('aboutBody') as string;
-                  await updateSiteSettings({ slogan, heroTitle, heroSubtitle, companyPhone, companyEmail, rcNumber, dpoName, dpoEmail, vision, mission, aboutBody });
+                  const aboutHeroImage = formData.get('aboutHeroImage') as string;
+                  const coreValues = formData.get('coreValues') as string;
+                  const leadershipTeam = formData.get('leadershipTeam') as string;
+                  await updateSiteSettings({ slogan, heroTitle, heroSubtitle, companyPhone, companyEmail, rcNumber, dpoName, dpoEmail, vision, mission, aboutBody, aboutHeroImage, coreValues, leadershipTeam });
                 }} className="space-y-6">
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -517,6 +520,25 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">About Page Body</label>
                         <textarea name="aboutBody" rows={4} defaultValue={config.site.aboutBody} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35 resize-none" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">About Page Hero Image URL</label>
+                        <input name="aboutHeroImage" type="text" defaultValue={config.site.aboutHeroImage || ''} placeholder="/uploads/... or full URL" className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-slate-100">
+                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Core Values &amp; Leadership (advanced — raw JSON)</p>
+                    <div className="space-y-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Core Values — JSON array of {'{'}title, description, icon{'}'}</label>
+                        <textarea name="coreValues" rows={4} defaultValue={config.site.coreValues} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35 resize-none" />
+                        <p className="text-[10px] text-slate-400">Icon options: Award, Building, Heart, Star, ShieldCheck, Handshake, TrendingUp, Users</p>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Leadership Team — JSON array of {'{'}name, title, photoUrl, bio{'}'}</label>
+                        <textarea name="leadershipTeam" rows={4} defaultValue={config.site.leadershipTeam} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35 resize-none" />
                       </div>
                     </div>
                   </div>

@@ -102,6 +102,14 @@ async function main() {
   }
 
   // 4. Seed SiteSettings singleton row (was previously a JSON file, wiped on every redeploy)
+  //    Vision/mission/core values default to the same copy that used to be hardcoded on the
+  //    About page, so admin has real starting content to edit rather than a blank slate.
+  const defaultCoreValues = JSON.stringify([
+    { title: 'Integrity First', description: 'We maintain absolute compliance with federal guidelines and coordinate honestly with all licensed PFAs and mortgage banks.', icon: 'Award' },
+    { title: 'Customer Obsession', description: 'Navigating real estate paperwork can be daunting. We do the heavy lifting to ensure you can focus on moving into your home.', icon: 'Building' },
+    { title: 'Teamwork & Speed', description: 'Our regional hubs cooperate directly to synchronize files between state land ministries, commercial banks, and PFAs.', icon: 'Heart' },
+  ]);
+
   await prisma.siteSettings.upsert({
     where: { id: 'singleton' },
     update: {},
@@ -113,6 +121,12 @@ async function main() {
       companyPhone: '+234 901 234 5678',
       companyEmail: 'hq@trustbrickspropertieslimited.com.ng',
       rcNumber: '9552712',
+      dpoName: '',
+      dpoEmail: 'dpo@trustbrickspropertieslimited.com.ng',
+      vision: 'To become the most reliable and transparent gateway to homeownership in Nigeria, enabling every citizen to effortlessly transition from tenant to homeowner using their pension assets as leverage.',
+      mission: 'To simplify the complexity of PFA approvals and primary mortgage bank requirements. We guide our clients through structured real estate options that conform completely with National Pension Commission guidelines.',
+      coreValues: defaultCoreValues,
+      aboutBody: 'Trust Bricks Properties Ltd is a mortgage facilitation and real estate advisory firm in Nigeria. We assist active contributors under the Contributory Pension Scheme (CPS) in accessing up to 25% of their RSA balance as equity contribution towards residential mortgages, in accordance with PenCom guidelines.',
     },
   });
   console.log('SiteSettings seeded.');
