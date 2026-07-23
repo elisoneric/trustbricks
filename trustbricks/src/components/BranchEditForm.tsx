@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { updateBranch, deleteBranch } from "@/app/actions/adminActions";
-import { MapPin, Phone, Mail, Trash, Pencil, X, Check, Building, MessageCircle, Tag, Clock, ShieldCheck } from "lucide-react";
+import { MapPin, Phone, Mail, Trash, Pencil, X, Check, Building, MessageCircle, Tag, Clock, ShieldCheck, Locate } from "lucide-react";
 
 interface BranchEditFormProps {
   branch: {
@@ -21,6 +21,8 @@ interface BranchEditFormProps {
     csuEmail?: string;
     csuPhone?: string;
     isHQ?: boolean;
+    lat?: number | null;
+    lng?: number | null;
   };
 }
 
@@ -39,11 +41,17 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
   const [csuEmail, setCsuEmail] = useState(branch.csuEmail || "");
   const [csuPhone, setCsuPhone] = useState(branch.csuPhone || "");
   const [isHQ, setIsHQ] = useState(branch.isHQ || false);
+  const [lat, setLat] = useState(branch.lat != null ? String(branch.lat) : "");
+  const [lng, setLng] = useState(branch.lng != null ? String(branch.lng) : "");
   const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
     setSaving(true);
-    await updateBranch(branch.id, { name, iconType, phone, whatsapp, email, address, city, state, landmark, hours, csuEmail, csuPhone, isHQ });
+    await updateBranch(branch.id, {
+      name, iconType, phone, whatsapp, email, address, city, state, landmark, hours, csuEmail, csuPhone, isHQ,
+      lat: lat ? parseFloat(lat) : undefined,
+      lng: lng ? parseFloat(lng) : undefined,
+    });
     setSaving(false);
     setEditing(false);
   };
@@ -125,6 +133,11 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <input type="text" value={csuPhone} onChange={(e) => setCsuPhone(e.target.value)} placeholder="CSU Phone" className={inputClass} />
+            </div>
+            <div className="flex items-center gap-2">
+              <Locate className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <input type="text" inputMode="decimal" value={lat} onChange={(e) => setLat(e.target.value)} placeholder="Latitude (e.g. 9.0765)" className={`${inputClass} max-w-[160px]`} />
+              <input type="text" inputMode="decimal" value={lng} onChange={(e) => setLng(e.target.value)} placeholder="Longitude (e.g. 7.3986)" className={`${inputClass} max-w-[160px]`} />
             </div>
             <label className="flex items-center gap-2 text-xs font-semibold text-slate-600 pl-1">
               <input type="checkbox" checked={isHQ} onChange={(e) => setIsHQ(e.target.checked)} className="rounded" />

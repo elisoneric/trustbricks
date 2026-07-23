@@ -14,10 +14,11 @@ interface NavLink {
 
 /* ── CONSTANTS ──────────────────────────────────────────────────────────── */
 const NAV_LINKS: NavLink[] = [
-  { label: "Home",         href: "/" },
-  { label: "How It Works", href: "/#how-it-works" },
-  { label: "Our Offices",  href: "/#offices" },
-  { label: "Contact",      href: "/contact" },
+  { label: "Home",       href: "/" },
+  { label: "Properties", href: "/properties" },
+  { label: "Branches",   href: "/branches" },
+  { label: "Gallery",    href: "/gallery" },
+  { label: "Contact",    href: "/contact" },
 ];
 
 /* ── FRAMER MOTION VARIANTS ─────────────────────────────────────────────── */

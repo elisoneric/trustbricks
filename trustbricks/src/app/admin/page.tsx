@@ -564,6 +564,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                       csuEmail: formData.get('csuEmail') as string,
                       csuPhone: formData.get('csuPhone') as string,
                       isHQ: formData.get('isHQ') === 'on',
+                      lat: formData.get('lat') ? parseFloat(formData.get('lat') as string) : undefined,
+                      lng: formData.get('lng') ? parseFloat(formData.get('lng') as string) : undefined,
                     };
                     await createBranch(data);
                   }} className="space-y-4">
@@ -629,6 +631,16 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">CSU Phone</label>
                         <input name="csuPhone" placeholder="+234..." className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Latitude (for Branches map)</label>
+                        <input name="lat" type="text" inputMode="decimal" placeholder="e.g. 9.0765" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Longitude</label>
+                        <input name="lng" type="text" inputMode="decimal" placeholder="e.g. 7.3986" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                       </div>
                     </div>
                     <label className="flex items-center gap-2 text-xs font-semibold text-slate-600">

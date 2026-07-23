@@ -7,6 +7,8 @@ export default function Footer({ siteSettings }: { siteSettings?: any } = {}) {
     { label: 'About Us', href: '/about' },
     { label: 'How It Works', href: '/how-it-works' },
     { label: 'Mortgage Advisory', href: '/mortgage-advisory' },
+    { label: 'Properties', href: '/properties' },
+    { label: 'Gallery', href: '/gallery' },
     { label: 'Careers', href: '/careers' },
     { label: 'Press & Media', href: '/press' },
   ];
@@ -119,9 +121,19 @@ export default function Footer({ siteSettings }: { siteSettings?: any } = {}) {
 
       <div className="max-w-7xl mx-auto px-6 border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40 font-medium">
         <p className="font-tabular">TRUST BRICKS PROPERTIES LTD. © 2026 (RC: 9552712). All rights reserved.</p>
-        <p className="flex items-center gap-2">
-          <ShieldCheck /> Operating in compliance with PenCom RSA Equity Contribution Guidelines.
-        </p>
+        <div className="flex items-center gap-6">
+          <p className="flex items-center gap-2">
+            <ShieldCheck /> Operating in compliance with PenCom RSA Equity Contribution Guidelines.
+          </p>
+          <a
+            href="https://equity.trustbrickspropertieslimited.com.ng"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-[var(--color-clay-200)] transition-colors font-bold"
+          >
+            Staff Login
+          </a>
+        </div>
       </div>
     </footer>
   );
