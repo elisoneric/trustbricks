@@ -9,7 +9,11 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json* ./
-RUN npm ci
+# --legacy-peer-deps: react-simple-maps@3 and next-auth@5-beta declare peer
+# ranges (React 18, nodemailer ^7||^8) that lag behind what's actually
+# installed (React 19, nodemailer 9) — both work fine at runtime, this just
+# skips npm's strict peer resolution to match how the lockfile was generated.
+RUN npm ci --legacy-peer-deps
 
 # Rebuild the source code only when needed
 FROM base AS builder
