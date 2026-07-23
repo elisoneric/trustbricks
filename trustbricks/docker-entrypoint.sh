@@ -29,11 +29,7 @@ echo "==> Applying database schema (prisma db push)"
 su-exec nextjs npx prisma db push --accept-data-loss || echo "WARNING: prisma db push encountered an issue, proceeding to start server..."
 
 echo "==> Syncing database seed & locations"
-if [ -f "prisma/seed-direct-sqlite.js" ]; then
-  su-exec nextjs node prisma/seed-direct-sqlite.js || echo "WARNING: node seed script encountered an issue, proceeding to start server..."
-else
-  su-exec nextjs npx prisma db seed || echo "WARNING: prisma db seed encountered an issue, proceeding to start server..."
-fi
+su-exec nextjs npx prisma db seed || echo "WARNING: prisma db seed encountered an issue, proceeding to start server..."
 
 echo "==> Starting Next.js standalone server as nextjs user on PORT=${PORT:-3000}"
 exec su-exec nextjs node server.js
