@@ -7,6 +7,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// SQLite has no native enum support in Prisma — role/category/status are
+// plain strings, constrained by TypeScript union types in src/lib/types.ts
+// and validated in the relevant server actions.
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("CSU_STAFF")
+  branch_id    String?
+  branch       Branch?  @relation(fields: [branch_id], references: [id])
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 model Branch {
   id        String   @id @default(cuid())
   name      String   @unique
@@ -20,9 +36,111 @@ model Branch {
   hours     String   @default("Mon – Fri: 8am – 5pm")
   mapQuery  String   @default("")
   iconType  String   @default("Landmark")
+  lat       Float?
+  lng       Float?
+  csuEmail  String   @default("")
+  csuPhone  String   @default("")
+  isHQ      Boolean  @default(false)
   leads     Lead[]
+  users     User[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model SiteSettings {
+  id             String   @id @default("singleton")
+  slogan         String   @default("We Value Your Trust")
+  heroTitle      String   @default("")
+  heroSubtitle   String   @default("")
+  companyPhone   String   @default("")
+  companyEmail   String   @default("")
+  rcNumber       String   @default("")
+  dpoName        String   @default("")
+  dpoEmail       String   @default("")
+  vision         String   @default("")
+  mission        String   @default("")
+  coreValues     String   @default("[]")
+  aboutHeroImage String?
+  aboutBody      String   @default("")
+  leadershipTeam String   @default("[]")
+  updatedAt      DateTime @updatedAt
+}
+
+model Property {
+  id          String   @id @default(cuid())
+  title       String
+  category    String   // "RESIDENTIAL" | "COMMERCIAL" | "LAND"
+  status      String   @default("AVAILABLE") // "AVAILABLE" | "UNDER_OFFER" | "SOLD"
+  description String   @default("")
+  price       Float?
+  priceLabel  String   @default("")
+  city        String
+  state       String
+  address     String   @default("")
+  bedrooms    Int?
+  bathrooms   Int?
+  sizeSqm     Float?
+  images      String   @default("[]")
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String   @default("")
+  quote     String
+  avatarUrl String?
+  rating    Int      @default(5)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model JobListing {
+  id                String   @id @default(cuid())
+  title             String
+  department        String   @default("")
+  location          String   @default("")
+  type              String   @default("Full-Time")
+  description       String   @default("")
+  requirements      String   @default("")
+  externalApplyUrl  String
+  published         Boolean  @default(true)
+  postedAt          DateTime @default(now())
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  url       String
+  caption   String   @default("")
+  category  String   @default("general")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model BlogPost {
+  id           String    @id @default(cuid())
+  title        String
+  slug         String    @unique
+  excerpt      String    @default("")
+  body         String
+  coverImage   String?
+  authorName   String    @default("Trust Bricks Team")
+  authorAvatar String?
+  published    Boolean   @default(false)
+  publishedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model ContactMessage {
+  id              String   @id @default(cuid())
+  name            String
+  email           String
+  office_branch_id String?
+  message         String
+  createdAt       DateTime @default(now())
 }
 
 model PfaRule {

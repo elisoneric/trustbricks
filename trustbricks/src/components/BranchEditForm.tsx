@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { updateBranch, deleteBranch } from "@/app/actions/adminActions";
-import { MapPin, Phone, Mail, Trash, Pencil, X, Check, Building, MessageCircle, Tag, Clock } from "lucide-react";
+import { MapPin, Phone, Mail, Trash, Pencil, X, Check, Building, MessageCircle, Tag, Clock, ShieldCheck } from "lucide-react";
 
 interface BranchEditFormProps {
   branch: {
@@ -18,6 +18,9 @@ interface BranchEditFormProps {
     whatsapp?: string;
     hours?: string;
     mapQuery?: string;
+    csuEmail?: string;
+    csuPhone?: string;
+    isHQ?: boolean;
   };
 }
 
@@ -33,11 +36,14 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
   const [state, setState] = useState(branch.state);
   const [landmark, setLandmark] = useState(branch.landmark || "");
   const [hours, setHours] = useState(branch.hours || "");
+  const [csuEmail, setCsuEmail] = useState(branch.csuEmail || "");
+  const [csuPhone, setCsuPhone] = useState(branch.csuPhone || "");
+  const [isHQ, setIsHQ] = useState(branch.isHQ || false);
   const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
     setSaving(true);
-    await updateBranch(branch.id, { name, iconType, phone, whatsapp, email, address, city, state, landmark, hours });
+    await updateBranch(branch.id, { name, iconType, phone, whatsapp, email, address, city, state, landmark, hours, csuEmail, csuPhone, isHQ });
     setSaving(false);
     setEditing(false);
   };
@@ -57,6 +63,9 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
     setState(branch.state);
     setLandmark(branch.landmark || "");
     setHours(branch.hours || "");
+    setCsuEmail(branch.csuEmail || "");
+    setCsuPhone(branch.csuPhone || "");
+    setIsHQ(branch.isHQ || false);
     setEditing(false);
   };
 
@@ -66,8 +75,11 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
   return (
     <div className="p-5 flex justify-between items-start gap-4 hover:bg-slate-50/20 transition-colors">
       <div className="space-y-1 flex-grow">
-        <h4 className="font-bold text-slate-900 text-base" style={{ fontFamily: "var(--font-display)" }}>
+        <h4 className="font-bold text-slate-900 text-base flex items-center gap-2" style={{ fontFamily: "var(--font-display)" }}>
           {branch.iconType} {branch.name}
+          {branch.isHQ && (
+            <span className="px-1.5 py-0.5 bg-[#E8600A]/10 text-[#E8600A] text-[9px] font-bold rounded uppercase">HQ</span>
+          )}
         </h4>
 
         {editing ? (
@@ -106,6 +118,18 @@ export default function BranchEditForm({ branch }: BranchEditFormProps) {
               <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <input type="text" value={hours} onChange={(e) => setHours(e.target.value)} placeholder="Hours (e.g. Mon – Fri: 8am – 5pm)" className={inputClass} />
             </div>
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <input type="text" value={csuEmail} onChange={(e) => setCsuEmail(e.target.value)} placeholder="CSU Email (for lead routing)" className={inputClass} />
+            </div>
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <input type="text" value={csuPhone} onChange={(e) => setCsuPhone(e.target.value)} placeholder="CSU Phone" className={inputClass} />
+            </div>
+            <label className="flex items-center gap-2 text-xs font-semibold text-slate-600 pl-1">
+              <input type="checkbox" checked={isHQ} onChange={(e) => setIsHQ(e.target.checked)} className="rounded" />
+              HQ branch (receives cc on every lead)
+            </label>
             <div className="flex gap-2 mt-2">
               <button
                 type="button"

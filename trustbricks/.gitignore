@@ -41,3 +41,7 @@ next-env.d.ts
 # Prisma
 /prisma/*.db
 /prisma/*.db-journal
+
+# User-uploaded images — local dev only; production uses a mounted volume
+/public/uploads/*
+!/public/uploads/.gitkeep

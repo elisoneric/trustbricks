@@ -234,7 +234,7 @@ export default function OfficeLocator({ selectedBranch, onBranchChange, branches
     <section
       id="offices"
       aria-labelledby="offices-heading"
-      className="py-24 lg:py-32"
+      className="pt-8 lg:pt-12 pb-24 lg:pb-32"
       style={{ backgroundColor: "var(--color-card)" }}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

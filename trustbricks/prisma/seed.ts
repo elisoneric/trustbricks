@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -32,6 +33,23 @@ async function main() {
   }
   console.log('Branches seeded.');
 
+  // Designate Abuja as HQ (receives cc on every lead) unless an HQ is already set
+  const existingHQ = await prisma.branch.findFirst({ where: { isHQ: true } });
+  if (!existingHQ) {
+    const abuja = await prisma.branch.findUnique({ where: { name: 'Abuja' } });
+    if (abuja) {
+      await prisma.branch.update({
+        where: { id: abuja.id },
+        data: {
+          isHQ: true,
+          csuEmail: abuja.csuEmail || abuja.email,
+          csuPhone: abuja.csuPhone || abuja.phone,
+        },
+      });
+      console.log('Abuja set as HQ branch.');
+    }
+  }
+
   // 2. Seed 18 PFAs (14 known + 4 placeholders for admin panel later)
   const pfas = [
     { name: 'Stanbic IBTC', minimum_threshold: 5000000 },
@@ -64,6 +82,40 @@ async function main() {
     });
   }
   console.log('18 PFAs seeded.');
+
+  // 3. Seed initial SUPER_ADMIN account (only if no users exist yet)
+  const userCount = await prisma.user.count();
+  if (userCount === 0) {
+    const seedEmail = process.env.SUPER_ADMIN_EMAIL || 'admin@trustbrickspropertieslimited.com.ng';
+    const seedPassword = process.env.SUPER_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || 'admin';
+    const passwordHash = await bcrypt.hash(seedPassword, 12);
+    await prisma.user.create({
+      data: {
+        name: 'Super Admin',
+        email: seedEmail,
+        passwordHash,
+        role: 'SUPER_ADMIN',
+        active: true,
+      },
+    });
+    console.log(`Seeded initial SUPER_ADMIN: ${seedEmail} — CHANGE THIS PASSWORD after first login.`);
+  }
+
+  // 4. Seed SiteSettings singleton row (was previously a JSON file, wiped on every redeploy)
+  await prisma.siteSettings.upsert({
+    where: { id: 'singleton' },
+    update: {},
+    create: {
+      id: 'singleton',
+      slogan: 'We Value Your Trust',
+      heroTitle: 'Your RSA Can Open Your Front Door',
+      heroSubtitle: 'Access up to 25% of your Retirement Savings Account (RSA) as equity contribution towards a residential mortgage under PenCom guidelines. We handle the verification, documentation, and PFA coordination.',
+      companyPhone: '+234 901 234 5678',
+      companyEmail: 'hq@trustbrickspropertieslimited.com.ng',
+      rcNumber: '9552712',
+    },
+  });
+  console.log('SiteSettings seeded.');
 
   console.log('Seeding finished.');
 }

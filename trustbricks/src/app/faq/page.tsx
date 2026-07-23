@@ -31,10 +31,6 @@ const FAQS: FAQItem[] = [
   {
     question: "How long does the entire PFA and PenCom approval process take?",
     answer: "Once all required documentation is submitted, the PFA has up to 10 working days to review and submit the application to PenCom. PenCom generally reviews and provides approvals within another 5 to 10 working days, after which funds are disbursed directly to the bank."
-  },
-  {
-    question: "Is there a minimum RSA balance required to qualify?",
-    answer: "While PenCom doesn't state a minimum balance, the actual limit depends on your PFA and the equity required for the home you wish to buy. For example, Stanbic IBTC requires a minimum RSA balance of ₦5,000,000 to process eligibility for their sponsored property lists."
   }
 ];
 

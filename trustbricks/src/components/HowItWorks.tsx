@@ -46,7 +46,7 @@ export default function HowItWorks({ onCheckStatus }: HowItWorksProps) {
   ];
 
   return (
-    <section id="how-it-works" className="py-32 bg-[var(--color-card)] relative overflow-hidden">
+    <section id="how-it-works" className="pt-20 lg:pt-32 pb-10 lg:pb-12 bg-[var(--color-card)] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-20">
           <span className="text-[var(--color-clay-500)] font-extrabold text-sm tracking-widest uppercase mb-4 block">The RSA Equity Contribution Process</span>

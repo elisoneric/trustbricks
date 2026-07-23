@@ -1,7 +1,9 @@
-import { getLeads, updateLeadStatus, getAdminConfig, updateSiteSettings, addOfficer, removeOfficer, adminLogin, adminLogout, getBranches, createBranch, updateBranch, deleteBranch } from '@/app/actions/adminActions';
+import { getLeads, updateLeadStatus, getAdminConfig, updateSiteSettings, getBranches, createBranch, updateBranch, deleteBranch } from '@/app/actions/adminActions';
+import { getUsers, createUser, setUserActive } from '@/app/actions/userActions';
+import { auth, signOut } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 import { format } from 'date-fns';
-import { cookies } from 'next/headers';
-import { Search, Filter, Mail, Phone, ChevronDown, Plus, Trash, Settings, Users, Database, LogOut, Lock, MapPin, Pencil } from 'lucide-react';
+import { Mail, Phone, ChevronDown, Plus, Settings, Users as UsersIcon, Database, LogOut, MapPin, ShieldCheck } from 'lucide-react';
 import React from 'react';
 import Link from 'next/link';
 import BranchEditForm from '@/components/BranchEditForm';
@@ -11,71 +13,24 @@ export const metadata = {
 };
 
 export default async function AdminDashboard({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
-  const cookieStore = await cookies();
-  const session = cookieStore.get('admin_session')?.value;
-  const isAuthenticated = session === 'authenticated';
-
-  // 1. GATED AUTHENTICATION LOCK SCREEN
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#081526] px-4 font-sans selection:bg-[#E8600A]">
-        {/* Decorative glowing orb */}
-        <div className="absolute w-[300px] h-[300px] bg-[#E8600A]/10 blur-[80px] rounded-full top-[15%] left-[20%] pointer-events-none" />
-        <div className="absolute w-[350px] h-[350px] bg-indigo-500/10 blur-[90px] rounded-full bottom-[15%] right-[20%] pointer-events-none" />
-
-        <div className="w-full max-w-[420px] bg-[#0D1F3C]/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-[0_30px_60px_rgba(0,0,0,0.4)] relative z-10 text-center space-y-6">
-          <div className="flex justify-center">
-            <div className="w-14 h-14 bg-gradient-to-tr from-[#E8600A] to-[#FF8C42] rounded-2xl flex items-center justify-center shadow-lg shadow-[#E8600A]/20">
-              <Lock className="w-6 h-6 text-white" />
-            </div>
-          </div>
-          
-          <div className="space-y-1.5">
-            <h1 className="text-2xl font-black text-white" style={{ fontFamily: "var(--font-display)" }}>
-              Admin Verification
-            </h1>
-            <p className="text-xs text-slate-400">
-              Enter password to access Trust Bricks customizer.
-            </p>
-          </div>
-
-          <form action={async (formData) => {
-            'use server';
-            const pass = formData.get('password') as string;
-            await adminLogin(pass);
-          }} className="space-y-4 text-left">
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-300 uppercase tracking-widest pl-1">Security Key</label>
-              <input
-                name="password"
-                type="password"
-                required
-                placeholder="Enter admin password"
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/50 focus:border-transparent transition-all"
-              />
-            </div>
-            
-            <button
-              type="submit"
-              className="w-full py-3.5 bg-[#E8600A] hover:bg-[#D4530A] text-white font-bold text-sm rounded-xl cursor-pointer shadow-lg shadow-[#E8600A]/10 transition-all duration-300"
-            >
-              Unlock Dashboard
-            </button>
-          </form>
-          
-          <div className="text-[10px] text-slate-500">
-            Authorized personnel only.
-          </div>
-        </div>
-      </div>
-    );
+  const session = await auth();
+  if (!session?.user) {
+    redirect('/admin/login');
   }
 
-  // 2. AUTHENTICATED PANEL
-  const { tab = 'leads' } = await searchParams;
-  const { success, leads } = await getLeads();
-  const config = await getAdminConfig();
+  const role = (session.user as any).role as 'SUPER_ADMIN' | 'CSU_STAFF';
+  const branchId = (session.user as any).branchId as string | null;
+  const isSuperAdmin = role === 'SUPER_ADMIN';
+
+  const { tab: rawTab = 'leads' } = await searchParams;
+  // CSU staff can only ever see their own leads — no other tab exists for them.
+  const tab = isSuperAdmin ? rawTab : 'leads';
+
+  const { success, leads } = await getLeads(isSuperAdmin ? null : branchId);
+  const config = isSuperAdmin ? await getAdminConfig() : null;
   const { branches } = await getBranches();
+  const usersResult = isSuperAdmin && tab === 'users' ? await getUsers() : null;
+  const myBranch = !isSuperAdmin ? branches?.find((b: any) => b.id === branchId) : null;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -103,11 +58,15 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                 <span className="text-[9px] font-bold text-slate-500 tracking-wider uppercase mt-0.5">Control Panel</span>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-4">
+              <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500">
+                <span className="font-semibold text-slate-700">{session.user.name || session.user.email}</span>
+                <span className="px-2 py-0.5 bg-[#0D1F3C]/5 text-[#0D1F3C] text-[9px] font-bold rounded uppercase">{role.replace('_', ' ')}</span>
+              </div>
               <form action={async () => {
                 'use server';
-                await adminLogout();
+                await signOut({ redirectTo: '/admin/login' });
               }}>
                 <button
                   type="submit"
@@ -124,7 +83,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
 
       {/* Main Container */}
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow flex flex-col md:flex-row gap-8">
-        
+
         {/* Sidebar Nav */}
         <aside className="w-full md:w-64 shrink-0 space-y-2">
           <Link
@@ -137,49 +96,63 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
             style={{ fontFamily: "var(--font-display)" }}
           >
             <Database className="w-4 h-4" />
-            Leads Manager ({leads?.length || 0})
+            {isSuperAdmin ? 'Leads Manager' : 'My Branch Leads'} ({leads?.length || 0})
           </Link>
-          <Link
-            href="/admin?tab=officers"
-            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold transition-all ${
-              tab === 'officers'
-                ? 'bg-[#0D1F3C] text-white shadow-md'
-                : 'bg-white hover:bg-slate-50 text-[#0D1F3C]/80 border border-slate-200/40'
-            }`}
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            <Users className="w-4 h-4" />
-            Conversion Officers ({config.officers?.length || 0})
-          </Link>
-          <Link
-            href="/admin?tab=settings"
-            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold transition-all ${
-              tab === 'settings'
-                ? 'bg-[#0D1F3C] text-white shadow-md'
-                : 'bg-white hover:bg-slate-50 text-[#0D1F3C]/80 border border-slate-200/40'
-            }`}
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            <Settings className="w-4 h-4" />
-            Frontend Customizer
-          </Link>
-          <Link
-            href="/admin?tab=branches"
-            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold transition-all ${
-              tab === 'branches'
-                ? 'bg-[#0D1F3C] text-white shadow-md'
-                : 'bg-white hover:bg-slate-50 text-[#0D1F3C]/80 border border-slate-200/40'
-            }`}
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            <MapPin className="w-4 h-4" />
-            Branches
-          </Link>
+
+          {isSuperAdmin && (
+            <>
+              <Link
+                href="/admin?tab=users"
+                className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+                  tab === 'users'
+                    ? 'bg-[#0D1F3C] text-white shadow-md'
+                    : 'bg-white hover:bg-slate-50 text-[#0D1F3C]/80 border border-slate-200/40'
+                }`}
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                <UsersIcon className="w-4 h-4" />
+                Users
+              </Link>
+              <Link
+                href="/admin?tab=settings"
+                className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+                  tab === 'settings'
+                    ? 'bg-[#0D1F3C] text-white shadow-md'
+                    : 'bg-white hover:bg-slate-50 text-[#0D1F3C]/80 border border-slate-200/40'
+                }`}
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                <Settings className="w-4 h-4" />
+                Site Content
+              </Link>
+              <Link
+                href="/admin?tab=branches"
+                className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+                  tab === 'branches'
+                    ? 'bg-[#0D1F3C] text-white shadow-md'
+                    : 'bg-white hover:bg-slate-50 text-[#0D1F3C]/80 border border-slate-200/40'
+                }`}
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                <MapPin className="w-4 h-4" />
+                Branches
+              </Link>
+            </>
+          )}
+
+          {!isSuperAdmin && myBranch && (
+            <div className="bg-white rounded-xl p-4 border border-slate-200/40 space-y-2 mt-4">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">My Branch Contact</p>
+              <p className="text-sm font-bold text-[#0D1F3C]">{myBranch.name}</p>
+              <p className="text-xs text-slate-500 flex items-center gap-1.5"><Phone className="w-3 h-3" /> {myBranch.csuPhone || myBranch.phone || '—'}</p>
+              <p className="text-xs text-slate-500 flex items-center gap-1.5 break-all"><Mail className="w-3 h-3 shrink-0" /> {myBranch.csuEmail || myBranch.email || '—'}</p>
+            </div>
+          )}
         </aside>
 
         {/* Tab Content Display */}
         <main className="flex-grow">
-          {/* TAB 1: LEADS MANAGER */}
+          {/* TAB: LEADS MANAGER */}
           {tab === 'leads' && (
             <div className="space-y-6">
               <div className="flex justify-between items-center">
@@ -196,7 +169,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                       <tr className="bg-slate-50 border-b border-slate-200 text-[10px] uppercase tracking-wider text-slate-500 font-bold">
                         <th className="px-6 py-4">Submission Date</th>
                         <th className="px-6 py-4">Client Contact</th>
-                        <th className="px-6 py-4">Details</th>
+                        <th className="px-6 py-4">Branch &amp; CSU Contact</th>
                         <th className="px-6 py-4 text-right">RSA Balance</th>
                         <th className="px-6 py-4">Eligibility</th>
                         <th className="px-6 py-4">Action Status</th>
@@ -222,7 +195,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                             </td>
                             <td className="px-6 py-4">
                               <span className="inline-flex px-2 py-0.5 bg-slate-100 text-[#0D1F3C] text-[10px] font-bold rounded mb-1">{lead.branch?.name || "Abuja (HQ)"}</span>
-                              <span className="block text-slate-400 text-xs">{lead.employer_type}</span>
+                              <span className="block text-slate-400 text-[11px]">{lead.branch?.csuEmail || lead.branch?.email || '—'}</span>
+                              <span className="block text-slate-400 text-[11px]">{lead.branch?.csuPhone || lead.branch?.phone || '—'}</span>
                             </td>
                             <td className="px-6 py-4 text-right font-semibold text-slate-900">
                               ₦{lead.rsa_balance.toLocaleString()}
@@ -271,90 +245,62 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
             </div>
           )}
 
-          {/* TAB 2: OFFICERS MANAGER */}
-          {tab === 'officers' && (
+          {/* TAB: USERS MANAGER (SUPER_ADMIN only) */}
+          {isSuperAdmin && tab === 'users' && (
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-black text-[#0D1F3C]" style={{ fontFamily: "var(--font-display)" }}>
-                  Leads Conversion Officers
+                  Staff Accounts
                 </h2>
-                <p className="text-slate-500 text-xs mt-0.5">Manage regional assignments and roles for officers handling leads.</p>
+                <p className="text-slate-500 text-xs mt-0.5">Create admin and CSU staff accounts. CSU staff only see leads for their assigned branch.</p>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-[4fr_6fr] gap-8 items-start">
-                {/* Add Officer Form */}
+                {/* Add User Form */}
                 <div className="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-card">
                   <h3 className="text-lg font-bold text-[#0D1F3C] mb-4" style={{ fontFamily: "var(--font-display)" }}>
-                    Add New Officer
+                    Add New User
                   </h3>
                   <form action={async (formData) => {
                     'use server';
                     const name = formData.get('name') as string;
                     const email = formData.get('email') as string;
-                    const role = formData.get('role') as string;
-                    const branch = formData.get('branch') as string;
-                    await addOfficer({ name, email, role, branch });
+                    const password = formData.get('password') as string;
+                    const role = formData.get('role') as 'SUPER_ADMIN' | 'CSU_STAFF';
+                    const branchId = formData.get('branchId') as string;
+                    await createUser({ name, email, password, role, branchId });
                   }} className="space-y-4">
                     <div className="space-y-1">
                       <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Full Name</label>
-                      <input
-                        name="name"
-                        type="text"
-                        required
-                        placeholder="e.g. Samuel Ade"
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
-                      />
+                      <input name="name" type="text" required placeholder="e.g. Samuel Ade" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Email</label>
-                      <input
-                        name="email"
-                        type="email"
-                        required
-                        placeholder="samuel@trustbrickproperties.ng"
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
-                      />
+                      <input name="email" type="email" required placeholder="samuel@trustbrickproperties.ng" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Temporary Password</label>
+                      <input name="password" type="text" required minLength={8} placeholder="Min. 8 characters" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Role</label>
-                        <select
-                          name="role"
-                          className="w-full px-2 py-2 bg-white border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
-                        >
-                          <option value="Conversion Officer">Conversion Officer</option>
-                          <option value="Lead Advisor">Lead Advisor</option>
-                          <option value="Regional Manager">Regional Manager</option>
+                        <select name="role" className="w-full px-2 py-2 bg-white border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35">
+                          <option value="CSU_STAFF">CSU Staff</option>
+                          <option value="SUPER_ADMIN">Super Admin</option>
                         </select>
                       </div>
                       <div className="space-y-1">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Branch</label>
-                        <select
-                          name="branch"
-                          className="w-full px-2 py-2 bg-white border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
-                        >
-                          <option value="Abuja (HQ)">Abuja (HQ)</option>
-                          <option value="Lagos Office">Lagos Office</option>
-                          <option value="Kano Center">Kano Center</option>
-                          <option value="Kwara Center">Kwara Center</option>
-                          <option value="Adamawa">Adamawa</option>
-                          <option value="Benue Center">Benue Center</option>
-                          <option value="Ogun Center">Ogun Center</option>
-                          <option value="Lokoja Center">Lokoja Center</option>
-                          <option value="Calabar Center">Calabar Center</option>
-                          <option value="Minna Center">Minna Center</option>
-                          <option value="Ibadan Center">Ibadan Center</option>
-                          <option value="Ekiti Center">Ekiti Center</option>
-                          <option value="Bauchi Center">Bauchi Center</option>
-                          <option value="Kaduna Hub">Kaduna Hub</option>
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Branch (CSU only)</label>
+                        <select name="branchId" className="w-full px-2 py-2 bg-white border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35">
+                          {branches?.map((b: any) => (
+                            <option key={b.id} value={b.id}>{b.name}</option>
+                          ))}
                         </select>
                       </div>
                     </div>
-                    <button
-                      type="submit"
-                      className="w-full flex items-center justify-center gap-1.5 py-3 rounded-lg bg-[#E8600A] text-white text-xs font-bold hover:bg-[#D4530A] transition-colors cursor-pointer shadow-md shadow-[#E8600A]/10"
-                    >
-                      <Plus className="w-4 h-4" /> Add Officer
+                    <button type="submit" className="w-full flex items-center justify-center gap-1.5 py-3 rounded-lg bg-[#E8600A] text-white text-xs font-bold hover:bg-[#D4530A] transition-colors cursor-pointer shadow-md shadow-[#E8600A]/10">
+                      <Plus className="w-4 h-4" /> Create User
                     </button>
                   </form>
                 </div>
@@ -362,40 +308,42 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                 {/* Directory List */}
                 <div className="bg-white rounded-2xl border border-slate-200/60 shadow-card overflow-hidden">
                   <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">Officer Directory</span>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wide">Staff Directory ({usersResult?.users?.length || 0})</span>
                   </div>
                   <div className="divide-y divide-slate-100">
-                    {config.officers.length === 0 ? (
-                      <div className="p-6 text-center text-slate-400 text-sm">No officers configured.</div>
+                    {!usersResult?.users || usersResult.users.length === 0 ? (
+                      <div className="p-6 text-center text-slate-400 text-sm">No users configured.</div>
                     ) : (
-                      config.officers.map((officer: any) => (
-                        <div key={officer.id} className="p-5 flex justify-between items-center gap-4 hover:bg-slate-50/20 transition-colors">
+                      usersResult.users.map((u: any) => (
+                        <div key={u.id} className="p-5 flex justify-between items-center gap-4 hover:bg-slate-50/20 transition-colors">
                           <div className="space-y-1">
-                            <h4 className="font-bold text-slate-900 text-base" style={{ fontFamily: "var(--font-display)" }}>
-                              {officer.name}
+                            <h4 className="font-bold text-slate-900 text-base flex items-center gap-2" style={{ fontFamily: "var(--font-display)" }}>
+                              {u.name}
+                              {!u.active && <span className="px-1.5 py-0.5 bg-slate-200 text-slate-500 text-[9px] font-bold rounded uppercase">Deactivated</span>}
                             </h4>
                             <p className="text-xs text-slate-500 flex items-center gap-1.5">
-                              <Mail className="w-3.5 h-3.5 text-slate-400" /> {officer.email}
+                              <Mail className="w-3.5 h-3.5 text-slate-400" /> {u.email}
                             </p>
                             <div className="flex gap-2 pt-1">
-                              <span className="px-2 py-0.5 bg-[#E8600A]/5 text-[#E8600A] text-[9px] font-bold rounded uppercase">
-                                {officer.role}
+                              <span className="px-2 py-0.5 bg-[#E8600A]/5 text-[#E8600A] text-[9px] font-bold rounded uppercase flex items-center gap-1">
+                                <ShieldCheck className="w-3 h-3" /> {u.role.replace('_', ' ')}
                               </span>
-                              <span className="px-2 py-0.5 bg-[#0D1F3C]/5 text-[#0D1F3C] text-[9px] font-bold rounded uppercase">
-                                {officer.branch}
-                              </span>
+                              {u.branch && (
+                                <span className="px-2 py-0.5 bg-[#0D1F3C]/5 text-[#0D1F3C] text-[9px] font-bold rounded uppercase">
+                                  {u.branch.name}
+                                </span>
+                              )}
                             </div>
                           </div>
                           <form action={async () => {
                             'use server';
-                            await removeOfficer(officer.id);
+                            await setUserActive(u.id, !u.active);
                           }}>
                             <button
                               type="submit"
-                              className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all cursor-pointer"
-                              aria-label={`Remove ${officer.name}`}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${u.active ? 'text-red-500 hover:bg-red-50' : 'text-emerald-600 hover:bg-emerald-50'}`}
                             >
-                              <Trash className="w-4 h-4" />
+                              {u.active ? 'Deactivate' : 'Reactivate'}
                             </button>
                           </form>
                         </div>
@@ -407,14 +355,14 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
             </div>
           )}
 
-          {/* TAB 3: SITE CUSTOMIZER */}
-          {tab === 'settings' && (
+          {/* TAB: SITE CONTENT (SUPER_ADMIN only) */}
+          {isSuperAdmin && tab === 'settings' && config && (
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-black text-[#0D1F3C]" style={{ fontFamily: "var(--font-display)" }}>
-                  Frontend Customizer
+                  Site Content
                 </h2>
-                <p className="text-slate-500 text-xs mt-0.5">Edit texts, contact details, and metadata that render on the home interface.</p>
+                <p className="text-slate-500 text-xs mt-0.5">Edit texts, contact details, and page content that render across the site.</p>
               </div>
 
               <div className="bg-white rounded-2xl p-8 border border-slate-200/60 shadow-card">
@@ -426,76 +374,80 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                   const companyPhone = formData.get('companyPhone') as string;
                   const companyEmail = formData.get('companyEmail') as string;
                   const rcNumber = formData.get('rcNumber') as string;
-                  await updateSiteSettings({ slogan, heroTitle, heroSubtitle, companyPhone, companyEmail, rcNumber });
+                  const dpoName = formData.get('dpoName') as string;
+                  const dpoEmail = formData.get('dpoEmail') as string;
+                  const vision = formData.get('vision') as string;
+                  const mission = formData.get('mission') as string;
+                  const aboutBody = formData.get('aboutBody') as string;
+                  await updateSiteSettings({ slogan, heroTitle, heroSubtitle, companyPhone, companyEmail, rcNumber, dpoName, dpoEmail, vision, mission, aboutBody });
                 }} className="space-y-6">
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-1">
                       <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Brand Slogan</label>
-                      <input
-                        name="slogan"
-                        type="text"
-                        defaultValue={config.site.slogan}
-                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
-                      />
+                      <input name="slogan" type="text" defaultValue={config.site.slogan} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">RC Registration Number</label>
-                      <input
-                        name="rcNumber"
-                        type="text"
-                        defaultValue={config.site.rcNumber}
-                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
-                      />
+                      <input name="rcNumber" type="text" defaultValue={config.site.rcNumber} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                     </div>
                   </div>
 
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Hero Headline</label>
-                    <input
-                      name="heroTitle"
-                      type="text"
-                      defaultValue={config.site.heroTitle}
-                      className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
-                    />
+                    <input name="heroTitle" type="text" defaultValue={config.site.heroTitle} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                   </div>
 
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Hero Subtitle</label>
-                    <textarea
-                      name="heroSubtitle"
-                      rows={3}
-                      defaultValue={config.site.heroSubtitle}
-                      className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35 resize-none"
-                    />
+                    <textarea name="heroSubtitle" rows={3} defaultValue={config.site.heroSubtitle} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35 resize-none" />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-1">
                       <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Support Phone Number</label>
-                      <input
-                        name="companyPhone"
-                        type="text"
-                        defaultValue={config.site.companyPhone}
-                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
-                      />
+                      <input name="companyPhone" type="text" defaultValue={config.site.companyPhone} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                     </div>
                     <div className="space-y-1">
                       <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Support Email Address</label>
-                      <input
-                        name="companyEmail"
-                        type="text"
-                        defaultValue={config.site.companyEmail}
-                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35"
-                      />
+                      <input name="companyEmail" type="text" defaultValue={config.site.companyEmail} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-slate-100">
+                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Data Protection Officer (shown on Privacy Policy)</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">DPO Name</label>
+                        <input name="dpoName" type="text" defaultValue={config.site.dpoName} placeholder="e.g. Chidinma Okeke" className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">DPO Email</label>
+                        <input name="dpoEmail" type="email" defaultValue={config.site.dpoEmail} placeholder="dpo@trustbrickspropertieslimited.com.ng" className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-slate-100">
+                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">Vision, Mission &amp; About</p>
+                    <div className="space-y-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Vision</label>
+                        <textarea name="vision" rows={2} defaultValue={config.site.vision} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35 resize-none" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Mission</label>
+                        <textarea name="mission" rows={2} defaultValue={config.site.mission} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35 resize-none" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">About Page Body</label>
+                        <textarea name="aboutBody" rows={4} defaultValue={config.site.aboutBody} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35 resize-none" />
+                      </div>
                     </div>
                   </div>
 
                   <div className="pt-4 border-t border-slate-100 flex justify-end">
-                    <button
-                      type="submit"
-                      className="px-6 py-3.5 bg-[#0D1F3C] hover:bg-[#1E3A5F] text-white text-xs font-bold rounded-xl cursor-pointer shadow-md transition-all"
-                    >
+                    <button type="submit" className="px-6 py-3.5 bg-[#0D1F3C] hover:bg-[#1E3A5F] text-white text-xs font-bold rounded-xl cursor-pointer shadow-md transition-all">
                       Save Configuration
                     </button>
                   </div>
@@ -504,14 +456,14 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
             </div>
           )}
 
-          {/* TAB 4: BRANCHES MANAGER */}
-          {tab === 'branches' && (
+          {/* TAB: BRANCHES MANAGER (SUPER_ADMIN only) */}
+          {isSuperAdmin && tab === 'branches' && (
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-black text-[#0D1F3C]" style={{ fontFamily: "var(--font-display)" }}>
                   Branches
                 </h2>
-                <p className="text-slate-500 text-xs mt-0.5">Manage office locations and contact details.</p>
+                <p className="text-slate-500 text-xs mt-0.5">Manage office locations, CSU contact details, and map coordinates.</p>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-[4fr_6fr] gap-8 items-start">
@@ -534,6 +486,9 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                       hours: formData.get('hours') as string,
                       mapQuery: formData.get('mapQuery') as string,
                       iconType: formData.get('iconType') as string,
+                      csuEmail: formData.get('csuEmail') as string,
+                      csuPhone: formData.get('csuPhone') as string,
+                      isHQ: formData.get('isHQ') === 'on',
                     };
                     await createBranch(data);
                   }} className="space-y-4">
@@ -591,6 +546,20 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                         <input name="mapQuery" required placeholder="City+Country" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
                       </div>
                     </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">CSU Email</label>
+                        <input name="csuEmail" placeholder="branch-csu@trustbricks..." className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">CSU Phone</label>
+                        <input name="csuPhone" placeholder="+234..." className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35" />
+                      </div>
+                    </div>
+                    <label className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+                      <input type="checkbox" name="isHQ" className="rounded" />
+                      This is the HQ branch (receives cc on every lead)
+                    </label>
                     <button type="submit" className="w-full flex items-center justify-center gap-1.5 py-3 rounded-lg bg-[#0D1F3C] hover:bg-[#1E3A5F] text-white text-xs font-bold transition-colors cursor-pointer shadow-md">
                       <Plus className="w-4 h-4" /> Add Branch
                     </button>

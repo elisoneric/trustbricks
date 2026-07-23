@@ -17,6 +17,14 @@ case "$DATABASE_URL" in
     ;;
 esac
 
+# Uploaded images directory — same reasoning as the SQLite dir above: a
+# freshly mounted persistent volume needs its ownership fixed up before
+# the nextjs user can write to it.
+echo "==> Ensuring uploads directory exists and is writable by nextjs: public/uploads"
+mkdir -p public/uploads 2>/dev/null || true
+chown -R nextjs:nodejs public/uploads 2>/dev/null || true
+chmod -R 775 public/uploads 2>/dev/null || true
+
 echo "==> Applying database schema (prisma db push)"
 su-exec nextjs npx prisma db push --accept-data-loss || echo "WARNING: prisma db push encountered an issue, proceeding to start server..."
 

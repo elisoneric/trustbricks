@@ -58,6 +58,13 @@ RUN chmod +x ./docker-entrypoint.sh
 # Dedicated directory for SQLite data storage
 RUN mkdir -p /app/data && chown -R nextjs:nodejs /app/data
 
+# Uploaded images (About/leadership photos, property listings, gallery,
+# blog covers) — served automatically by Next's standalone server since
+# it reads public/ from disk at request time, not bundled at build time.
+# Mount a persistent volume here in production or uploads won't survive
+# a redeploy (same reasoning as /app/data above).
+RUN mkdir -p public/uploads && chown -R nextjs:nodejs public/uploads
+
 EXPOSE 3000
 
 # Entrypoint runs as root initially to ensure mounted volume (/app/data) ownership,

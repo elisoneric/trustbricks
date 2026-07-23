@@ -1,4 +1,3 @@
-import { createClient } from "next-sanity";
 import Image from "next/image";
 
 import { ArrowRight } from "lucide-react";
@@ -9,63 +8,35 @@ export const metadata = {
   description: "Stay updated with the latest in Nigerian real estate, PenCom RSA mortgages, and homeownership tips.",
 };
 
-// Scaffolded Sanity Client (User must configure env variables later)
-const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "demo",
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-  apiVersion: "2024-01-01",
-  useCdn: false, // For dynamic ISR
-});
+// Placeholder posts until the Blog admin tab (Phase 4) is wired up to the
+// BlogPost model — this page previously used an unfinished Sanity CMS
+// integration that was never configured with real content.
+const MOCK_POSTS = [
+  {
+    _id: "1",
+    title: "How to Access 25% of Your RSA for a Mortgage",
+    authorName: "Amina Yusuf",
+    mainImage: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    publishedAt: new Date().toISOString(),
+  },
+  {
+    _id: "2",
+    title: "Top 5 Up-and-Coming Neighborhoods in Abuja",
+    authorName: "Chinedu Okonkwo",
+    mainImage: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    publishedAt: new Date(Date.now() - 86400000).toISOString(),
+  },
+  {
+    _id: "3",
+    title: "Understanding the New PenCom Guidelines for 2024",
+    authorName: "Sarah Adebayo",
+    mainImage: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    publishedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+  },
+];
 
 export default async function InsightsPage() {
-  // Fetch posts from Sanity
-  const query = `*[_type == "post"] | order(publishedAt desc) {
-    _id,
-    title,
-    "slug": slug.current,
-    "authorName": author->name,
-    "authorImage": author->image.asset->url,
-    "mainImage": mainImage.asset->url,
-    publishedAt
-  }`;
-
-  // If no projectId is configured, it will fail, so we wrap in try/catch and provide fallbacks.
-  let posts: any[] = [];
-  try {
-    if (process.env.NEXT_PUBLIC_SANITY_PROJECT_ID && process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== "demo") {
-      posts = await client.fetch(query);
-    } else {
-      // Mock Data so the UI still looks incredible during development before Sanity is fully linked
-      posts = [
-        {
-          _id: "1",
-          title: "How to Access 25% of Your RSA for a Mortgage",
-          slug: "access-25-rsa-mortgage",
-          authorName: "Amina Yusuf",
-          mainImage: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-          publishedAt: new Date().toISOString(),
-        },
-        {
-          _id: "2",
-          title: "Top 5 Up-and-Coming Neighborhoods in Abuja",
-          slug: "abuja-top-neighborhoods",
-          authorName: "Chinedu Okonkwo",
-          mainImage: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-          publishedAt: new Date(Date.now() - 86400000).toISOString(),
-        },
-        {
-          _id: "3",
-          title: "Understanding the New PenCom Guidelines for 2024",
-          slug: "pencom-guidelines-2024",
-          authorName: "Sarah Adebayo",
-          mainImage: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-          publishedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-        }
-      ];
-    }
-  } catch (err) {
-    console.error("Sanity Fetch Error:", err);
-  }
+  const posts = MOCK_POSTS;
 
   return (
     <div className="min-h-screen bg-[var(--color-body-bg)] flex flex-col font-sans antialiased">
