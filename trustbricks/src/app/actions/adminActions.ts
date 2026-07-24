@@ -121,6 +121,8 @@ const DEFAULT_SITE_SETTINGS = {
   dpoEmail: "",
   vision: "",
   mission: "",
+  mandatePurpose: "",
+  ourCulture: "",
   coreValues: "[]",
   aboutHeroImage: null as string | null,
   aboutBody: "",

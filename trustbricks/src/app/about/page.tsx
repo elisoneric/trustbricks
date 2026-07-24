@@ -45,6 +45,41 @@ export default async function AboutPage() {
 
         <CoreValuesSection vision={site.vision} mission={site.mission} coreValues={coreValues} compact />
 
+        {(site.mandatePurpose || site.ourCulture) && (
+          <section className="max-w-6xl mx-auto px-6 lg:px-8 mt-20 grid grid-cols-1 md:grid-cols-2 gap-8">
+            {site.mandatePurpose && (
+              <div className="bg-[var(--color-card)] rounded-3xl p-8 border border-[var(--color-border)] shadow-card">
+                <h2 className="text-2xl font-bold text-[var(--color-text-heading)] mb-4" style={{ fontFamily: "var(--font-display)" }}>
+                  Mandate &amp; Purpose
+                </h2>
+                <ul className="space-y-2.5">
+                  {site.mandatePurpose.split("\n").filter(Boolean).map((line: string, i: number) => (
+                    <li key={i} className="flex gap-2.5 text-[var(--color-text-body)] leading-relaxed">
+                      <span className="text-[var(--color-clay-500)] font-bold">•</span>
+                      <span>{line}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {site.ourCulture && (
+              <div className="bg-[var(--color-card)] rounded-3xl p-8 border border-[var(--color-border)] shadow-card">
+                <h2 className="text-2xl font-bold text-[var(--color-text-heading)] mb-4" style={{ fontFamily: "var(--font-display)" }}>
+                  Our Culture
+                </h2>
+                <ul className="space-y-2.5">
+                  {site.ourCulture.split("\n").filter(Boolean).map((line: string, i: number) => (
+                    <li key={i} className="flex gap-2.5 text-[var(--color-text-body)] leading-relaxed">
+                      <span className="text-[var(--color-clay-500)] font-bold">•</span>
+                      <span>{line}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </section>
+        )}
+
         {leadershipTeam.length > 0 && (
           <section className="max-w-6xl mx-auto px-6 lg:px-8 mt-20">
             <h2 className="text-3xl font-extrabold text-[var(--color-text-heading)] text-center mb-12" style={{ fontFamily: "var(--font-display)" }}>

@@ -440,11 +440,13 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                   const dpoEmail = formData.get('dpoEmail') as string;
                   const vision = formData.get('vision') as string;
                   const mission = formData.get('mission') as string;
+                  const mandatePurpose = formData.get('mandatePurpose') as string;
+                  const ourCulture = formData.get('ourCulture') as string;
                   const aboutBody = formData.get('aboutBody') as string;
                   const aboutHeroImage = formData.get('aboutHeroImage') as string;
                   const coreValues = formData.get('coreValues') as string;
                   const leadershipTeam = formData.get('leadershipTeam') as string;
-                  await updateSiteSettings({ slogan, heroTitle, heroSubtitle, companyPhone, companyEmail, rcNumber, dpoName, dpoEmail, vision, mission, aboutBody, aboutHeroImage, coreValues, leadershipTeam });
+                  await updateSiteSettings({ slogan, heroTitle, heroSubtitle, companyPhone, companyEmail, rcNumber, dpoName, dpoEmail, vision, mission, mandatePurpose, ourCulture, aboutBody, aboutHeroImage, coreValues, leadershipTeam });
                 }} className="space-y-6">
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -503,6 +505,14 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Mission</label>
                         <textarea name="mission" rows={2} defaultValue={config.site.mission} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35 resize-none" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Mandate &amp; Purpose (one bullet per line)</label>
+                        <textarea name="mandatePurpose" rows={3} defaultValue={config.site.mandatePurpose} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35 resize-none" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Our Culture (one bullet per line)</label>
+                        <textarea name="ourCulture" rows={3} defaultValue={config.site.ourCulture} className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-[#E8600A]/35 resize-none" />
                       </div>
                       <div className="space-y-1">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">About Page Body</label>

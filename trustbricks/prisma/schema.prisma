@@ -59,6 +59,8 @@ model SiteSettings {
   dpoEmail       String   @default("")
   vision         String   @default("")
   mission        String   @default("")
+  mandatePurpose String   @default("")
+  ourCulture     String   @default("")
   coreValues     String   @default("[]")
   aboutHeroImage String?
   aboutBody      String   @default("")

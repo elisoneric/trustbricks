@@ -132,6 +132,8 @@ async function main() {
       dpoEmail: 'dpo@trustbrickspropertieslimited.com.ng',
       vision: 'To become the most reliable and transparent gateway to homeownership in Nigeria, enabling every citizen to effortlessly transition from tenant to homeowner using their pension assets as leverage.',
       mission: 'To simplify the complexity of PFA approvals and primary mortgage bank requirements. We guide our clients through structured real estate options that conform completely with National Pension Commission guidelines.',
+      mandatePurpose: 'Property development, effective asset management, and exceptional customer service.\nAccurate and timely equity pension services\nTransparency and long-term value',
+      ourCulture: 'Integrity, accountability, service excellence\nPeople-centred and customer-focused\nTeamwork and continuous improvement',
       coreValues: defaultCoreValues,
       aboutBody: 'Trust Bricks Properties Ltd is a mortgage facilitation and real estate advisory firm in Nigeria. We assist active contributors under the Contributory Pension Scheme (CPS) in accessing up to 25% of their RSA balance as equity contribution towards residential mortgages, in accordance with PenCom guidelines.',
     },
