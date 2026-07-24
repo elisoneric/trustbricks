@@ -83,12 +83,13 @@ async function main() {
   }
   console.log('18 PFAs seeded.');
 
-  // 3. Seed initial SUPER_ADMIN account (only if no users exist yet)
-  const userCount = await prisma.user.count();
-  if (userCount === 0) {
-    const seedEmail = process.env.SUPER_ADMIN_EMAIL || 'admin@trustbrickspropertieslimited.com.ng';
-    const seedPassword = process.env.SUPER_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || 'admin';
-    const passwordHash = await bcrypt.hash(seedPassword, 12);
+  // 3. Seed initial SUPER_ADMIN account (create if missing, update password if env provided)
+  const seedEmail = process.env.SUPER_ADMIN_EMAIL || 'admin@trustbrickspropertieslimited.com.ng';
+  const seedPassword = process.env.SUPER_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || 'admin';
+  const passwordHash = await bcrypt.hash(seedPassword, 12);
+
+  const existingAdmin = await prisma.user.findUnique({ where: { email: seedEmail } });
+  if (!existingAdmin) {
     await prisma.user.create({
       data: {
         name: 'Super Admin',
@@ -98,7 +99,13 @@ async function main() {
         active: true,
       },
     });
-    console.log(`Seeded initial SUPER_ADMIN: ${seedEmail} — CHANGE THIS PASSWORD after first login.`);
+    console.log(`Seeded initial SUPER_ADMIN: ${seedEmail}`);
+  } else if (process.env.SUPER_ADMIN_PASSWORD) {
+    await prisma.user.update({
+      where: { email: seedEmail },
+      data: { passwordHash, active: true },
+    });
+    console.log(`Updated SUPER_ADMIN password for ${seedEmail} from environment variable.`);
   }
 
   // 4. Seed SiteSettings singleton row (was previously a JSON file, wiped on every redeploy)

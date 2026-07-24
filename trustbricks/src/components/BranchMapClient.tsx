@@ -32,20 +32,26 @@ export default function BranchMapClient({ branches }: { branches: BranchRecord[]
   const [center, setCenter] = useState<[number, number]>(NIGERIA_CENTER);
   const [zoom, setZoom] = useState(DEFAULT_ZOOM);
 
-  const mappedBranches = useMemo(() => branches.filter((b) => b.lat != null && b.lng != null), [branches]);
-  const unmappedBranches = useMemo(() => branches.filter((b) => b.lat == null || b.lng == null), [branches]);
+  const mappedBranches = useMemo(
+    () => branches.filter((b) => b.lat != null && b.lng != null && !isNaN(Number(b.lat)) && !isNaN(Number(b.lng))),
+    [branches]
+  );
+  const unmappedBranches = useMemo(
+    () => branches.filter((b) => b.lat == null || b.lng == null || isNaN(Number(b.lat)) || isNaN(Number(b.lng))),
+    [branches]
+  );
 
   const selectBranch = (branch: BranchRecord) => {
     setSelected(branch);
-    if (branch.lat != null && branch.lng != null) {
-      setCenter([branch.lng, branch.lat]);
+    if (branch.lat != null && branch.lng != null && !isNaN(Number(branch.lat)) && !isNaN(Number(branch.lng))) {
+      setCenter([Number(branch.lng), Number(branch.lat)]);
       setZoom(8);
     }
   };
 
   const handleStateClick = (geo: any) => {
     const { longitude, latitude } = geo.properties || {};
-    if (longitude && latitude) {
+    if (longitude != null && latitude != null && !isNaN(parseFloat(longitude)) && !isNaN(parseFloat(latitude))) {
       setCenter([parseFloat(longitude), parseFloat(latitude)]);
       setZoom(7);
     }
@@ -71,7 +77,7 @@ export default function BranchMapClient({ branches }: { branches: BranchRecord[]
 
           <ComposableMap
             projection="geoMercator"
-            projectionConfig={{ scale: 2200, center: NIGERIA_CENTER }}
+            projectionConfig={{ scale: 2200 }}
             className="w-full h-full"
           >
             <ZoomableGroup center={center} zoom={zoom} onMoveEnd={({ coordinates, zoom: z }) => { setCenter(coordinates); setZoom(z); }} minZoom={4} maxZoom={16}>
@@ -95,7 +101,7 @@ export default function BranchMapClient({ branches }: { branches: BranchRecord[]
               {mappedBranches.map((branch) => (
                 <Marker
                   key={branch.id}
-                  coordinates={[branch.lng as number, branch.lat as number]}
+                  coordinates={[Number(branch.lng), Number(branch.lat)]}
                   onClick={() => selectBranch(branch)}
                 >
                   <circle

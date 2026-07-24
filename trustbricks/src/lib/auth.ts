@@ -12,6 +12,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   // sees doesn't match what it infers from NEXTAUTH_URL. Safe to trust here
   // since Traefik is the only thing routing traffic to this container.
   trustHost: true,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "trustbricks_production_fallback_auth_secret_key_2026",
   session: { strategy: "jwt" },
   pages: { signIn: "/admin/login" },
   providers: [
@@ -21,23 +22,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        const email = credentials?.email as string | undefined;
-        const password = credentials?.password as string | undefined;
-        if (!email || !password) return null;
+        try {
+          const email = credentials?.email as string | undefined;
+          const password = credentials?.password as string | undefined;
+          if (!email || !password) return null;
 
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user || !user.active) return null;
+          const user = await prisma.user.findUnique({ where: { email } });
+          if (!user || !user.active) return null;
 
-        const valid = await bcrypt.compare(password, user.passwordHash);
-        if (!valid) return null;
+          const valid = await bcrypt.compare(password, user.passwordHash);
+          if (!valid) return null;
 
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          branchId: user.branch_id,
-        };
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            branchId: user.branch_id,
+          };
+        } catch (error) {
+          console.error("[Auth Authorize Error]:", error);
+          return null;
+        }
       },
     }),
   ],

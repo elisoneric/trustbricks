@@ -28,24 +28,30 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
     redirect('/admin/login');
   }
 
-  const role = (session.user as any).role as 'SUPER_ADMIN' | 'CSU_STAFF';
-  const branchId = (session.user as any).branchId as string | null;
+  const role = ((session.user as any)?.role as 'SUPER_ADMIN' | 'CSU_STAFF') || 'CSU_STAFF';
+  const branchId = ((session.user as any)?.branchId as string | null) || null;
   const isSuperAdmin = role === 'SUPER_ADMIN';
 
-  const { tab: rawTab = 'leads' } = await searchParams;
+  const resolvedParams = searchParams ? await searchParams : {};
+  const rawTab = resolvedParams?.tab || 'leads';
   // CSU staff can only ever see their own leads — no other tab exists for them.
   const tab = isSuperAdmin ? rawTab : 'leads';
 
-  const { success, leads } = await getLeads(isSuperAdmin ? null : branchId);
+  const leadsResult = await getLeads(isSuperAdmin ? null : branchId);
+  const success = leadsResult?.success ?? false;
+  const leads = leadsResult?.leads || [];
+
   const config = isSuperAdmin ? await getAdminConfig() : null;
-  const { branches } = await getBranches();
+  const branchesResult = await getBranches();
+  const branches = branchesResult?.branches || [];
+
   const usersResult = isSuperAdmin && tab === 'users' ? await getUsers() : null;
   const propertiesResult = isSuperAdmin && tab === 'properties' ? await getProperties() : null;
   const testimonialsResult = isSuperAdmin && tab === 'testimonials' ? await getTestimonials() : null;
   const jobsResult = isSuperAdmin && tab === 'careers' ? await getJobs() : null;
   const galleryResult = isSuperAdmin && tab === 'gallery' ? await getGalleryImages() : null;
   const blogResult = isSuperAdmin && tab === 'blog' ? await getBlogPosts() : null;
-  const myBranch = !isSuperAdmin ? branches?.find((b: any) => b.id === branchId) : null;
+  const myBranch = !isSuperAdmin && branches ? branches.find((b: any) => b.id === branchId) : null;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -76,8 +82,8 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
 
             <div className="flex items-center gap-4">
               <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500">
-                <span className="font-semibold text-slate-700">{session.user.name || session.user.email}</span>
-                <span className="px-2 py-0.5 bg-[#0D1F3C]/5 text-[#0D1F3C] text-[9px] font-bold rounded uppercase">{role.replace('_', ' ')}</span>
+                <span className="font-semibold text-slate-700">{session?.user?.name || session?.user?.email || 'User'}</span>
+                <span className="px-2 py-0.5 bg-[#0D1F3C]/5 text-[#0D1F3C] text-[9px] font-bold rounded uppercase">{(role || 'STAFF').replace('_', ' ')}</span>
               </div>
               <form action={async () => {
                 'use server';

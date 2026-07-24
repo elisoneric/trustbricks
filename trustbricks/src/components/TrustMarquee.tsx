@@ -55,9 +55,10 @@ const PFAS: PfaEntry[] = [
 
 function PfaBadge({ name, slug }: PfaEntry) {
   const [logoOk, setLogoOk] = useState(false);
-  const logoPath = PFA_LOGO_PATH_MAP[slug] || `/pfa-logos/${slug}.png`;
+  const logoPath = PFA_LOGO_PATH_MAP[slug];
 
   useEffect(() => {
+    if (!logoPath) return;
     let cancelled = false;
     const probe = new window.Image();
     probe.onload = () => { if (!cancelled) setLogoOk(true); };
