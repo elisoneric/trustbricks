@@ -4,6 +4,8 @@ import BranchMapClient from "@/components/BranchMapClient";
 import { getBranches } from "@/app/actions/adminActions";
 import { getAdminConfig } from "@/app/actions/adminActions";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Our Branches | Trust Bricks Properties Ltd",
   description: "Find a Trust Bricks Properties branch near you — 14 locations across Nigeria on an interactive map.",
