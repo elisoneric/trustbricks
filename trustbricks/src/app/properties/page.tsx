@@ -4,6 +4,8 @@ import PropertiesPageClient from "@/components/PropertiesPageClient";
 import { getProperties } from "@/app/actions/propertyActions";
 import { getAdminConfig } from "@/app/actions/adminActions";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Properties | Trust Bricks Properties Ltd",
   description: "Browse residential, commercial, and land properties available through Trust Bricks Properties Ltd.",

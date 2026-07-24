@@ -3,6 +3,8 @@ import Footer from "@/components/Footer";
 import ContactPageClient from "@/components/ContactPageClient";
 import { getBranches, getAdminConfig } from "@/app/actions/adminActions";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Contact Us | Trust Bricks Properties Ltd",
   description: "Get in touch with a Trust Bricks Properties advisor at any of our 14 branches across Nigeria for PenCom RSA mortgage support.",

@@ -5,6 +5,8 @@ import { getAdminConfig, getBranches } from "@/app/actions/adminActions";
 import { getTestimonials } from "@/app/actions/testimonialActions";
 import { getProperties } from "@/app/actions/propertyActions";
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const config = await getAdminConfig();
   const siteSettings = config?.site || {};

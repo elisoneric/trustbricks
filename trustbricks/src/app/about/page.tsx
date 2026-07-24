@@ -2,6 +2,8 @@ import GlobalNavbar from "@/components/GlobalNavbar";
 import Footer from "@/components/Footer";
 import CoreValuesSection from "@/components/CoreValuesSection";
 import { getAdminConfig } from "@/app/actions/adminActions";
+
+export const dynamic = 'force-dynamic';
 import type { CoreValue, LeadershipMember } from "@/lib/types";
 
 export const metadata = {
