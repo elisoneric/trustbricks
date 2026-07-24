@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: "default-src 'self'; connect-src 'self' https://equity.trustbrickspropertieslimited.com.ng https://api.trustbrickspropertieslimited.com.ng https://space.trustbrickspropertieslimited.com.ng https://dev.trustbrickspropertieslimited.com.ng; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://cdn.sanity.io; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
+            value: "default-src 'self'; connect-src 'self' https://equity.trustbrickspropertieslimited.com.ng https://api.trustbrickspropertieslimited.com.ng https://space.trustbrickspropertieslimited.com.ng https://dev.trustbrickspropertieslimited.com.ng; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https://cdn.sanity.io https://*.tile.openstreetmap.org; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
           },
           {
             key: "X-Frame-Options",
