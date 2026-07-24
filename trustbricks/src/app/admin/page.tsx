@@ -17,6 +17,7 @@ import TestimonialsTab from '@/components/admin/TestimonialsTab';
 import CareersTab from '@/components/admin/CareersTab';
 import GalleryTab from '@/components/admin/GalleryTab';
 import BlogTab from '@/components/admin/BlogTab';
+import LeadStatusSelect from '@/components/admin/LeadStatusSelect';
 
 export const metadata = {
   title: 'Admin Panel | Trust Bricks Properties Ltd',
@@ -294,27 +295,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
                               )}
                             </td>
                             <td className="px-6 py-4">
-                              <form action={async (formData) => {
-                                'use server';
-                                const newStatus = formData.get('status') as string;
-                                await updateLeadStatus(lead.id, newStatus);
-                              }}>
-                                <div className="relative inline-block w-32">
-                                  <select
-                                    name="status"
-                                    defaultValue={lead.status || 'new'}
-                                    onChange={(e) => e.target.form?.requestSubmit()}
-                                    className={`appearance-none w-full border text-xs font-bold rounded-lg px-2.5 py-1.5 pr-8 focus:outline-none focus:ring-2 focus:ring-[#E8600A]/50 cursor-pointer transition-colors ${getStatusColor(lead.status || 'new')}`}
-                                  >
-                                    <option value="new">New Lead</option>
-                                    <option value="contacted">Contacted</option>
-                                    <option value="qualified">Qualified</option>
-                                    <option value="converted">Converted</option>
-                                    <option value="disqualified">Disqualified</option>
-                                  </select>
-                                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none opacity-50 text-slate-700" />
-                                </div>
-                              </form>
+                              <LeadStatusSelect leadId={lead.id} currentStatus={lead.status || 'new'} />
                             </td>
                           </tr>
                         ))
