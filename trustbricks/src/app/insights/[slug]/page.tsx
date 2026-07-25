@@ -5,6 +5,47 @@ import Footer from "@/components/Footer";
 import { getBlogPostBySlug } from "@/app/actions/blogActions";
 import { getAdminConfig } from "@/app/actions/adminActions";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const { post } = await getBlogPostBySlug(slug);
+  if (!post || !post.published) {
+    return {
+      title: "Article Not Found | Trust Bricks Properties Ltd",
+    };
+  }
+
+  const pageTitle = `${post.title} | Trust Bricks Insights`;
+  const description = post.excerpt || post.body.slice(0, 160);
+  const canonicalUrl = `https://trustbrickspropertieslimited.com.ng/insights/${post.slug}`;
+  const images = post.coverImage ? [post.coverImage] : ["https://trustbrickspropertieslimited.com.ng/og-image.jpg"];
+
+  return {
+    title: pageTitle,
+    description: description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: pageTitle,
+      description: description,
+      url: canonicalUrl,
+      siteName: "Trust Bricks Properties",
+      locale: "en_NG",
+      type: "article",
+      publishedTime: (post.publishedAt || post.createdAt).toISOString(),
+      authors: [post.authorName || "Trust Bricks Team"],
+      images: images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: pageTitle,
+      description: description,
+      images: images,
+    },
+  };
+}
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -13,8 +54,39 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   const config = await getAdminConfig();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt || post.body.slice(0, 160),
+    image: post.coverImage ? [post.coverImage] : undefined,
+    datePublished: (post.publishedAt || post.createdAt).toISOString(),
+    dateModified: post.updatedAt ? post.updatedAt.toISOString() : (post.publishedAt || post.createdAt).toISOString(),
+    author: {
+      "@type": "Person",
+      name: post.authorName || "Trust Bricks Team",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Trust Bricks Properties Ltd",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://trustbrickspropertieslimited.com.ng/og-image.jpg",
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://trustbrickspropertieslimited.com.ng/insights/${post.slug}`,
+    },
+  };
+
   return (
     <div className="min-h-screen bg-[var(--color-body-bg)] flex flex-col font-sans antialiased">
+      {/* Google Rich Snippets / JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <GlobalNavbar />
       <main className="flex-grow pt-32 pb-24">
         <article className="max-w-3xl mx-auto px-6 lg:px-8">

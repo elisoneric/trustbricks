@@ -1,12 +1,11 @@
 'use server';
 
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { auth } from '@/lib/auth';
 import { saveUpload, deleteUpload } from '@/lib/uploads';
 import type { PropertyCategory, PropertyStatus } from '@/lib/types';
 
-const prisma = new PrismaClient();
 
 async function requireSuperAdmin() {
   const session = await auth();

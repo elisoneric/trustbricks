@@ -4,10 +4,22 @@ import GlobalNavbar from "@/components/GlobalNavbar";
 import Footer from "@/components/Footer";
 import { getBlogPosts } from "@/app/actions/blogActions";
 import { getAdminConfig } from "@/app/actions/adminActions";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Insights & News | Trust Bricks Properties Ltd",
   description: "Stay updated with the latest in Nigerian real estate, PenCom RSA mortgages, and homeownership tips.",
+  alternates: {
+    canonical: "https://trustbrickspropertieslimited.com.ng/insights",
+  },
+  openGraph: {
+    title: "Insights & News | Trust Bricks Properties Ltd",
+    description: "Stay updated with the latest in Nigerian real estate, PenCom RSA mortgages, and homeownership tips.",
+    url: "https://trustbrickspropertieslimited.com.ng/insights",
+    siteName: "Trust Bricks Properties",
+    locale: "en_NG",
+    type: "website",
+  },
 };
 
 export default async function InsightsPage() {

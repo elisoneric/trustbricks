@@ -1,9 +1,8 @@
 'use server';
 
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import nodemailer from 'nodemailer';
 
-const prisma = new PrismaClient();
 
 export type LeadResponse = {
   success: boolean;

@@ -1,15 +1,24 @@
-"use client";
-
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import GlobalNavbar from "@/components/GlobalNavbar";
 import Footer from "@/components/Footer";
-import { ChevronDown, HelpCircle, HelpCircle as HelpIcon } from "lucide-react";
+import FaqPageClient, { FAQItem } from "@/components/FaqPageClient";
+import { getAdminConfig } from "@/app/actions/adminActions";
+import type { Metadata } from "next";
 
-interface FAQItem {
-  question: string;
-  answer: string;
-}
+export const metadata: Metadata = {
+  title: "Frequently Asked Questions | Trust Bricks Properties Ltd",
+  description: "Find answers to common questions about PenCom RSA 25% mortgage withdrawals, eligibility criteria, and PFA application procedures.",
+  alternates: {
+    canonical: "https://trustbrickspropertieslimited.com.ng/faq",
+  },
+  openGraph: {
+    title: "Frequently Asked Questions | Trust Bricks Properties Ltd",
+    description: "Find answers to common questions about PenCom RSA 25% mortgage withdrawals, eligibility criteria, and PFA application procedures.",
+    url: "https://trustbrickspropertieslimited.com.ng/faq",
+    siteName: "Trust Bricks Properties",
+    locale: "en_NG",
+    type: "website",
+  },
+};
 
 const FAQS: FAQItem[] = [
   {
@@ -34,56 +43,29 @@ const FAQS: FAQItem[] = [
   }
 ];
 
-function FAQAccordionItem({ faq, isOpen, onClick }: { faq: FAQItem; isOpen: boolean; onClick: () => void }) {
-  return (
-    <div className="border-b border-[var(--color-border)] py-4">
-      <button
-        type="button"
-        onClick={onClick}
-        className="w-full flex items-center justify-between text-left py-2 font-bold text-[var(--color-text-heading)] text-base hover:text-[var(--color-clay-500)] transition-colors focus:outline-none"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
-        <span className="flex items-center gap-3">
-          <HelpCircle className="w-5 h-5 text-[var(--color-clay-500)] shrink-0" />
-          {faq.question}
-        </span>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ type: "spring", stiffness: 200, damping: 15 }}
-          className="text-[var(--color-text-muted)]"
-        >
-          <ChevronDown className="w-5 h-5" />
-        </motion.div>
-      </button>
+export default async function FAQPage() {
+  const config = await getAdminConfig();
 
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 150, damping: 18 }}
-            className="overflow-hidden"
-          >
-            <p className="text-sm text-[var(--color-text-body)] leading-relaxed pt-2 pb-4 pl-8">
-              {faq.answer}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-export default function FAQPage() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const toggleIndex = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQS.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
   };
 
   return (
     <div className="min-h-screen bg-[var(--color-body-bg)] flex flex-col font-sans antialiased">
+      {/* Google SERP FAQ Rich Snippet */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <GlobalNavbar />
 
       <main className="flex-grow pt-32 pb-24">
@@ -101,22 +83,11 @@ export default function FAQPage() {
             </p>
           </div>
 
-          <div className="bg-[var(--color-card)] rounded-3xl p-8 md:p-10 border border-[var(--color-border)] shadow-card">
-            <div className="divide-y divide-[var(--color-border)]">
-              {FAQS.map((faq, index) => (
-                <FAQAccordionItem
-                  key={faq.question}
-                  faq={faq}
-                  isOpen={openIndex === index}
-                  onClick={() => toggleIndex(index)}
-                />
-              ))}
-            </div>
-          </div>
+          <FaqPageClient faqs={FAQS} />
         </section>
       </main>
 
-      <Footer />
+      <Footer siteSettings={config?.site} />
     </div>
   );
 }

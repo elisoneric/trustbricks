@@ -3,12 +3,24 @@ import Footer from "@/components/Footer";
 import PropertiesPageClient from "@/components/PropertiesPageClient";
 import { getProperties } from "@/app/actions/propertyActions";
 import { getAdminConfig } from "@/app/actions/adminActions";
+import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: "Properties | Trust Bricks Properties Ltd",
-  description: "Browse residential, commercial, and land properties available through Trust Bricks Properties Ltd.",
+export const metadata: Metadata = {
+  title: "Properties for Sale & Mortgage | Trust Bricks Properties Ltd",
+  description: "Browse residential, commercial, and land properties available in Nigeria through Trust Bricks Properties Ltd with RSA 25% mortgage facilitation.",
+  alternates: {
+    canonical: "https://trustbrickspropertieslimited.com.ng/properties",
+  },
+  openGraph: {
+    title: "Properties for Sale & Mortgage | Trust Bricks Properties Ltd",
+    description: "Browse residential, commercial, and land properties available in Nigeria through Trust Bricks Properties Ltd with RSA 25% mortgage facilitation.",
+    url: "https://trustbrickspropertieslimited.com.ng/properties",
+    siteName: "Trust Bricks Properties",
+    locale: "en_NG",
+    type: "website",
+  },
 };
 
 export default async function PropertiesPage() {

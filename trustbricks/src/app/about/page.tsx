@@ -6,10 +6,24 @@ import { getAdminConfig } from "@/app/actions/adminActions";
 export const dynamic = 'force-dynamic';
 import type { CoreValue, LeadershipMember } from "@/lib/types";
 
-export const metadata = {
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
   title: "About Us | Trust Bricks Properties Ltd",
   description: "Learn about Trust Bricks Properties Ltd — our vision, mission, and the team behind Nigeria's PenCom RSA mortgage specialists.",
+  alternates: {
+    canonical: "https://trustbrickspropertieslimited.com.ng/about",
+  },
+  openGraph: {
+    title: "About Us | Trust Bricks Properties Ltd",
+    description: "Learn about Trust Bricks Properties Ltd — our vision, mission, and the team behind Nigeria's PenCom RSA mortgage specialists.",
+    url: "https://trustbrickspropertieslimited.com.ng/about",
+    siteName: "Trust Bricks Properties",
+    locale: "en_NG",
+    type: "website",
+  },
 };
+
 
 export default async function AboutPage() {
   const config = await getAdminConfig();

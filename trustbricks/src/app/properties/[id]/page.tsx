@@ -2,11 +2,51 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import GlobalNavbar from "@/components/GlobalNavbar";
 import Footer from "@/components/Footer";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { getAdminConfig } from "@/app/actions/adminActions";
 import { MapPin, BedDouble, Bath, Ruler, ArrowLeft, Home } from "lucide-react";
+import type { Metadata } from "next";
 
-const prisma = new PrismaClient();
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const property = await prisma.property.findUnique({ where: { id } });
+  if (!property) {
+    return {
+      title: "Property Not Found | Trust Bricks Properties Ltd",
+    };
+  }
+
+  const images: string[] = JSON.parse(property.images || "[]");
+  const priceString = property.priceLabel || (property.price ? `₦${property.price.toLocaleString()}` : "Price on request");
+  const pageTitle = `${property.title} | Trust Bricks Properties`;
+  const description = property.description
+    ? property.description.slice(0, 160)
+    : `${property.category} property in ${property.city}, ${property.state}. ${priceString}.`;
+  const canonicalUrl = `https://trustbrickspropertieslimited.com.ng/properties/${id}`;
+
+  return {
+    title: pageTitle,
+    description: description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: pageTitle,
+      description: description,
+      url: canonicalUrl,
+      siteName: "Trust Bricks Properties",
+      locale: "en_NG",
+      type: "website",
+      images: images.length > 0 ? [images[0]] : ["https://trustbrickspropertieslimited.com.ng/og-image.jpg"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: pageTitle,
+      description: description,
+      images: images.length > 0 ? [images[0]] : ["https://trustbrickspropertieslimited.com.ng/twitter-image.jpg"],
+    },
+  };
+}
 
 export default async function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -16,8 +56,31 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
   const config = await getAdminConfig();
   const images: string[] = JSON.parse(property.images || "[]");
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    name: property.title,
+    description: property.description,
+    url: `https://trustbrickspropertieslimited.com.ng/properties/${property.id}`,
+    image: images,
+    datePosted: property.createdAt.toISOString(),
+    offers: property.price
+      ? {
+          "@type": "Offer",
+          price: property.price,
+          priceCurrency: "NGN",
+          availability: property.status === "AVAILABLE" ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+        }
+      : undefined,
+  };
+
   return (
     <div className="min-h-screen bg-[var(--color-body-bg)] flex flex-col font-sans antialiased">
+      {/* Google Rich Snippets / JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <GlobalNavbar />
       <main className="flex-grow pt-32 pb-24">
         <section className="max-w-5xl mx-auto px-6 lg:px-8">

@@ -1,12 +1,11 @@
 'use server';
 
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import bcrypt from 'bcryptjs';
 import { auth } from '@/lib/auth';
 import type { Role } from '@/lib/types';
 
-const prisma = new PrismaClient();
 
 async function requireSuperAdmin() {
   const session = await auth();

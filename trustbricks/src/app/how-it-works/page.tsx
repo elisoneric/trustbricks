@@ -3,10 +3,24 @@ import Footer from "@/components/Footer";
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
-export const metadata = {
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
   title: "How It Works | PenCom RSA Mortgage Guide",
   description: "Learn how to unlock 25% of your Retirement Savings Account to fund your home mortgage down payment in Nigeria.",
+  alternates: {
+    canonical: "https://trustbrickspropertieslimited.com.ng/how-it-works",
+  },
+  openGraph: {
+    title: "How It Works | PenCom RSA Mortgage Guide",
+    description: "Learn how to unlock 25% of your Retirement Savings Account to fund your home mortgage down payment in Nigeria.",
+    url: "https://trustbrickspropertieslimited.com.ng/how-it-works",
+    siteName: "Trust Bricks Properties",
+    locale: "en_NG",
+    type: "website",
+  },
 };
+
 
 export default function HowItWorksPage() {
   return (

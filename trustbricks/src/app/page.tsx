@@ -14,8 +14,27 @@ export default async function HomePage() {
   const { testimonials } = await getTestimonials(true);
   const { properties } = await getProperties(true);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    name: "Trust Bricks Properties Ltd",
+    url: "https://trustbrickspropertieslimited.com.ng",
+    logo: "https://trustbrickspropertieslimited.com.ng/og-image.jpg",
+    description: siteSettings.slogan || "Access up to 25% of your Retirement Savings Account (RSA) as equity contribution towards a residential mortgage under PenCom guidelines.",
+    telephone: siteSettings.companyPhone || undefined,
+    email: siteSettings.companyEmail || undefined,
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "NG",
+    },
+  };
+
   return (
     <div className="min-h-screen bg-[var(--color-body-bg)] font-sans antialiased selection:bg-[var(--color-clay-500)] selection:text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <GlobalNavbar />
       <HomeClient
         siteSettings={siteSettings}

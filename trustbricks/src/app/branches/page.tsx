@@ -3,20 +3,64 @@ import Footer from "@/components/Footer";
 import BranchMapClient from "@/components/BranchMapClient";
 import { getBranches } from "@/app/actions/adminActions";
 import { getAdminConfig } from "@/app/actions/adminActions";
+import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: "Our Branches | Trust Bricks Properties Ltd",
-  description: "Find a Trust Bricks Properties branch near you — 14 locations across Nigeria on an interactive map.",
+export const metadata: Metadata = {
+  title: "Our Branches Nationwide | Trust Bricks Properties Ltd",
+  description: "Find a Trust Bricks Properties branch near you — 14 office locations across Nigeria on an interactive map.",
+  alternates: {
+    canonical: "https://trustbrickspropertieslimited.com.ng/branches",
+  },
+  openGraph: {
+    title: "Our Branches Nationwide | Trust Bricks Properties Ltd",
+    description: "Find a Trust Bricks Properties branch near you — 14 office locations across Nigeria on an interactive map.",
+    url: "https://trustbrickspropertieslimited.com.ng/branches",
+    siteName: "Trust Bricks Properties",
+    locale: "en_NG",
+    type: "website",
+  },
 };
 
 export default async function BranchesPage() {
   const { branches } = await getBranches();
   const config = await getAdminConfig();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Trust Bricks Properties Branches",
+    itemListElement: (branches || []).map((branch, idx) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      item: {
+        "@type": "LocalBusiness",
+        name: `Trust Bricks Properties - ${branch.name}`,
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: branch.address || undefined,
+          addressLocality: branch.city,
+          addressRegion: branch.state,
+          addressCountry: "NG",
+        },
+        telephone: branch.phone || undefined,
+        email: branch.email || undefined,
+        geo: branch.lat && branch.lng ? {
+          "@type": "GeoCoordinates",
+          latitude: branch.lat,
+          longitude: branch.lng,
+        } : undefined,
+      },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-[var(--color-body-bg)] flex flex-col font-sans antialiased">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <GlobalNavbar />
       <main className="flex-grow pt-32 pb-24">
         <section className="max-w-7xl mx-auto px-6 lg:px-8">
