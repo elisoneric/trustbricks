@@ -8,7 +8,7 @@ async function main() {
 
   // 1. Seed Branches with placeholder contact details (to be edited via admin panel)
   const branches = [
-    { name: 'Abuja', email: 'abuja@trustbrickproperties.ng', whatsapp: '+2347078387777', phone: '+2347078387777', city: 'Abuja', state: 'FCT', address: 'Area 3, block 5, House 4 Cross River Street Garki, Abuja', landmark: 'Cross River Street Garki', lat: 9.0765, lng: 7.3986 },
+    { name: 'Abuja', email: 'abuja@trustbrickproperties.ng', whatsapp: '+2347078387777', phone: '+2347078387777', city: 'Abuja', state: 'FCT', address: 'Area 3, block 5, House 4 Cross River Street Garki, Abuja', landmark: 'Cross River Street Garki', lat: 9.030869712063904, lng: 7.4789396232331224 },
     { name: 'Lagos', email: 'lagos@trustbrickproperties.ng', whatsapp: '+2349065652920', phone: '+2349065652920', city: 'Lagos', state: 'Lagos', address: 'Towry Close, Idejo Street, Off Adeola Odeku, Victoria Island, Lagos', landmark: 'Off Adeola Odeku, Victoria Island', lat: 6.4281, lng: 3.4219 },
     { name: 'Kano', email: 'kano@trustbrickproperties.ng', whatsapp: '+2348085537624', phone: '+2348085537624', city: 'Kano', state: 'Kano', address: '10/24 Ruqayya Plaza, Civic Centre, Opposite MTN', landmark: 'Opposite MTN, Civic Centre', lat: 12.0022, lng: 8.5920 },
     { name: 'Kwara', email: 'kwara@trustbrickproperties.ng', whatsapp: '', phone: '', city: 'Ilorin', state: 'Kwara', address: '', landmark: '', lat: 8.4966, lng: 4.5426 },

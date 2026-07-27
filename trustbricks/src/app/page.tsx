@@ -14,7 +14,7 @@ export default async function HomePage() {
   const { testimonials } = await getTestimonials(true);
   const { properties } = await getProperties(true);
 
-  const jsonLd = {
+  const jsonLdRealEstate = {
     "@context": "https://schema.org",
     "@type": "RealEstateAgent",
     name: "Trust Bricks Properties Ltd",
@@ -29,11 +29,18 @@ export default async function HomePage() {
     },
   };
 
+  const jsonLdWebSite = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Trust Bricks Properties Ltd",
+    url: "https://trustbrickspropertieslimited.com.ng",
+  };
+
   return (
     <div className="min-h-screen bg-[var(--color-body-bg)] font-sans antialiased selection:bg-[var(--color-clay-500)] selection:text-white">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLdRealEstate, jsonLdWebSite]) }}
       />
       <GlobalNavbar />
       <HomeClient

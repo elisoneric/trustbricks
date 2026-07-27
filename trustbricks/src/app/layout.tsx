@@ -28,26 +28,32 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 /* ── METADATA ────────────────────────────────────────────────── */
 export const metadata: Metadata = {
+  applicationName: "Trust Bricks Properties Ltd",
   title: {
     default: "Trust Bricks Properties Ltd | PenCom RSA Mortgage Specialists",
     template: "%s | Trust Bricks Properties Ltd"
   },
   description:
-    "Access up to 25% of your Retirement Savings Account (RSA) as equity contribution towards a residential mortgage, in compliance with PenCom guidelines. 14 branches across Nigeria.",
+    "Trust Bricks Properties Ltd specializes in real estate properties and PenCom RSA mortgage financing. Access up to 25% of your RSA as equity for a residential mortgage.",
   keywords: [
+    "Trust Bricks Properties",
+    "Trust Bricks",
+    "Trust Properties RSA",
     "PenCom mortgage",
     "RSA withdrawal",
+    "RSA equity contribution",
+    "buy house with pension in Nigeria",
     "Nigeria real estate",
     "pension mortgage",
-    "Trust Bricks Properties",
     "Nigerian mortgage company",
+    "PenCom guidelines real estate",
   ],
   metadataBase: new URL('https://trustbrickspropertieslimited.com.ng'),
   openGraph: {
     title: "Trust Bricks Properties Ltd | Unlock Your Dream Home",
-    description: "Access up to 25% of your RSA as equity contribution towards a residential mortgage under PenCom guidelines.",
+    description: "Trust Bricks Properties Ltd specializes in real estate properties and PenCom RSA mortgage financing.",
     url: "https://trustbrickspropertieslimited.com.ng",
-    siteName: "Trust Bricks Properties",
+    siteName: "Trust Bricks Properties Ltd",
     locale: "en_NG",
     type: "website",
     images: [
