@@ -19,7 +19,7 @@ export default async function HomePage() {
     "@type": "RealEstateAgent",
     name: "Trust Bricks Properties Ltd",
     url: "https://trustbrickspropertieslimited.com.ng",
-    logo: "https://trustbrickspropertieslimited.com.ng/og-image.jpg",
+    logo: "https://trustbrickspropertieslimited.com.ng/logo.png",
     description: siteSettings.slogan || "Access up to 25% of your Retirement Savings Account (RSA) as equity contribution towards a residential mortgage under PenCom guidelines.",
     telephone: siteSettings.companyPhone || undefined,
     email: siteSettings.companyEmail || undefined,
@@ -33,6 +33,7 @@ export default async function HomePage() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Trust Bricks Properties Ltd",
+    alternateName: ["Trust Bricks", "Trust Bricks Properties"],
     url: "https://trustbrickspropertieslimited.com.ng",
   };
 
