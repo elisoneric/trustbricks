@@ -1,4 +1,4 @@
-﻿'use server';
+'use server';
 
 import { prisma } from '@/lib/prisma';
 import nodemailer from 'nodemailer';
@@ -112,7 +112,7 @@ export async function processMortgageLead(formData: FormData): Promise<LeadRespo
       },
     });
 
-    // 5. Send Notification Email — ALWAYS sent to primary central CSU address
+    // 5. Send Notification Email � ALWAYS sent to primary central CSU address
     const centralCsuEmail = 'csu@trustbrickspropertieslimited.com.ng';
     const branchEmail = branch?.csuEmail || branch?.email;
     const ccList = branchEmail && branchEmail.toLowerCase() !== centralCsuEmail.toLowerCase() ? [branchEmail] : undefined;
@@ -174,7 +174,7 @@ export async function processMortgageLead(formData: FormData): Promise<LeadRespo
                   </tr>
                   <tr style="border-bottom: 1px solid #eeeeee;">
                     <td style="padding: 8px 0; font-weight: bold;">RSA Balance:</td>
-                    <td style="padding: 8px 0; font-weight: bold; color: #0284c7;">₦${rsa_balance.toLocaleString('en-NG')}</td>
+                    <td style="padding: 8px 0; font-weight: bold; color: #0284c7;">?${rsa_balance.toLocaleString('en-NG')}</td>
                   </tr>
                   <tr style="border-bottom: 1px solid #eeeeee;">
                     <td style="padding: 8px 0; font-weight: bold;">Years in Service:</td>
