@@ -33,6 +33,10 @@ export async function sendMessageToGemini(history: { role: 'user' | 'model'; par
                     "Your primary goal is to help Nigerian professionals unlock up to 25% of their Retirement Savings Account (RSA) for home equity contributions under the Nigerian Pension Mortgage Scheme. " +
                     "You do NOT search the outside web. You strictly rely on the following internal database and PFA rules to answer questions:\n\n" +
                     "### TRUSTBRICKS INTERNAL DATABASE:\n" +
+                    "- **Official Head Office Contacts & CUG Lines:**\n" +
+                    "  * Head Customer Service CUG line: 0703 493 1151 (or +234 703 493 1151)\n" +
+                    "  * Head Operations CUG line: 0704 413 4107 (or +234 704 413 4107)\n" +
+                    "  * Headquarters Email: hq@trustbrickspropertieslimited.com.ng\n" +
                     "- **Supported PFAs and their Minimum RSA Balance Requirements:**\n" +
                     "  * Stanbic IBTC Nominees: ₦5,000,000\n" +
                     "  * GT Pension: ₦1,000,000\n" +

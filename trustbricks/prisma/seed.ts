@@ -1,4 +1,4 @@
-﻿import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -92,7 +92,7 @@ async function main() {
       slogan: 'We Value Your Trust',
       heroTitle: 'Your RSA Can Open Your Front Door',
       heroSubtitle: 'Access up to 25% of your Retirement Savings Account (RSA) as equity contribution towards a residential mortgage under PenCom guidelines. We handle the verification, documentation, and PFA coordination.',
-      companyPhone: '+234 901 234 5678',
+      companyPhone: '0703 493 1151 / 0704 413 4107',
       companyEmail: 'hq@trustbrickspropertieslimited.com.ng',
       rcNumber: '9552712',
       dpoName: '',

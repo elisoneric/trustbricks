@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Phone, Mail, Building, CheckCircle2, ChevronRight } from "lucide-react";
+import { MapPin, Phone, Mail, Building, CheckCircle2, ChevronRight, Headphones, Clock } from "lucide-react";
 import { submitContactForm } from "@/app/actions/contactActions";
 
 interface BranchRecord {
@@ -175,11 +175,136 @@ export default function ContactPageClient({ branches }: { branches: BranchRecord
           )}
         </motion.div>
 
-        {/* Office Selector & Details */}
-        <div className="space-y-4">
+        {/* Right Column: Direct CUG Lines & Office Directory */}
+        <div className="space-y-6">
+
+          {/* Direct Headquarters CUG Lines Card */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 15 }}
+            className="bg-[var(--color-card)] rounded-3xl p-6 sm:p-7 border border-[var(--color-border)] shadow-card space-y-5"
+          >
+            <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] pb-4">
+              <div>
+                <span className="inline-block px-2.5 py-1 rounded-full bg-[var(--color-clay-500)]/10 text-[var(--color-clay-500)] text-[10px] font-extrabold uppercase tracking-widest mb-1">
+                  Official CUG Lines
+                </span>
+                <h3 className="text-lg font-bold text-[var(--color-text-heading)]" style={{ fontFamily: "var(--font-display)" }}>
+                  Head Office Direct Support
+                </h3>
+              </div>
+              <div className="w-10 h-10 rounded-2xl bg-[var(--color-clay-500)]/10 text-[var(--color-clay-500)] flex items-center justify-center shrink-0">
+                <Headphones className="w-5 h-5" />
+              </div>
+            </div>
+
+            <p className="text-xs text-[var(--color-text-body)] leading-relaxed">
+              Connect directly with our corporate department heads for urgent inquiries, mortgage verification escalations, and official assistance.
+            </p>
+
+            <div className="space-y-3">
+              {/* Head Customer Service */}
+              <div className="p-4 rounded-2xl bg-[var(--color-body-bg)] border border-[var(--color-border)] space-y-2.5">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-clay-500)]">
+                      Customer Service Desk
+                    </span>
+                    <h4 className="text-sm font-bold text-[var(--color-text-heading)]" style={{ fontFamily: "var(--font-display)" }}>
+                      Head Customer Service CUG line
+                    </h4>
+                  </div>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+                    Live
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                  <a
+                    href="tel:+2347034931151"
+                    className="text-base sm:text-lg font-bold text-[var(--color-text-heading)] hover:text-[var(--color-clay-500)] transition-colors font-tabular"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    0703 493 1151
+                  </a>
+                  <div className="flex items-center gap-2">
+                    <a
+                      href="tel:+2347034931151"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--color-ink-700)] text-white text-xs font-bold hover:bg-[var(--color-ink-800)] transition-colors"
+                      title="Call Head Customer Service"
+                    >
+                      <Phone className="w-3.5 h-3.5" /> Call
+                    </a>
+                    <a
+                      href={`https://wa.me/2347034931151?text=${encodeURIComponent("Hello Head of Customer Service, I am contacting you from the TrustBricks website regarding my mortgage inquiry.")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#25D366] text-white text-xs font-bold hover:bg-[#20ba59] transition-colors"
+                      title="WhatsApp Head Customer Service"
+                    >
+                      WhatsApp
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Head Operations */}
+              <div className="p-4 rounded-2xl bg-[var(--color-body-bg)] border border-[var(--color-border)] space-y-2.5">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-clay-500)]">
+                      Operations &amp; Processing Desk
+                    </span>
+                    <h4 className="text-sm font-bold text-[var(--color-text-heading)]" style={{ fontFamily: "var(--font-display)" }}>
+                      Head Operations CUG line
+                    </h4>
+                  </div>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+                    Live
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                  <a
+                    href="tel:+2347044134107"
+                    className="text-base sm:text-lg font-bold text-[var(--color-text-heading)] hover:text-[var(--color-clay-500)] transition-colors font-tabular"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    0704 413 4107
+                  </a>
+                  <div className="flex items-center gap-2">
+                    <a
+                      href="tel:+2347044134107"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--color-ink-700)] text-white text-xs font-bold hover:bg-[var(--color-ink-800)] transition-colors"
+                      title="Call Head Operations"
+                    >
+                      <Phone className="w-3.5 h-3.5" /> Call
+                    </a>
+                    <a
+                      href={`https://wa.me/2347044134107?text=${encodeURIComponent("Hello Head of Operations, I am contacting you from the TrustBricks website regarding mortgage operations and processing.")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#25D366] text-white text-xs font-bold hover:bg-[#20ba59] transition-colors"
+                      title="WhatsApp Head Operations"
+                    >
+                      WhatsApp
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-[var(--color-text-muted)] pt-2 border-t border-[var(--color-border)]">
+              <span className="flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-[var(--color-clay-500)]" /> Mon – Fri: 8:00 AM – 5:00 PM (WAT)
+              </span>
+              <span>Abuja HQ</span>
+            </div>
+          </motion.div>
+
+          {/* Regional Office Directory */}
           <div className="bg-[var(--color-card)] rounded-2xl p-6 border border-[var(--color-border)] shadow-card">
             <h3 className="text-lg font-bold text-[var(--color-text-heading)] mb-4" style={{ fontFamily: "var(--font-display)" }}>
-              Office Directory
+              Regional Office Directory
             </h3>
             <div className="space-y-1 mb-5">
               <label htmlFor="office-selector" className="text-xs font-bold text-[var(--color-text-heading)] uppercase tracking-wide">

@@ -122,7 +122,7 @@ export default function WhatsAppWidget({ selectedBranch = "abuja", branches = []
   const cityName = currentBranch?.city || "Head";
 
   const getWhatsAppURL = () => {
-    const number = currentBranch?.whatsapp?.replace(/[^0-9]/g, '') || "2348030000000";
+    const number = currentBranch?.whatsapp?.replace(/[^0-9]/g, '') || "2347034931151";
     // Generate a beautiful summarized transcript to pass to WhatsApp
     const transcript = messages
       .map(m => `${m.sender === "user" ? "Me" : "Ada"}: ${m.text}`)
@@ -179,6 +179,20 @@ export default function WhatsAppWidget({ selectedBranch = "abuja", branches = []
                   >
                     <X className="w-5 h-5 text-[var(--color-text-muted)] hover:text-white" />
                   </button>
+                </div>
+
+                {/* Direct CUG Quick Dial Bar */}
+                <div className="bg-[var(--color-ink-800)] px-4 py-2 text-[11px] text-white/70 flex items-center justify-between border-b border-white/5 z-10 font-tabular">
+                  <span className="text-white/50 text-[10px] font-bold uppercase tracking-wider">CUG Lines:</span>
+                  <div className="flex items-center gap-2.5">
+                    <a href="tel:+2347034931151" className="text-white hover:text-[var(--color-clay-300)] font-semibold transition-colors" title="Call Head Customer Service">
+                      CS: 0703 493 1151
+                    </a>
+                    <span className="text-white/20">•</span>
+                    <a href="tel:+2347044134107" className="text-white hover:text-[var(--color-clay-300)] font-semibold transition-colors" title="Call Head Operations">
+                      Ops: 0704 413 4107
+                    </a>
+                  </div>
                 </div>
 
                 {/* Messages Box */}
@@ -281,7 +295,7 @@ export default function WhatsAppWidget({ selectedBranch = "abuja", branches = []
                   Chat Customer Service
                 </p>
                 <a
-                  href={`https://wa.me/${branches.find(b => b.slug === selectedBranch)?.whatsapp || "+2348030000000"}?text=${encodeURIComponent(
+                  href={`https://wa.me/${(branches.find(b => b.slug === selectedBranch)?.whatsapp || "2347034931151").replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
                     "Hello TrustBricks! I am interested in the PenCom RSA mortgage."
                   )}`}
                   target="_blank"

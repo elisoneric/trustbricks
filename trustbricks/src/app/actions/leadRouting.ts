@@ -112,7 +112,7 @@ export async function processMortgageLead(formData: FormData): Promise<LeadRespo
       },
     });
 
-    // 5. Send Notification Email — ALWAYS sent to primary central CSU address
+    // 5. Send Notification Email ï¿½ ALWAYS sent to primary central CSU address
     const centralCsuEmail = 'csu@trustbrickspropertieslimited.com.ng';
     const branchEmail = branch?.csuEmail || branch?.email;
     const ccList = branchEmail && branchEmail.toLowerCase() !== centralCsuEmail.toLowerCase() ? [branchEmail] : undefined;
@@ -236,9 +236,46 @@ export async function trackLeadStatus(phoneOrAccount: string): Promise<TrackStat
   try {
     const rawInput = phoneOrAccount.trim();
     if (!rawInput) {
-      return { found: false, status: null, description: null, step: null, total_steps: 4 };
+      return { found: false, status: null, description: null, step: null, total_steps: 6 };
     }
 
+    const backendUrl = process.env.TRUSTBRICKS_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+
+    // 1. Check real-time mortgage pipeline via TrustBricks Portal API
+    try {
+      const isDigits = /^\d+$/.test(rawInput);
+      const isPhone = isDigits && rawInput.length >= 10;
+      const payload: { phone_number?: string; account_number?: string } = {};
+      if (isPhone) {
+        payload.phone_number = rawInput;
+      } else {
+        payload.account_number = rawInput;
+      }
+
+      const res = await fetch(`${backendUrl}/api/portal/track`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        cache: 'no-store',
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.found) {
+          return {
+            found: true,
+            status: data.status,
+            description: data.description,
+            step: data.step,
+            total_steps: data.total_steps || 6,
+          };
+        }
+      }
+    } catch (apiErr) {
+      console.warn('[TRACK API BACKEND UNAVAILABLE, FALLING BACK TO PRISMA LEADS]', apiErr);
+    }
+
+    // 2. Fallback to local leads table
     const digitsOnly = rawInput.replace(/[^0-9]/g, '');
 
     const lead = await prisma.lead.findFirst({
@@ -263,13 +300,13 @@ export async function trackLeadStatus(phoneOrAccount: string): Promise<TrackStat
         status: isNew ? 'Verification & PFA Review' : lead.status.toUpperCase(),
         description: `Application for ${lead.full_name} (${lead.pfa.name}) is currently undergoing verification by our ${lead.branch.name} regional advisory desk.`,
         step: isNew ? 2 : 3,
-        total_steps: 4,
+        total_steps: 6,
       };
     }
 
-    return { found: false, status: null, description: null, step: null, total_steps: 4 };
+    return { found: false, status: null, description: null, step: null, total_steps: 6 };
   } catch (error) {
     console.error('[TRACK LEAD ERROR]', error);
-    return { found: false, status: null, description: null, step: null, total_steps: 4 };
+    return { found: false, status: null, description: null, step: null, total_steps: 6 };
   }
 }

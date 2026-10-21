@@ -404,7 +404,20 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                     </div>
                     <div className="space-y-2">
                       <h3 className="text-base font-black text-[var(--color-text-heading)] uppercase tracking-wider">No Application Found</h3>
-                      <p className="text-sm text-[var(--color-text-muted)] max-w-sm mx-auto font-medium leading-relaxed">We couldn't find an active mortgage application matching those details. Please check the inputs or contact support.</p>
+                      <p className="text-sm text-[var(--color-text-muted)] max-w-sm mx-auto font-medium leading-relaxed">We couldn't find an active mortgage application matching those details. Please check the inputs or contact our support desks directly.</p>
+                      <div className="bg-[var(--color-mortar-50)] p-4 rounded-xl border border-[var(--color-border)] text-left mt-4 space-y-2">
+                        <p className="text-[var(--color-text-muted)] text-[10px] font-black uppercase tracking-widest mb-1.5">Direct CUG Support Lines</p>
+                        <div className="flex flex-col gap-2">
+                          <a href="tel:+2347034931151" className="flex items-center justify-between text-xs font-bold text-[var(--color-text-heading)] hover:text-[var(--color-clay-500)] transition-colors">
+                            <span className="flex items-center gap-2 text-[var(--color-text-muted)]"><Phone className="w-3.5 h-3.5 text-[var(--color-clay-500)]" /> Customer Service:</span>
+                            <span className="font-tabular text-[var(--color-clay-500)]">0703 493 1151</span>
+                          </a>
+                          <a href="tel:+2347044134107" className="flex items-center justify-between text-xs font-bold text-[var(--color-text-heading)] hover:text-[var(--color-clay-500)] transition-colors">
+                            <span className="flex items-center gap-2 text-[var(--color-text-muted)]"><Phone className="w-3.5 h-3.5 text-[var(--color-clay-500)]" /> Head Operations:</span>
+                            <span className="font-tabular text-[var(--color-clay-500)]">0704 413 4107</span>
+                          </a>
+                        </div>
+                      </div>
                     </div>
                     <button type="button" onClick={handleReset} className="w-full py-3 rounded-xl border border-[var(--color-border)] text-[var(--color-text-body)] text-sm font-bold hover:bg-[var(--color-mortar-50)] transition-colors">← Double Check Details</button>
                   </motion.div>
@@ -419,10 +432,17 @@ export default function ApplicationStatusModal({ isOpen, onClose }: ApplicationS
                       <h3 className="text-base font-black text-[var(--color-text-heading)] uppercase tracking-wider">Query Failed</h3>
                       <p className="text-sm text-[var(--color-text-muted)] max-w-sm mx-auto font-medium leading-relaxed">{errorMsg || "An error occurred. Please try again later."}</p>
                       <div className="bg-[var(--color-mortar-50)] p-4 rounded-xl border border-[var(--color-border)] text-left mt-4 space-y-2">
-                        <p className="text-[var(--color-text-muted)] text-[10px] font-black uppercase tracking-widest mb-2">Need Help?</p>
-                        <a href="tel:+2349155553558" className="flex items-center gap-3 text-[var(--color-clay-500)] text-sm font-bold hover:text-[var(--color-clay-600)] transition-colors">
-                          <Phone className="w-3.5 h-3.5" /> +234 915 555 3558
-                        </a>
+                        <p className="text-[var(--color-text-muted)] text-[10px] font-black uppercase tracking-widest mb-1.5">Need Help? Direct CUG Lines</p>
+                        <div className="flex flex-col gap-2">
+                          <a href="tel:+2347034931151" className="flex items-center justify-between text-xs font-bold text-[var(--color-text-heading)] hover:text-[var(--color-clay-500)] transition-colors">
+                            <span className="flex items-center gap-2 text-[var(--color-text-muted)]"><Phone className="w-3.5 h-3.5 text-[var(--color-clay-500)]" /> Customer Service:</span>
+                            <span className="font-tabular text-[var(--color-clay-500)]">0703 493 1151</span>
+                          </a>
+                          <a href="tel:+2347044134107" className="flex items-center justify-between text-xs font-bold text-[var(--color-text-heading)] hover:text-[var(--color-clay-500)] transition-colors">
+                            <span className="flex items-center gap-2 text-[var(--color-text-muted)]"><Phone className="w-3.5 h-3.5 text-[var(--color-clay-500)]" /> Head Operations:</span>
+                            <span className="font-tabular text-[var(--color-clay-500)]">0704 413 4107</span>
+                          </a>
+                        </div>
                       </div>
                     </div>
                     <button type="button" onClick={handleReset} className="w-full py-3 rounded-xl border border-[var(--color-border)] text-[var(--color-text-body)] text-sm font-bold hover:bg-[var(--color-mortar-50)] transition-colors">← Try Again</button>

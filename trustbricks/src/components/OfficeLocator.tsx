@@ -371,6 +371,26 @@ export default function OfficeLocator({ selectedBranch, onBranchChange, branches
                 >
                   {currentOffice.email}
                 </a>
+
+                {currentOffice.slug === "abuja" && (
+                  <div className="mt-2.5 pt-2.5 border-t border-[var(--color-border)] space-y-1">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-clay-500)]">
+                      Head Office CUG Lines
+                    </p>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-[var(--color-text-muted)]">Customer Service:</span>
+                      <a href="tel:+2347034931151" className="font-bold text-[var(--color-ink-700)] hover:text-[var(--color-clay-500)] font-tabular">
+                        0703 493 1151
+                      </a>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-[var(--color-text-muted)]">Head Operations:</span>
+                      <a href="tel:+2347044134107" className="font-bold text-[var(--color-ink-700)] hover:text-[var(--color-clay-500)] font-tabular">
+                        0704 413 4107
+                      </a>
+                    </div>
+                  </div>
+                )}
               </DetailBlock>
 
               <Divider />

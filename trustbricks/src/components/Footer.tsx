@@ -39,9 +39,30 @@ export default function Footer({ siteSettings }: { siteSettings?: any } = {}) {
           <p className="text-white/50 text-sm leading-relaxed max-w-xs">
             Empowering Nigerian professionals to unlock their RSA equity and secure their dream homes with absolute transparency and ease.
           </p>
-          <div className="text-xs text-white/50 space-y-1 font-tabular">
-            <p>Email: {siteSettings?.companyEmail || "hq@trustbrickproperties.ng"}</p>
-            <p>Phone: {siteSettings?.companyPhone || "+234 800-TRUSTBRICKS"}</p>
+          <div className="text-xs text-white/60 space-y-2 font-tabular">
+            <p>
+              <span className="text-white/40">Email: </span>
+              <a href={`mailto:${siteSettings?.companyEmail || "hq@trustbrickspropertieslimited.com.ng"}`} className="hover:text-white transition-colors">
+                {siteSettings?.companyEmail || "hq@trustbrickspropertieslimited.com.ng"}
+              </a>
+            </p>
+            <div className="pt-1.5 border-t border-white/10 space-y-1">
+              <p className="text-[10px] text-[var(--color-clay-300)] font-semibold uppercase tracking-wider">
+                Direct CUG Lines
+              </p>
+              <p className="flex items-center justify-between gap-2">
+                <span className="text-white/50">Customer Service:</span>
+                <a href="tel:+2347034931151" className="text-white hover:text-[var(--color-clay-200)] font-bold transition-colors">
+                  0703 493 1151
+                </a>
+              </p>
+              <p className="flex items-center justify-between gap-2">
+                <span className="text-white/50">Head Operations:</span>
+                <a href="tel:+2347044134107" className="text-white hover:text-[var(--color-clay-200)] font-bold transition-colors">
+                  0704 413 4107
+                </a>
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-4 text-white/50">
             <a href="https://facebook.com/trustbricksproperties" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><Facebook /></a>
