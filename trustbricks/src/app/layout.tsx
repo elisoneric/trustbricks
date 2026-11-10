@@ -28,10 +28,13 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 /* ── METADATA ────────────────────────────────────────────────── */
 export const metadata: Metadata = {
-  applicationName: "Trust Bricks Properties Ltd",
+  applicationName: "TrustBricks",
   title: {
     default: "Trust Bricks Properties Ltd | PenCom RSA Mortgage Specialists",
     template: "%s | Trust Bricks Properties Ltd"
+  },
+  alternates: {
+    canonical: 'https://trustbrickspropertieslimited.com.ng/',
   },
   description:
     "Trust Bricks Properties Ltd specializes in real estate properties and PenCom RSA mortgage financing. Access up to 25% of your RSA as equity for a residential mortgage.",
@@ -53,7 +56,7 @@ export const metadata: Metadata = {
     title: "Trust Bricks Properties Ltd | Unlock Your Dream Home",
     description: "Trust Bricks Properties Ltd specializes in real estate properties and PenCom RSA mortgage financing.",
     url: "https://trustbrickspropertieslimited.com.ng",
-    siteName: "Trust Bricks Properties Ltd",
+    siteName: "TrustBricks",
     locale: "en_NG",
     type: "website",
     images: [

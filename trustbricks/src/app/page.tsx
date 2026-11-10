@@ -14,34 +14,45 @@ export default async function HomePage() {
   const { testimonials } = await getTestimonials(true);
   const { properties } = await getProperties(true);
 
-  const jsonLdRealEstate = {
+  const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "RealEstateAgent",
-    name: "Trust Bricks Properties Ltd",
-    url: "https://trustbrickspropertieslimited.com.ng",
-    logo: "https://trustbrickspropertieslimited.com.ng/logo.png",
-    description: siteSettings.slogan || "Access up to 25% of your Retirement Savings Account (RSA) as equity contribution towards a residential mortgage under PenCom guidelines.",
-    telephone: siteSettings.companyPhone || undefined,
-    email: siteSettings.companyEmail || undefined,
-    address: {
-      "@type": "PostalAddress",
-      addressCountry: "NG",
-    },
-  };
-
-  const jsonLdWebSite = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "Trust Bricks Properties Ltd",
-    alternateName: ["Trust Bricks", "Trust Bricks Properties"],
-    url: "https://trustbrickspropertieslimited.com.ng",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://trustbrickspropertieslimited.com.ng/#website",
+        "url": "https://trustbrickspropertieslimited.com.ng/",
+        "name": "TrustBricks",
+        "alternateName": [
+          "Trust Bricks",
+          "Trust Bricks Properties",
+          "Trust Bricks Properties Ltd"
+        ],
+        "publisher": {
+          "@id": "https://trustbrickspropertieslimited.com.ng/#organization"
+        }
+      },
+      {
+        "@type": "RealEstateAgent",
+        "@id": "https://trustbrickspropertieslimited.com.ng/#organization",
+        "name": "Trust Bricks Properties Ltd",
+        "url": "https://trustbrickspropertieslimited.com.ng/",
+        "logo": "https://trustbrickspropertieslimited.com.ng/logo.png",
+        "description": siteSettings.slogan || "Access up to 25% of your Retirement Savings Account (RSA) as equity contribution towards a residential mortgage under PenCom guidelines.",
+        "telephone": siteSettings.companyPhone || undefined,
+        "email": siteSettings.companyEmail || undefined,
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "NG",
+        },
+      }
+    ]
   };
 
   return (
     <div className="min-h-screen bg-[var(--color-body-bg)] font-sans antialiased selection:bg-[var(--color-clay-500)] selection:text-white">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLdRealEstate, jsonLdWebSite]) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <GlobalNavbar />
       <HomeClient

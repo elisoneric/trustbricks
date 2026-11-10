@@ -133,7 +133,7 @@ export default function GlobalNavbar() {
           className="flex items-center gap-2.5 group outline-none focus:outline-none border-none ring-0 rounded-md"
           aria-label="Trust Bricks Properties — home"
         >
-          <img src="/logo.png?v=3" alt="" aria-hidden="true" className="h-10 w-auto select-none border-none outline-none shadow-none ring-0" />
+          <img src="/logo.png?v=3" alt="TrustBricks" className="h-10 w-auto select-none border-none outline-none shadow-none ring-0" />
           <span
             className="leading-tight select-none border-none outline-none"
             style={{ fontFamily: "var(--font-display)" }}
